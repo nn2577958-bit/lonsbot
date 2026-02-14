@@ -1,6 +1,5 @@
 # LONS PAL
 
-## 사용법
 - 언제나 함께 하는 LONS Palworld
 
 ## 초대 링크
