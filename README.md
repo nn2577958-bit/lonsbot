@@ -1,6 +1,6 @@
-# LONSBOT
+# LONS PAL
 
-론스봇(LONSBOT)은 론스서버 유저들을 위한 디스코드 실시간 알림 봇입니다.
+LONS Palworld
 
 ## 사용법
 - `index.html`을 열어 프로젝트 미리보기를 확인하세요.
@@ -14,4 +14,4 @@
 
 ## 라이선스
 - 별도 표기 없으면 개인 프로젝트용으로 사용 가능합니다.
-# LONSbot
+# LONS SV ONLINE
