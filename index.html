@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS 로그인 & 모듈9 데모</title>
+  <title>LONS SPA 데모</title>
   <style>
     body {
       margin: 0;
@@ -105,7 +105,17 @@
     <input type="text" id="username" placeholder="아이디">
     <input type="password" id="password" placeholder="비밀번호">
     <button id="loginBtn">로그인</button>
-    <p>회원이 아니신가요? <a href="#">회원가입</a></p>
+    <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
+  </div>
+
+  <!-- 회원가입 화면 -->
+  <div class="card" id="signupCard" style="display:none;">
+    <h1>회원가입</h1>
+    <input type="text" id="newUsername" placeholder="아이디">
+    <input type="password" id="newPassword" placeholder="비밀번호">
+    <input type="password" id="confirmPassword" placeholder="비밀번호 확인">
+    <button id="signupBtn">회원가입</button>
+    <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
   </div>
 
   <!-- 모듈 9 화면 -->
@@ -119,6 +129,7 @@
   </div>
 
   <script>
+    // 요소 가져오기
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const loginCard = document.getElementById('loginCard');
@@ -126,7 +137,12 @@
     const moduleContent = document.getElementById('moduleContent');
     const welcomeMsg = document.getElementById('welcomeMsg');
 
-    // 예시 데이터 (동적으로 표시)
+    const showSignup = document.getElementById('showSignup');
+    const backToLogin = document.getElementById('backToLogin');
+    const signupCard = document.getElementById('signupCard');
+    const signupBtn = document.getElementById('signupBtn');
+
+    // 예시 모듈 데이터
     const moduleData = [
       { title: "공지사항", text: "오늘 시스템 점검이 있습니다." },
       { title: "업무 알림", text: "마감된 보고서를 확인해주세요." },
@@ -134,6 +150,7 @@
       { title: "새 메시지", text: "새로운 쪽지가 도착했습니다." }
     ];
 
+    // 로그인 버튼
     loginBtn.addEventListener('click', () => {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
@@ -143,10 +160,8 @@
         return;
       }
 
-      // 로그인 성공 시 모듈9 화면 표시
       loginCard.style.display = 'none';
       module9.style.display = 'block';
-
       welcomeMsg.textContent = `${username}님, 모듈 9에 오신 것을 환영합니다!`;
 
       // 동적 카드 생성
@@ -159,12 +174,50 @@
       });
     });
 
+    // 로그아웃 버튼
     logoutBtn.addEventListener('click', () => {
       module9.style.display = 'none';
       loginCard.style.display = 'block';
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
       moduleContent.innerHTML = '';
+    });
+
+    // 회원가입 화면 표시
+    showSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginCard.style.display = 'none';
+      signupCard.style.display = 'block';
+    });
+
+    // 로그인 화면 복귀
+    backToLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      signupCard.style.display = 'none';
+      loginCard.style.display = 'block';
+    });
+
+    // 회원가입 버튼
+    signupBtn.addEventListener('click', () => {
+      const newUser = document.getElementById('newUsername').value.trim();
+      const newPass = document.getElementById('newPassword').value.trim();
+      const confirmPass = document.getElementById('confirmPassword').value.trim();
+
+      if(!newUser || !newPass || !confirmPass) {
+        alert('모든 항목을 입력해주세요.');
+        return;
+      }
+      if(newPass !== confirmPass) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      alert(`${newUser}님, 회원가입이 완료되었습니다!`);
+      signupCard.style.display = 'none';
+      loginCard.style.display = 'block';
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
     });
   </script>
 
