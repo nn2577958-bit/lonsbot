@@ -3,19 +3,213 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 로그인</title>
-  <link rel="stylesheet" href="style.css">
+  <title>로그인 / 회원가입</title>
+  <style>
+    /* 기본 스타일 */
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #6a11cb, #2575fc); /* 그라데이션 배경 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* 카드 스타일 */
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 380px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    /* 입력 필드 스타일 */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      background: #f9f9f9;
+      transition: border 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #66a6ff;
+      background: #fff;
+    }
+
+    /* 버튼 스타일 */
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #66a6ff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5a94e3;
+    }
+
+    button:active {
+      background-color: #4c82c0;
+    }
+
+    /* 텍스트 스타일 */
+    p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* 에러 메시지 */
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+
+    /* 회원가입 화면 */
+    .hidden {
+      display: none;
+    }
+    
+    /* 링크 스타일 */
+    a {
+      color: #66a6ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
 </head>
 <body>
-  <div class="login-container">
-    <h1>LONS SV Palworld</h1>
+
+  <!-- 로그인 화면 -->
+  <div id="authContainer" class="card">
+    <h1>로그인</h1>
     <form id="login-form">
       <input type="email" id="login-email" placeholder="이메일" required />
       <input type="password" id="login-password" placeholder="비밀번호" required />
-      <button type="submit">로그인</button>
+      <button type="submit" id="loginBtn">로그인</button>
+      <p id="login-msg" class="error"></p>
     </form>
-    <p id="login-msg" class="error"></p>
+    <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
   </div>
-  <script type="module" src="script.js"></script>
+
+  <!-- 회원가입 화면 -->
+  <div id="signupContainer" class="card hidden">
+    <h1>회원가입</h1>
+    <form id="signup-form">
+      <input type="email" id="signup-email" placeholder="이메일" required />
+      <input type="password" id="signup-password" placeholder="비밀번호" required />
+      <button type="submit" id="signupBtn">회원가입</button>
+      <p id="signup-msg" class="error"></p>
+    </form>
+    <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { 
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+      onAuthStateChanged, signOut 
+    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    // Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
+      authDomain: "lons-dc24d.firebaseapp.com",
+      projectId: "lons-dc24d",
+      storageBucket: "lons-dc24d.appspot.com",
+      messagingSenderId: "755692328918",
+      appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM 요소
+    const signupForm = document.getElementById("signup-form");
+    const signupMsg = document.getElementById("signup-msg");
+    const loginForm = document.getElementById("login-form");
+    const loginMsg = document.getElementById("login-msg");
+    const showSignup = document.getElementById("showSignup");
+    const backToLogin = document.getElementById("backToLogin");
+
+    const loginContainer = document.getElementById("authContainer");
+    const signupContainer = document.getElementById("signupContainer");
+
+    // 로그인 처리
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          window.location.href = "home.html"; // 로그인 후 홈 페이지로 이동
+        })
+        .catch((err) => {
+          loginMsg.innerText = err.message;
+        });
+    });
+
+    // 회원가입 처리
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value;
+      if (password.length < 6) {
+        signupMsg.innerText = "비밀번호는 최소 6자 이상이어야 합니다.";
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          signupMsg.innerText = "회원가입 성공! 로그인 해주세요.";
+          signupForm.reset();
+        })
+        .catch((err) => {
+          signupMsg.innerText = err.message;
+        });
+    });
+
+    // 로그인 화면 -> 회원가입 화면
+    showSignup.addEventListener("click", (e) => {
+      e.preventDefault();
+      loginContainer.style.display = "none";
+      signupContainer.style.display = "block";
+    });
+
+    // 회원가입 화면 -> 로그인 화면
+    backToLogin.addEventListener("click", (e) => {
+      e.preventDefault();
+      signupContainer.style.display = "none";
+      loginContainer.style.display = "block";
+    });
+
+    // 로그인 상태 체크
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "home.html"; // 이미 로그인 상태라면 홈 페이지로 이동
+      }
+    });
+  </script>
 </body>
 </html>
