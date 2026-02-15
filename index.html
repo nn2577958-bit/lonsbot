@@ -5,62 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LONS SV 공식 홈페이지</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #auth-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
-    #auth-section input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
-    #auth-section button { padding: 8px 16px; margin-bottom: 10px; }
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
+    header { background: #333; color: #fff; padding: 10px 20px; position: sticky; top: 0; z-index: 100; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    nav { margin-top: 5px; }
+    nav a { color: #fff; text-decoration: none; margin-right: 15px; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+
+    main { padding: 20px; }
+
+    /* 로그인/회원가입 카드 */
+    #auth-section { 
+      background: #fff; 
+      max-width: 400px; 
+      margin: 20px auto; 
+      padding: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #auth-section h2 { margin-top: 0; }
+    #auth-section input { 
+      display: block; 
+      width: 100%; 
+      margin-bottom: 10px; 
+      padding: 8px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+    }
+    #auth-section button { 
+      width: 100%; 
+      padding: 10px; 
+      background: #333; 
+      color: #fff; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    #auth-section button:hover { background: #555; }
     #auth-section p { margin: 5px 0; }
     #auth-section p.error { color: red; }
-    #user-info { margin-bottom: 10px; padding: 10px; border: 1px solid #666; border-radius: 5px; background-color: #f1f1f1; }
+
+    /* 메시지 표시 */
+    #login-status { 
+      max-width: 400px; 
+      margin: 10px auto; 
+      padding: 10px; 
+      text-align: center; 
+      font-weight: bold; 
+      color: green;
+    }
+
+    /* 주요 기능 */
+    .features { max-width: 600px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .features h2 { margin-top: 0; }
+    .features ul { padding-left: 20px; }
+
+    #invite-btn { display: block; max-width: 400px; margin: 20px auto; text-align: center; background: #7289da; color: #fff; padding: 10px; border-radius: 5px; text-decoration: none; }
 
     #scrollTopBtn {
       position: fixed; bottom: 20px; right: 20px; padding: 10px 15px; font-size: 14px;
       border-radius: 5px; background-color: #333; color: #fff; border: none; cursor: pointer; display: none; z-index: 1000;
     }
+
+    footer { text-align: center; padding: 20px; background: #333; color: #fff; margin-top: 40px; }
   </style>
 </head>
 <body>
   <header>
     <h1>LONS SV Palworld</h1>
-    <p>꿀팁 & 커뮤니티 & 팰월드 정보 아래를 클릭해주세요!</p>
+    <nav>
+      <a href="#auth-section">회원가입/로그인</a>
+      <a href="#features">팰월드 정보</a>
+      <a href="#invite-btn">커뮤니티</a>
+    </nav>
   </header>
+
+  <!-- 로그인/회원가입 상태 메시지 -->
+  <div id="login-status"></div>
 
   <main>
     <section id="auth-section">
-      <div id="user-info" style="display:none;"></div>
-      <div id="forms-section">
-        <h2>회원가입</h2>
-        <form id="signup-form">
-          <input type="email" id="signup-email" placeholder="이메일" required />
-          <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required />
-          <button type="submit">회원가입</button>
-        </form>
-        <p id="signup-msg"></p>
+      <h2>회원가입</h2>
+      <form id="signup-form">
+        <input type="email" id="signup-email" placeholder="이메일" required />
+        <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required />
+        <button type="submit">회원가입</button>
+      </form>
+      <p id="signup-msg"></p>
 
-        <h2>로그인</h2>
-        <form id="login-form">
-          <input type="email" id="login-email" placeholder="이메일" required />
-          <input type="password" id="login-password" placeholder="비밀번호" required />
-          <button type="submit">로그인</button>
-        </form>
-        <p id="login-msg"></p>
-
-        <h2>Google 로그인</h2>
-        <button id="google-login">Google 계정으로 로그인</button>
-        <p id="google-msg"></p>
-      </div>
-
-      <h2>사용자 관리</h2>
-      <button id="logout-btn">로그아웃</button>
-      <button id="delete-btn">계정 삭제</button>
-
-      <h2>로그인 상태</h2>
-      <p id="status-msg">로그인 상태를 확인 중...</p>
+      <h2>로그인</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="이메일" required />
+        <input type="password" id="login-password" placeholder="비밀번호" required />
+        <button type="submit">로그인</button>
+      </form>
+      <p id="login-msg"></p>
     </section>
 
-    <a id="invite-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">디스코드 바로가기</a>
+    <a id="invite-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">커뮤니티 바로가기</a>
 
-    <section class="features">
+    <section id="features" class="features">
       <h2>주요 기능</h2>
       <ul>
         <li>실시간 알림 & 다양한 소식 & 정보</li>
@@ -76,13 +120,12 @@
 
   <button id="scrollTopBtn">▲ 맨 위로</button>
 
-  <!-- 🔹 Firebase v8 CDN -->
+  <!-- Firebase v8 CDN -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Firebase 초기화
       const firebaseConfig = {
         apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
         authDomain: "lons-dc24d.firebaseapp.com",
@@ -95,18 +138,11 @@
       firebase.initializeApp(firebaseConfig);
       const auth = firebase.auth();
 
-      // DOM 요소
       const signupForm = document.getElementById("signup-form");
       const signupMsg = document.getElementById("signup-msg");
       const loginForm = document.getElementById("login-form");
       const loginMsg = document.getElementById("login-msg");
-      const googleBtn = document.getElementById("google-login");
-      const googleMsg = document.getElementById("google-msg");
-      const logoutBtn = document.getElementById("logout-btn");
-      const deleteBtn = document.getElementById("delete-btn");
-      const statusMsg = document.getElementById("status-msg");
-      const userInfo = document.getElementById("user-info");
-      const formsSection = document.getElementById("forms-section");
+      const loginStatus = document.getElementById("login-status");
 
       // 회원가입
       signupForm.addEventListener("submit", e => {
@@ -122,9 +158,11 @@
 
         auth.createUserWithEmailAndPassword(email, pw)
           .then(() => {
-            signupMsg.innerText = "회원가입 완료! 자동 로그인 됩니다.";
-            signupMsg.className = "";
+            signupMsg.innerText = "";
             loginMsg.innerText = "";
+            loginStatus.innerText = `회원가입 완료! 자동 로그인됨: ${email}`;
+            loginStatus.style.color = "green";
+            document.querySelector("#auth-section").scrollIntoView({ behavior: "smooth" });
           })
           .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
       });
@@ -136,51 +174,17 @@
         const pw = document.getElementById("login-password").value;
 
         auth.signInWithEmailAndPassword(email, pw)
-          .then(() => { loginMsg.innerText = "로그인 성공!"; loginMsg.className = ""; })
+          .then(() => {
+            loginMsg.innerText = "";
+            signupMsg.innerText = "";
+            loginStatus.innerText = `로그인 성공: ${email}`;
+            loginStatus.style.color = "green";
+            document.querySelector("#features").scrollIntoView({ behavior: "smooth" });
+          })
           .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
       });
 
-      // Google 로그인
-      const provider = new firebase.auth.GoogleAuthProvider();
-      googleBtn.addEventListener("click", () => {
-        auth.signInWithPopup(provider)
-          .then(result => {
-            const user = result.user;
-            googleMsg.innerText = `로그인 성공! ${user.displayName || "사용자"} (${user.email})`;
-            googleMsg.className = "";
-          })
-          .catch(err => { googleMsg.innerText = err.message; googleMsg.className = "error"; });
-      });
-
-      // 로그아웃
-      logoutBtn.addEventListener("click", () => {
-        auth.signOut().then(() => { alert("로그아웃 완료!"); });
-      });
-
-      // 계정 삭제
-      deleteBtn.addEventListener("click", () => {
-        const user = auth.currentUser;
-        if(user){
-          user.delete().then(() => { alert("계정 삭제 완료!"); })
-            .catch(err => { alert("계정 삭제 실패: " + err.message); });
-        } else { alert("로그인 상태가 아닙니다."); }
-      });
-
-      // 로그인 상태 감지
-      auth.onAuthStateChanged(user => {
-        if(user){
-          userInfo.style.display = "block";
-          userInfo.innerText = `로그인 중: ${user.displayName || "사용자"} (${user.email})`;
-          formsSection.style.display = "none";
-          statusMsg.innerText = `로그인 상태: ${user.email}`;
-        } else {
-          userInfo.style.display = "none";
-          formsSection.style.display = "block";
-          statusMsg.innerText = "로그아웃 상태";
-        }
-      });
-
-      // 맨 위로 버튼
+      // 스크롤 맨 위 버튼
       const scrollBtn = document.getElementById("scrollTopBtn");
       window.onscroll = () => {
         if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
