@@ -9,13 +9,9 @@
 <body>
   <header>
     <h1>LONS SV Palworld</h1>
-    <nav>
-      <a href="#auth-section">회원가입/로그인</a>
-      <a href="#board-section">게시판</a>
-    </nav>
   </header>
 
-  <!-- 로그인/회원가입 폼 -->
+  <!-- 로그인/회원가입 -->
   <section id="auth-section">
     <h2>회원가입</h2>
     <form id="signup-form">
@@ -34,7 +30,7 @@
     <p id="login-msg" class="error"></p>
   </section>
 
-  <!-- 로그인 성공 후 보여줄 게시판 -->
+  <!-- 게시판 (로그인 후 표시) -->
   <section id="board-section" style="display:none;">
     <h2>회원 전용 게시판</h2>
     <p id="user-email"></p>
@@ -49,9 +45,11 @@
     <div id="posts"></div>
   </section>
 
+  <!-- Firebase v8 CDN -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
   <script src="script.js"></script>
 </body>
 </html>
