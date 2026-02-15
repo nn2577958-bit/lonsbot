@@ -30,7 +30,7 @@
       messagingSenderId: "755692328918",
       appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
     };
-    
+
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
@@ -40,6 +40,7 @@
 
     // 로그인된 사용자 정보 표시
     auth.onAuthStateChanged(user => {
+      console.log(user);  // 로그인된 사용자의 정보 확인
       if (user) {
         userNameElement.textContent = user.email; // 사용자 이메일 표시
       } else {
