@@ -10,22 +10,30 @@
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f7f6;
+      background: linear-gradient(135deg, #6a11cb, #2575fc); /* 그라데이션 배경 */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
 
+    /* 카드 스타일 */
     .card {
-      background: white;
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       padding: 30px;
-      width: 400px;
+      width: 380px;
       text-align: center;
     }
 
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    /* 입력 필드 스타일 */
     input {
       width: 100%;
       padding: 12px;
@@ -33,13 +41,16 @@
       border-radius: 8px;
       border: 1px solid #ddd;
       font-size: 14px;
+      background: #f9f9f9;
       transition: border 0.3s ease;
     }
 
     input:focus {
       border-color: #66a6ff;
+      background: #fff;
     }
 
+    /* 버튼 스타일 */
     button {
       width: 100%;
       padding: 12px;
@@ -55,22 +66,44 @@
       background-color: #5a94e3;
     }
 
+    button:active {
+      background-color: #4c82c0;
+    }
+
+    /* 텍스트 스타일 */
     p {
       color: #666;
       font-size: 14px;
     }
 
+    /* 에러 메시지 */
     .error {
       color: red;
       font-size: 14px;
     }
+
+    /* 회원가입 화면 */
+    .hidden {
+      display: none;
+    }
+    
+    /* 링크 스타일 */
+    a {
+      color: #66a6ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- 로그인 / 회원가입 화면 -->
+  <!-- 로그인 화면 -->
   <div id="authContainer" class="card">
-    <h1 id="authTitle">로그인</h1>
+    <h1>로그인</h1>
     <form id="login-form">
       <input type="email" id="login-email" placeholder="이메일" required />
       <input type="password" id="login-password" placeholder="비밀번호" required />
@@ -81,7 +114,7 @@
   </div>
 
   <!-- 회원가입 화면 -->
-  <div id="signupContainer" class="card" style="display: none;">
+  <div id="signupContainer" class="card hidden">
     <h1>회원가입</h1>
     <form id="signup-form">
       <input type="email" id="signup-email" placeholder="이메일" required />
