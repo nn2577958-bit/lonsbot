@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS PAL 완전판 + 뽑기</title>
+<title>LONS SPA 완전판 + 뽑기 + 당첨코드</title>
 <style>
 body {
   margin:0;
@@ -11,7 +11,7 @@ body {
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  min-height:100vh;
   background:linear-gradient(135deg,#89f7fe,#66a6ff);
 }
 .card, .module9 {
@@ -35,7 +35,12 @@ p{margin-top:10px;font-size:14px;color:#666;}
 a{color:#66a6ff;text-decoration:none;font-weight:500;}
 a:hover{text-decoration:underline;}
 .module-card{background:#f7f9ff;padding:15px;margin:10px 0;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);text-align:left;opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
-.gacha-card{display:inline-block;background:#fffbdd;padding:15px;margin:5px;border-radius:12px;box-shadow:0 5px 10px rgba(0,0,0,0.2);opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
+.gacha-card{display:inline-block;padding:15px;margin:5px;border-radius:12px;box-shadow:0 5px 10px rgba(0,0,0,0.2);opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;font-weight:bold;}
+.gacha-normal{background:#f7f7f7;color:#333;}
+.gacha-rare{background:#cce5ff;color:#0056b3;}
+.gacha-super{background:#d7b3ff;color:#4b0082;}
+.gacha-legend{background:#ffe066;color:#b36b00;}
+.gacha-code{display:block;margin-top:5px;font-size:12px;color:#333;font-weight:normal;}
 @keyframes fadeInUp{to{transform:translateY(0);opacity:1;}}
 </style>
 </head>
@@ -71,34 +76,37 @@ a:hover{text-decoration:underline;}
 </div>
 
 <script>
+// DOM
 const loginBtn=document.getElementById('loginBtn');
 const logoutBtn=document.getElementById('logoutBtn');
 const loginCard=document.getElementById('loginCard');
 const module9=document.getElementById('module9');
 const moduleContent=document.getElementById('moduleContent');
 const welcomeMsg=document.getElementById('welcomeMsg');
-
 const showSignup=document.getElementById('showSignup');
 const backToLogin=document.getElementById('backToLogin');
 const signupCard=document.getElementById('signupCard');
 const signupBtn=document.getElementById('signupBtn');
-
 const gachaBtn=document.getElementById('gachaBtn');
 const gachaResult=document.getElementById('gachaResult');
 
-// 모듈 카드 데이터
+// 데이터
 const moduleData=[
 {title:"공지사항",text:"오늘 시스템 점검이 있습니다."},
 {title:"업무 알림",text:"마감된 보고서를 확인해주세요."},
 {title:"통계",text:"이번 주 방문자 수: 1,234명"},
 {title:"새 메시지",text:"새로운 쪽지가 도착했습니다."}
 ];
-
-// 뽑기 아이템
-const gachaItems=["🌟레어 카드","✨슈퍼 레어","💎전설 카드","🪙코인 100","❤️체력 회복","⚡스킬 업"];
-const GACHA_INTERVAL=10*60*1000; // 10분
+const gachaItems=[
+  {name:"일반 카드",type:"normal"},
+  {name:"레어 카드",type:"rare"},
+  {name:"슈퍼 레어",type:"super"},
+  {name:"전설 카드",type:"legend"}
+];
+const GACHA_INTERVAL=10*60*1000;
 const GACHA_KEY='lastGachaTime';
 
+// SPA 화면
 function showModule9(username){
   loginCard.style.display='none';
   signupCard.style.display='none';
@@ -115,16 +123,15 @@ function showModule9(username){
   });
 }
 
+// 로그인/회원가입
 loginBtn.addEventListener('click',()=>{
   const username=document.getElementById('username').value.trim();
   const password=document.getElementById('password').value.trim();
   if(!username||!password){alert('아이디와 비밀번호를 입력해주세요.');return;}
   showModule9(username);
 });
-
 showSignup.addEventListener('click',(e)=>{e.preventDefault();loginCard.style.display='none';signupCard.style.display='block';signupCard.classList.add('show');});
 backToLogin.addEventListener('click',(e)=>{e.preventDefault();signupCard.style.display='none';loginCard.style.display='block';loginCard.classList.add('show');});
-
 signupBtn.addEventListener('click',()=>{
   const newUser=document.getElementById('newUsername').value.trim();
   const newPass=document.getElementById('newPassword').value.trim();
@@ -135,6 +142,7 @@ signupBtn.addEventListener('click',()=>{
   showModule9(newUser);
 });
 
+// 로그아웃
 logoutBtn.addEventListener('click',()=>{
   module9.style.display='none';
   loginCard.style.display='block';
@@ -144,7 +152,10 @@ logoutBtn.addEventListener('click',()=>{
   gachaResult.innerHTML='';
 });
 
-// 뽑기 버튼 (10분 제한)
+// 뽑기
+function generateCode(){ // 랜덤 8자리 코드
+  return 'LONS-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
+}
 gachaBtn.addEventListener('click',()=>{
   const lastTime=localStorage.getItem(GACHA_KEY);
   const now=Date.now();
@@ -153,12 +164,17 @@ gachaBtn.addEventListener('click',()=>{
     alert(`아직 뽑기 시간이 되지 않았습니다!\n남은 시간: ${Math.floor(remain/60)}분 ${remain%60}초`);
     return;
   }
+  // 확률 설정 예시
+  const rand=Math.random();
+  let item;
+  if(rand<0.05){item=gachaItems[3];}      // 5% 전설
+  else if(rand<0.15){item=gachaItems[2];} // 10% 슈퍼
+  else if(rand<0.35){item=gachaItems[1];} // 20% 레어
+  else{item=gachaItems[0];}               // 65% 일반
 
-  const randIndex=Math.floor(Math.random()*gachaItems.length);
-  const item=gachaItems[randIndex];
   const card=document.createElement('div');
-  card.className='gacha-card';
-  card.innerHTML=item;
+  card.className='gacha-card gacha-'+item.type;
+  card.innerHTML=item.name+'<span class="gacha-code">'+generateCode()+'</span>';
   gachaResult.appendChild(card);
 
   localStorage.setItem(GACHA_KEY, now);
