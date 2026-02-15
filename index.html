@@ -1,222 +1,156 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SPA 팰월드 데모</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Noto Sans KR', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-    }
-
-    .card, .module9 {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      width: 360px;
-      padding: 30px 25px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .card.show, .module9.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    input {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: all 0.3s;
-    }
-
-    input:focus {
-      border-color: #66a6ff;
-      box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
-      outline: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(45deg, #66a6ff, #89f7fe);
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 10px;
-      transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
-    }
-
-    button:hover {
-      transform: scale(1.1) rotate(-2deg);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      background: linear-gradient(45deg, #89f7fe, #66a6ff);
-    }
-
-    button:active {
-      transform: scale(0.95) rotate(0deg);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    p {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    a {
-      color: #66a6ff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .module-card {
-      background: #f7f9ff;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      text-align: left;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.5s forwards;
-    }
-
-    @keyframes fadeInUp {
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LONS SPA 팰월드 + 뽑기</title>
+<style>
+body {
+  margin:0;
+  font-family:'Noto Sans KR',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:linear-gradient(135deg,#89f7fe,#66a6ff);
+}
+.card, .module9 {
+  background:white;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  width:360px;
+  padding:30px 25px;
+  text-align:center;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+}
+.card.show,.module9.show{opacity:1;transform:translateY(0);}
+input{width:100%;padding:12px 15px;margin-bottom:15px;border:1px solid #ddd;border-radius:8px;font-size:14px;transition:all 0.3s;}
+input:focus{border-color:#66a6ff;box-shadow:0 0 5px rgba(102,166,255,0.5);outline:none;}
+button{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(45deg,#66a6ff,#89f7fe);color:white;font-size:16px;cursor:pointer;margin-bottom:10px;transition:transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;}
+button:hover{transform:scale(1.1) rotate(-2deg);box-shadow:0 8px 20px rgba(0,0,0,0.3);background:linear-gradient(45deg,#89f7fe,#66a6ff);}
+button:active{transform:scale(0.95) rotate(0deg);box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+p{margin-top:10px;font-size:14px;color:#666;}
+a{color:#66a6ff;text-decoration:none;font-weight:500;}
+a:hover{text-decoration:underline;}
+.module-card{background:#f7f9ff;padding:15px;margin:10px 0;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);text-align:left;opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
+@keyframes fadeInUp{to{transform:translateY(0);opacity:1;}}
+#gachaResult{margin-top:15px;text-align:center;}
+.gacha-card{display:inline-block;background:#fffbdd;padding:15px;margin:5px;border-radius:12px;box-shadow:0 5px 10px rgba(0,0,0,0.2);opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
+</style>
 </head>
 <body>
 
-  <!-- 로그인 화면 -->
-  <div class="card show" id="loginCard">
-    <h1>로그인</h1>
-    <input type="text" id="username" placeholder="아이디">
-    <input type="password" id="password" placeholder="비밀번호">
-    <button id="loginBtn">로그인</button>
-    <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
-  </div>
+<!-- 로그인 화면 -->
+<div class="card show" id="loginCard">
+<h1>로그인</h1>
+<input type="text" id="username" placeholder="아이디">
+<input type="password" id="password" placeholder="비밀번호">
+<button id="loginBtn">로그인</button>
+<p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
+</div>
 
-  <!-- 회원가입 화면 -->
-  <div class="card" id="signupCard" style="display:none;">
-    <h1>회원가입</h1>
-    <input type="text" id="newUsername" placeholder="아이디">
-    <input type="password" id="newPassword" placeholder="비밀번호">
-    <input type="password" id="confirmPassword" placeholder="비밀번호 확인">
-    <button id="signupBtn">회원가입</button>
-    <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
-  </div>
+<!-- 회원가입 화면 -->
+<div class="card" id="signupCard" style="display:none;">
+<h1>회원가입</h1>
+<input type="text" id="newUsername" placeholder="아이디">
+<input type="password" id="newPassword" placeholder="비밀번호">
+<input type="password" id="confirmPassword" placeholder="비밀번호 확인">
+<button id="signupBtn">회원가입</button>
+<p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
+</div>
 
-  <!-- 모듈 9 화면 -->
-  <div class="module9" id="module9">
-    <h2 id="welcomeMsg">모듈 9</h2>
-    <p id="introMsg">로그인 성공! 아래는 모듈 9의 주요 내용입니다.</p>
-    <div id="moduleContent"></div>
-    <button id="logoutBtn">로그아웃</button>
-  </div>
+<!-- 모듈 9 화면 -->
+<div class="module9" id="module9">
+<h2 id="welcomeMsg">모듈 9</h2>
+<p id="introMsg">로그인 성공! 아래는 모듈 9의 주요 내용입니다.</p>
+<div id="moduleContent"></div>
+<button id="gachaBtn">🎲 뽑기</button>
+<div id="gachaResult"></div>
+<button id="logoutBtn">로그아웃</button>
+</div>
 
-  <script>
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginCard = document.getElementById('loginCard');
-    const module9 = document.getElementById('module9');
-    const moduleContent = document.getElementById('moduleContent');
-    const welcomeMsg = document.getElementById('welcomeMsg');
+<script>
+const loginBtn=document.getElementById('loginBtn');
+const logoutBtn=document.getElementById('logoutBtn');
+const loginCard=document.getElementById('loginCard');
+const module9=document.getElementById('module9');
+const moduleContent=document.getElementById('moduleContent');
+const welcomeMsg=document.getElementById('welcomeMsg');
 
-    const showSignup = document.getElementById('showSignup');
-    const backToLogin = document.getElementById('backToLogin');
-    const signupCard = document.getElementById('signupCard');
-    const signupBtn = document.getElementById('signupBtn');
+const showSignup=document.getElementById('showSignup');
+const backToLogin=document.getElementById('backToLogin');
+const signupCard=document.getElementById('signupCard');
+const signupBtn=document.getElementById('signupBtn');
 
-    // 모듈 데이터
-    const moduleData = [
-      { title: "공지사항", text: "오늘 시스템 점검이 있습니다." },
-      { title: "업무 알림", text: "마감된 보고서를 확인해주세요." },
-      { title: "통계", text: "이번 주 방문자 수: 1,234명" },
-      { title: "새 메시지", text: "새로운 쪽지가 도착했습니다." }
-    ];
+const gachaBtn=document.getElementById('gachaBtn');
+const gachaResult=document.getElementById('gachaResult');
 
-    function showModule9(username){
-      loginCard.style.display = 'none';
-      signupCard.style.display = 'none';
-      module9.style.display = 'block';
-      module9.classList.add('show');
-      welcomeMsg.textContent = `${username}님, 모듈 9에 오신 것을 환영합니다!`;
+const moduleData=[
+{title:"공지사항",text:"오늘 시스템 점검이 있습니다."},
+{title:"업무 알림",text:"마감된 보고서를 확인해주세요."},
+{title:"통계",text:"이번 주 방문자 수: 1,234명"},
+{title:"새 메시지",text:"새로운 쪽지가 도착했습니다."}
+];
 
-      moduleContent.innerHTML = '';
-      moduleData.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        card.style.animationDelay = `${index * 0.1}s`; // 딜레이
-        card.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
-        moduleContent.appendChild(card);
-      });
-    }
+const gachaItems=["🌟레어 카드","✨슈퍼 레어","💎전설 카드","🪙코인 100","❤️체력 회복","⚡스킬 업"];
 
-    loginBtn.addEventListener('click', () => {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      if(!username || !password) { alert('아이디와 비밀번호를 입력해주세요.'); return; }
-      showModule9(username);
-    });
+function showModule9(username){
+  loginCard.style.display='none';
+  signupCard.style.display='none';
+  module9.style.display='block';
+  module9.classList.add('show');
+  welcomeMsg.textContent=`${username}님, 모듈 9에 오신 것을 환영합니다!`;
+  moduleContent.innerHTML='';
+  moduleData.forEach((item,index)=>{
+    const card=document.createElement('div');
+    card.className='module-card';
+    card.style.animationDelay=`${index*0.1}s`;
+    card.innerHTML=`<h3>${item.title}</h3><p>${item.text}</p>`;
+    moduleContent.appendChild(card);
+  });
+}
 
-    showSignup.addEventListener('click', (e) => {
-      e.preventDefault();
-      loginCard.style.display = 'none';
-      signupCard.style.display = 'block';
-      signupCard.classList.add('show');
-    });
+loginBtn.addEventListener('click',()=>{
+  const username=document.getElementById('username').value.trim();
+  const password=document.getElementById('password').value.trim();
+  if(!username||!password){alert('아이디와 비밀번호를 입력해주세요.');return;}
+  showModule9(username);
+});
 
-    backToLogin.addEventListener('click', (e) => {
-      e.preventDefault();
-      signupCard.style.display = 'none';
-      loginCard.style.display = 'block';
-      loginCard.classList.add('show');
-    });
+showSignup.addEventListener('click',(e)=>{e.preventDefault();loginCard.style.display='none';signupCard.style.display='block';signupCard.classList.add('show');});
+backToLogin.addEventListener('click',(e)=>{e.preventDefault();signupCard.style.display='none';loginCard.style.display='block';loginCard.classList.add('show');});
 
-    signupBtn.addEventListener('click', () => {
-      const newUser = document.getElementById('newUsername').value.trim();
-      const newPass = document.getElementById('newPassword').value.trim();
-      const confirmPass = document.getElementById('confirmPassword').value.trim();
+signupBtn.addEventListener('click',()=>{
+  const newUser=document.getElementById('newUsername').value.trim();
+  const newPass=document.getElementById('newPassword').value.trim();
+  const confirmPass=document.getElementById('confirmPassword').value.trim();
+  if(!newUser||!newPass||!confirmPass){alert('모든 항목을 입력해주세요.');return;}
+  if(newPass!==confirmPass){alert('비밀번호가 일치하지 않습니다.');return;}
+  alert(`${newUser}님, 회원가입 완료! 자동 로그인됩니다.`);
+  showModule9(newUser);
+});
 
-      if(!newUser || !newPass || !confirmPass){ alert('모든 항목을 입력해주세요.'); return; }
-      if(newPass !== confirmPass){ alert('비밀번호가 일치하지 않습니다.'); return; }
+logoutBtn.addEventListener('click',()=>{
+  module9.style.display='none';
+  loginCard.style.display='block';
+  document.getElementById('username').value='';
+  document.getElementById('password').value='';
+  moduleContent.innerHTML='';
+  gachaResult.innerHTML='';
+});
 
-      alert(`${newUser}님, 회원가입 완료! 자동 로그인됩니다.`);
-      showModule9(newUser);
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      module9.style.display = 'none';
-      loginCard.style.display = 'block';
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-      moduleContent.innerHTML = '';
-    });
-  </script>
+// 뽑기 버튼 클릭
+gachaBtn.addEventListener('click',()=>{
+  const randIndex=Math.floor(Math.random()*gachaItems.length);
+  const item=gachaItems[randIndex];
+  const card=document.createElement('div');
+  card.className='gacha-card';
+  card.innerHTML=item;
+  gachaResult.appendChild(card);
+});
+</script>
 
 </body>
 </html>
