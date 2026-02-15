@@ -3,23 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 홈</title>
+  <title>LONS SV 게시판</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="home-bg">
-  <div class="home-container">
+<body>
+  <header>
     <h1>LONS SV Palworld</h1>
-    <p>로그인 후 주요 기능과 정보를 확인하세요!</p>
+    <nav>
+      <a href="#auth-section">회원가입/로그인</a>
+      <a href="#board-section">게시판</a>
+    </nav>
+  </header>
 
-    <a id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">
-      디스코드 바로가기
-    </a>
+  <!-- 로그인/회원가입 폼 -->
+  <section id="auth-section">
+    <h2>회원가입</h2>
+    <form id="signup-form">
+      <input type="email" id="signup-email" placeholder="이메일" required />
+      <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required />
+      <button type="submit">회원가입</button>
+    </form>
+    <p id="signup-msg" class="error"></p>
 
+    <h2>로그인</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="이메일" required />
+      <input type="password" id="login-password" placeholder="비밀번호" required />
+      <button type="submit">로그인</button>
+    </form>
+    <p id="login-msg" class="error"></p>
+  </section>
+
+  <!-- 로그인 성공 후 보여줄 게시판 -->
+  <section id="board-section" style="display:none;">
+    <h2>회원 전용 게시판</h2>
+    <p id="user-email"></p>
     <button id="logout-btn">로그아웃</button>
 
-    <footer>© 2026 LONS SV ONLINE</footer>
-  </div>
+    <h3>게시글 작성</h3>
+    <input type="text" id="post-title" placeholder="제목" />
+    <textarea id="post-content" placeholder="내용" rows="4"></textarea>
+    <button id="submit-post">작성</button>
 
-  <script type="module" src="script.js"></script>
+    <h3>게시글 목록</h3>
+    <div id="posts"></div>
+  </section>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
