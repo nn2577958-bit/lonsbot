@@ -9,7 +9,6 @@ body, html {
   background-color: #cce7ff;
 }
 
-/* 배경 아기 캐릭터 + 드래곤 의상 */
 .background {
   position: fixed;
   top: 0; left: 0;
@@ -22,7 +21,6 @@ body, html {
   filter: brightness(0.85);
 }
 
-/* 헤더 */
 header {
   text-align: center;
   padding: 20px;
@@ -30,7 +28,6 @@ header {
   text-shadow: 1px 1px 2px #000;
 }
 
-/* 카드 */
 .card {
   background: rgba(255,255,255,0.95);
   width: 380px;
@@ -44,7 +41,6 @@ header {
   align-items: center;
 }
 
-/* input, button */
 .card input {
   width: 100%;
   padding: 10px;
@@ -70,14 +66,12 @@ header {
   background-color: #357ABD;
 }
 
-/* 오류 메시지 */
 .error {
   color: red;
   font-size: 13px;
   margin-bottom: 10px;
 }
 
-/* 버튼 그룹 (로그아웃 + 디스코드) */
 .button-group {
   display: flex;
   justify-content: center;
@@ -106,7 +100,6 @@ header {
   background-color: #357ABD;
 }
 
-/* footer */
 footer {
   margin-top: auto;
   padding: 10px;
