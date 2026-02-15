@@ -3,38 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 공식 홈페이지</title>
+  <title>LONS SV 회원가입/로그인</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background:#f7f7f7;}
-    header { text-align:center; margin-bottom:20px;}
-    section { background:#fff; max-width:400px; margin:20px auto; padding:20px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-    input, button { width:100%; margin-bottom:10px; padding:10px; border-radius:5px; border:1px solid #ccc;}
-    button { background:#333; color:#fff; border:none; cursor:pointer;}
+    body { font-family: sans-serif; background:#f7f7f7; padding:20px; }
+    header { text-align:center; margin-bottom:15px; }
+    h1 { margin-bottom:5px; font-size:1.6em; }
+    section { background:#fff; max-width:350px; margin:15px auto; padding:15px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
+    input, button { width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:0.9em; }
+    button { background:#333; color:#fff; border:none; cursor:pointer; font-size:0.9em; }
     button:hover { background:#555;}
-    .error { color:red; text-align:center;}
-    #features-section { display:none; max-width:500px; margin:20px auto; padding:20px; border-radius:10px; background:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-    #user-info { display:none; margin-bottom:10px; padding:10px; border-radius:5px; background:#f1f1f1;}
+    .error { color:red; text-align:center; margin-bottom:8px; font-size:0.85em; }
+    #user-info { text-align:center; margin-bottom:8px; font-size:0.9em; }
+    #features-section { display:none; max-width:400px; margin:15px auto; padding:15px; background:#fff; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
   </style>
 </head>
 <body>
   <header>
     <h1>LONS SV Palworld</h1>
-    <p>회원가입/로그인 후 주요 기능을 확인하세요!</p>
+    <p style="font-size:0.9em;">회원가입 또는 로그인 후 주요 기능 확인</p>
   </header>
 
   <section id="auth-section">
-    <div id="user-info"></div>
+    <div id="user-info" style="display:none;"></div>
 
     <div id="forms-section">
-      <h2>회원가입</h2>
+      <h2 style="font-size:1.2em;">회원가입</h2>
       <form id="signup-form">
         <input type="email" id="signup-email" placeholder="이메일" required>
-        <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required>
+        <input type="password" id="signup-password" placeholder="비밀번호" required>
         <button type="submit">회원가입</button>
       </form>
       <p id="signup-msg" class="error"></p>
 
-      <h2>로그인</h2>
+      <h2 style="font-size:1.2em;">로그인</h2>
       <form id="login-form">
         <input type="email" id="login-email" placeholder="이메일" required>
         <input type="password" id="login-password" placeholder="비밀번호" required>
@@ -42,24 +43,25 @@
       </form>
       <p id="login-msg" class="error"></p>
 
-      <h2>Google 로그인</h2>
+      <h2 style="font-size:1.2em;">Google 로그인</h2>
       <button id="google-login">Google 계정으로 로그인</button>
       <p id="google-msg" class="error"></p>
     </div>
 
-    <button id="logout-btn" style="margin-top:10px;">로그아웃</button>
-    <button id="delete-btn">계정 삭제</button>
-    <p id="status-msg"></p>
+    <div style="display:flex; justify-content:space-between;">
+      <button id="logout-btn" style="width:48%;">로그아웃</button>
+      <button id="delete-btn" style="width:48%;">계정 삭제</button>
+    </div>
   </section>
 
   <section id="features-section">
-    <h2>주요 기능</h2>
-    <ul>
+    <h2 style="font-size:1.2em;">주요 기능</h2>
+    <ul style="padding-left:20px; font-size:0.9em;">
       <li>실시간 알림 & 다양한 소식 & 정보</li>
-      <li>공지사항 꿀팁 정보 확인 가능</li>
+      <li>공지사항 및 꿀팁 확인 가능</li>
       <li>02월 20일 새로운 하드코어 OPEN</li>
     </ul>
-    <p>로그인 후 바로 접근 가능한 회원 전용 콘텐츠입니다!</p>
+    <a href="https://discord.gg/tnMXbQ65Hk" target="_blank" style="font-size:0.9em;">디스코드 바로가기</a>
   </section>
 
   <script type="module" src="script.js"></script>
