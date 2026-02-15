@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS SPA 팰월드 + 뽑기</title>
+<title>LONS PAL 완전판 + 뽑기</title>
 <style>
 body {
   margin:0;
@@ -35,9 +35,8 @@ p{margin-top:10px;font-size:14px;color:#666;}
 a{color:#66a6ff;text-decoration:none;font-weight:500;}
 a:hover{text-decoration:underline;}
 .module-card{background:#f7f9ff;padding:15px;margin:10px 0;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);text-align:left;opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
-@keyframes fadeInUp{to{transform:translateY(0);opacity:1;}}
-#gachaResult{margin-top:15px;text-align:center;}
 .gacha-card{display:inline-block;background:#fffbdd;padding:15px;margin:5px;border-radius:12px;box-shadow:0 5px 10px rgba(0,0,0,0.2);opacity:0;transform:translateY(20px);animation:fadeInUp 0.5s forwards;}
+@keyframes fadeInUp{to{transform:translateY(0);opacity:1;}}
 </style>
 </head>
 <body>
@@ -87,6 +86,7 @@ const signupBtn=document.getElementById('signupBtn');
 const gachaBtn=document.getElementById('gachaBtn');
 const gachaResult=document.getElementById('gachaResult');
 
+// 모듈 카드 데이터
 const moduleData=[
 {title:"공지사항",text:"오늘 시스템 점검이 있습니다."},
 {title:"업무 알림",text:"마감된 보고서를 확인해주세요."},
@@ -94,7 +94,10 @@ const moduleData=[
 {title:"새 메시지",text:"새로운 쪽지가 도착했습니다."}
 ];
 
+// 뽑기 아이템
 const gachaItems=["🌟레어 카드","✨슈퍼 레어","💎전설 카드","🪙코인 100","❤️체력 회복","⚡스킬 업"];
+const GACHA_INTERVAL=10*60*1000; // 10분
+const GACHA_KEY='lastGachaTime';
 
 function showModule9(username){
   loginCard.style.display='none';
@@ -141,14 +144,24 @@ logoutBtn.addEventListener('click',()=>{
   gachaResult.innerHTML='';
 });
 
-// 뽑기 버튼 클릭
+// 뽑기 버튼 (10분 제한)
 gachaBtn.addEventListener('click',()=>{
+  const lastTime=localStorage.getItem(GACHA_KEY);
+  const now=Date.now();
+  if(lastTime && now - lastTime < GACHA_INTERVAL){
+    const remain=Math.ceil((GACHA_INTERVAL-(now-lastTime))/1000);
+    alert(`아직 뽑기 시간이 되지 않았습니다!\n남은 시간: ${Math.floor(remain/60)}분 ${remain%60}초`);
+    return;
+  }
+
   const randIndex=Math.floor(Math.random()*gachaItems.length);
   const item=gachaItems[randIndex];
   const card=document.createElement('div');
   card.className='gacha-card';
   card.innerHTML=item;
   gachaResult.appendChild(card);
+
+  localStorage.setItem(GACHA_KEY, now);
 });
 </script>
 
