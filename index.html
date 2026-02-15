@@ -3,49 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로그인</title>
+  <title>로그인 | LONS</title>
   <style>
     body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
       background: linear-gradient(to right, #89f7fe, #66a6ff);
-      font-family: 'Noto Sans KR', sans-serif;
     }
 
-    .login-card {
+    .card {
       background: white;
       padding: 40px 30px;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       width: 360px;
       text-align: center;
+      transition: opacity 0.3s ease;
     }
 
-    .login-card h1 {
-      margin-bottom: 25px;
-      color: #333;
-    }
-
-    .login-card input {
+    input {
       width: 100%;
       padding: 12px 15px;
       margin-bottom: 15px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      transition: all 0.3s;
       font-size: 14px;
+      transition: all 0.3s;
     }
 
-    .login-card input:focus {
+    input:focus {
       border-color: #66a6ff;
       box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
       outline: none;
     }
 
-    .login-card button {
+    button {
       width: 100%;
       padding: 12px;
       border: none;
@@ -57,52 +53,92 @@
       transition: transform 0.2s, background 0.3s;
     }
 
-    .login-card button:hover {
+    button:hover {
       transform: scale(1.05);
       background: #89f7fe;
     }
 
-    .login-card p {
+    p {
       margin-top: 15px;
       font-size: 14px;
       color: #666;
     }
 
-    .login-card a {
+    a {
       color: #66a6ff;
       text-decoration: none;
       font-weight: 500;
     }
 
-    .login-card a:hover {
+    a:hover {
       text-decoration: underline;
+    }
+
+    /* 모듈 화면 스타일 */
+    .module9 {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 360px;
+    }
+
+    .module9 h2 {
+      color: #333;
+    }
+
+    .module9 button {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="login-card">
+
+  <!-- 로그인 화면 -->
+  <div class="card" id="loginCard">
     <h1>로그인</h1>
     <input type="text" id="username" placeholder="아이디">
     <input type="password" id="password" placeholder="비밀번호">
     <button id="loginBtn">로그인</button>
-    <p>회원이 아니신가요? <a href="signup.html">회원가입</a></p>
+    <p>회원이 아니신가요? <a href="#">회원가입</a></p>
+  </div>
+
+  <!-- 모듈 9 화면 -->
+  <div class="module9" id="module9">
+    <h2>모듈 9 화면</h2>
+    <p>로그인 성공! 여기가 모듈 9 화면입니다.</p>
+    <button id="logoutBtn">로그아웃</button>
   </div>
 
   <script>
-    // 로그인 버튼 클릭 이벤트
-    document.getElementById('loginBtn').addEventListener('click', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginCard = document.getElementById('loginCard');
+    const module9 = document.getElementById('module9');
+
+    loginBtn.addEventListener('click', () => {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
 
-      // 간단한 입력 체크
-      if(username === '' || password === '') {
+      if(!username || !password) {
         alert('아이디와 비밀번호를 입력해주세요.');
         return;
       }
 
-      // 실제 로그인 처리 없이 바로 모듈 9 페이지로 이동
-      window.location.href = 'module9.html'; // 모듈 9 페이지 경로
+      // 로그인 성공 시 화면 전환
+      loginCard.style.display = 'none';
+      module9.style.display = 'block';
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      module9.style.display = 'none';
+      loginCard.style.display = 'block';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
     });
   </script>
+
 </body>
 </html>
