@@ -1,9 +1,53 @@
-body { font-family: sans-serif; background:#f7f7f7; padding:20px; }
-header { background:#333; color:#fff; padding:10px; text-align:center; }
-section { background:#fff; max-width:700px; margin:20px auto; padding:20px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-input, textarea, button { width:100%; margin-bottom:10px; padding:10px; border-radius:5px; border:1px solid #ccc;}
-button { background:#333; color:#fff; border:none; cursor:pointer;}
-button:hover { background:#555;}
-.error { color:red;}
-.post { border-bottom:1px solid #ddd; padding:10px 0;}
-.post:last-child { border:none;}
+/* 공통 스타일 */
+body {
+  font-family: sans-serif;
+  background: #f7f7f7;
+  padding: 20px;
+  margin: 0;
+}
+
+header {
+  background: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+/* 섹션 스타일 */
+section {
+  background: #fff;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 입력 필드 & 버튼 */
+input, textarea, button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #555;
+}
+
+/* 오류 메시지 */
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
