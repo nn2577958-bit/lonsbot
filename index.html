@@ -1,227 +1,66 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS SPA 로그인/회원가입</title>
-<style>
-/* 전체 배경 */
-body {
-  margin: 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #89f7fe, #66a6ff);
-}
-
-/* 카드 스타일 */
-.card, .module8 {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  width: 360px;
-  padding: 30px 25px;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.card.show, .module8.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-input {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-input:focus {
-  border-color: #66a6ff;
-  box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
-  outline: none;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(45deg, #66a6ff, #89f7fe);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
-}
-
-button:hover {
-  transform: scale(1.1) rotate(-2deg);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(45deg, #89f7fe, #66a6ff);
-}
-
-button:active {
-  transform: scale(0.95) rotate(0deg);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-p {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #666;
-}
-
-a {
-  color: #66a6ff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.logo {
-  width: 150px;
-  margin-bottom: 30px;
-}
-
-@keyframes fadeInUp {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LONS SV Palworld</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="background"></div>
 
-<!-- 로그인 화면 -->
-<div class="card show" id="loginCard">
-  <img class="logo" src="https://via.placeholder.com/150x50?text=LONS+Logo" alt="LONS 로고">
-  <h1>로그인</h1>
-  <input type="text" id="username" placeholder="아이디">
-  <input type="password" id="password" placeholder="비밀번호">
-  <button id="loginBtn">로그인</button>
-  <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
-</div>
+  <header>
+    <h1>LONS SV Palworld</h1>
+    <p>오늘도 찾아 와주셔서 감사 합니다!</p>
+  </header>
 
-<!-- 회원가입 화면 -->
-<div class="card" id="signupCard" style="display:none;">
-  <img class="logo" src="https://via.placeholder.com/150x50?text=LONS+Logo" alt="LONS 로고">
-  <h1>회원가입</h1>
-  <input type="text" id="newUsername" placeholder="아이디">
-  <input type="password" id="newPassword" placeholder="비밀번호">
-  <input type="password" id="confirmPassword" placeholder="비밀번호 확인">
-  <button id="signupBtn">회원가입</button>
-  <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
-</div>
+  <main>
+    <div class="card" id="auth-card">
+      <h2>계정 로그인 / 회원가입</h2>
 
-<!-- 모듈 8 화면 -->
-<div class="module8" id="module8" style="display:none;">
-  <h2 id="welcomeMsg">모듈 8</h2>
-  <p id="introMsg">로그인 성공! 아래는 모듈 8의 주요 내용입니다.</p>
-  <div id="moduleContent"></div>
-  <button id="logoutBtn">로그아웃</button>
-</div>
+      <form id="signup-form">
+        <input type="email" id="signup-email" placeholder="이메일" required />
+        <input type="password" id="signup-password" placeholder="비밀번호 (6자 이상)" required />
+        <button type="submit">회원가입</button>
+      </form>
+      <p id="signup-msg" class="error"></p>
 
-<script>
-// 로그인 / 회원가입 화면 전환
-const loginCard = document.getElementById('loginCard');
-const signupCard = document.getElementById('signupCard');
-const showSignup = document.getElementById('showSignup');
-const backToLogin = document.getElementById('backToLogin');
-const module8 = document.getElementById('module8');
+      <hr>
 
-// 회원가입 화면으로 전환
-showSignup.addEventListener('click', (e) => {
-  e.preventDefault();
-  loginCard.style.display = 'none';
-  signupCard.style.display = 'block';
-  signupCard.classList.add('show');
-});
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="이메일" required />
+        <input type="password" id="login-password" placeholder="비밀번호" required />
+        <button type="submit">로그인</button>
+      </form>
+      <p id="login-msg" class="error"></p>
 
-// 로그인 화면으로 전환
-backToLogin.addEventListener('click', (e) => {
-  e.preventDefault();
-  signupCard.style.display = 'none';
-  loginCard.style.display = 'block';
-  loginCard.classList.add('show');
-});
+      <hr>
 
-// 로그인 버튼 클릭 시 동작
-const loginBtn = document.getElementById('loginBtn');
-loginBtn.addEventListener('click', () => {
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if (!username || !password) {
-    alert('아이디와 비밀번호를 입력해주세요.');
-    return;
-  }
+      <button id="google-login">Google 계정으로 로그인</button>
+      <p id="google-msg" class="error"></p>
+    </div>
 
-  // 로그인 성공 후 모듈 8 화면으로 넘어가기
-  alert(`${username}님, 로그인 성공!`);
-  loginCard.style.display = 'none';
-  signupCard.style.display = 'none';
-  module8.style.display = 'block';
-  module8.classList.add('show');
+    <div class="card" id="main-card" style="display:none;">
+      <div class="button-group">
+        <button class="logout-btn" id="logout-btn">로그아웃</button>
+        <a id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank" class="btn">디스코드 바로가기</a>
+      </div>
 
-  // 모듈 8 콘텐츠 추가
-  const moduleContent = document.getElementById('moduleContent');
-  const welcomeMsg = document.getElementById('welcomeMsg');
-  welcomeMsg.textContent = `${username}님, 모듈 8에 오신 것을 환영합니다!`;
+      <h2 style="text-align:center;">주요 기능</h2>
+      <ul style="text-align:center;">
+        <li>실시간 알림 & 다양한 소식 & 정보</li>
+        <li>공지사항 & 꿀팁 정보</li>
+        <li>02월 15일 [ 1 SV ] OPEN</li>
+        <li>02월 20일 새로운 하드코어 OPEN</li>
+        <li>즐거운 명절 보내시기 바랍니다</li>
+      </ul>
+    </div>
+  </main>
 
-  const moduleData = [
-    { title: "공지사항", text: "오늘 시스템 점검이 있습니다." },
-    { title: "업무 알림", text: "마감된 보고서를 확인해주세요." },
-    { title: "통계", text: "이번 주 방문자 수: 1,234명" },
-    { title: "새 메시지", text: "새로운 쪽지가 도착했습니다." }
-  ];
+  <footer>
+    <p style="text-align:center;">© 2026 LONS SV ONLINE</p>
+  </footer>
 
-  moduleData.forEach((item) => {
-    const card = document.createElement('div');
-    card.className = 'module-card';
-    card.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
-    moduleContent.appendChild(card);
-  });
-});
-
-// 회원가입 버튼 클릭 시 동작
-const signupBtn = document.getElementById('signupBtn');
-signupBtn.addEventListener('click', () => {
-  const newUsername = document.getElementById('newUsername').value.trim();
-  const newPassword = document.getElementById('newPassword').value.trim();
-  const confirmPassword = document.getElementById('confirmPassword').value.trim();
-  if (!newUsername || !newPassword || !confirmPassword) {
-    alert('모든 항목을 입력해주세요.');
-    return;
-  }
-  if (newPassword !== confirmPassword) {
-    alert('비밀번호가 일치하지 않습니다.');
-    return;
-  }
-  alert(`${newUsername}님, 회원가입 완료!`);
-});
-
-// 로그아웃 버튼 클릭 시 동작
-const logoutBtn = document.getElementById('logoutBtn');
-logoutBtn.addEventListener('click', () => {
-  // 로그인 화면으로 돌아가기
-  module8.style.display = 'none';
-  loginCard.style.display = 'block';
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-});
-</script>
-
+  <script type="module" src="script.js"></script>
 </body>
 </html>
