@@ -1,51 +1,253 @@
-/* 공통 폰트 */
-body, input, button, p { font-family: 'Noto Sans KR', sans-serif; }
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 / 회원가입</title>
+  <style>
+    /* 공통 폰트 */
+    body, input, button, p {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
 
-/* 로그인/회원가입 화면 */
-.login-container, .home-container {
-  max-width: 400px;
-  margin: 50px auto;
-  background: rgba(255,255,255,0.95);
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
+    /* 배경 그라데이션 */
+    body {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
 
-.login-container h1, .home-container h1 { margin-bottom: 10px; }
-.login-container p, .home-container p { margin-bottom: 20px; }
+    /* 로그인/회원가입 화면 */
+    .login-container, .home-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.6s forwards;
+    }
 
-/* 입력/버튼 */
-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
-button { width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: #fff; cursor: pointer; }
-button:hover { background: #555; }
-.error { color: red; margin-bottom: 10px; }
+    .login-container h1, .home-container h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
 
-/* 홈 화면 배경 + 그라데이션 */
-body.home-bg {
-  background: linear-gradient(to bottom right, #6a11cb, #2575fc);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .login-container p, .home-container p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #555;
+    }
 
-/* 디스코드 버튼 */
-#discord-btn {
-  display: inline-block;
-  padding: 12px 20px;
-  margin: 20px 0;
-  color: #fff;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #7289DA, #99AAB5);
-  transition: transform 0.2s;
-}
-#discord-btn:hover { transform: scale(1.05); }
+    /* 로그인/회원가입 입력 필드 */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      background: #f9f9f9;
+      transition: all 0.3s ease;
+    }
 
-/* 로그아웃 버튼 */
-#logout-btn { margin-top: 10px; }
+    input:focus {
+      border-color: #66a6ff;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
+      outline: none;
+    }
 
-/* footer */
-footer { margin-top: 30px; font-size: 12px; color: #fff; }
+    /* 버튼 스타일 */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #333;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: #555;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    /* 오류 메시지 */
+    .error {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    /* 홈 화면 배경 + 그라데이션 */
+    .home-bg {
+      background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    /* 디스코드 버튼 */
+    #discord-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 20px 0;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #7289DA, #99AAB5);
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    #discord-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #99AAB5, #7289DA);
+    }
+
+    /* 로그아웃 버튼 */
+    #logout-btn {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #ff5733;
+      color: #fff;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #logout-btn:hover {
+      background-color: #e04e2a;
+    }
+
+    /* 애니메이션 */
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* footer */
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #fff;
+    }
+
+  </style>
+</head>
+<body class="home-bg">
+
+  <!-- 홈 화면 -->
+  <div class="home-container show" id="homeCard">
+    <h1>환영합니다!</h1>
+    <p>여기에서 로그인하고 다양한 서비스를 이용해보세요. 회원가입을 통해 새로운 계정을 만들 수 있습니다.</p>
+    <button id="goToLogin">로그인 화면으로</button>
+    <button id="goToSignup">회원가입 화면으로</button>
+    <a href="https://discord.com" id="discord-btn" target="_blank">디스코드 서버로</a>
+  </div>
+
+  <!-- 로그인 화면 -->
+  <div class="login-container" id="loginCard" style="display:none;">
+    <h1>로그인</h1>
+    <input type="text" id="username" placeholder="아이디" />
+    <input type="password" id="password" placeholder="비밀번호" />
+    <button id="loginBtn">로그인</button>
+    <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
+  </div>
+
+  <!-- 회원가입 화면 -->
+  <div class="login-container" id="signupCard" style="display:none;">
+    <h1>회원가입</h1>
+    <input type="text" id="newUsername" placeholder="아이디" />
+    <input type="password" id="newPassword" placeholder="비밀번호" />
+    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" />
+    <button id="signupBtn">회원가입</button>
+    <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeCard = document.getElementById('homeCard');
+      const loginCard = document.getElementById('loginCard');
+      const signupCard = document.getElementById('signupCard');
+      const goToLogin = document.getElementById('goToLogin');
+      const goToSignup = document.getElementById('goToSignup');
+      const showSignup = document.getElementById('showSignup');
+      const backToLogin = document.getElementById('backToLogin');
+      const loginBtn = document.getElementById('loginBtn');
+      const signupBtn = document.getElementById('signupBtn');
+
+      // 홈 화면 -> 로그인 화면 이동
+      goToLogin.addEventListener('click', () => {
+        homeCard.style.display = 'none';
+        loginCard.style.display = 'block';
+        loginCard.classList.add('show');
+      });
+
+      // 홈 화면 -> 회원가입 화면 이동
+      goToSignup.addEventListener('click', () => {
+        homeCard.style.display = 'none';
+        signupCard.style.display = 'block';
+        signupCard.classList.add('show');
+      });
+
+      // 로그인 버튼 클릭
+      loginBtn.addEventListener('click', () => {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        if (!username || !password) {
+          alert('아이디와 비밀번호를 입력해주세요.');
+          return;
+        }
+        alert('로그인 성공!');
+        // 로그인 후 처리
+      });
+
+      // 회원가입 화면으로 이동
+      showSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginCard.style.display = 'none';
+        signupCard.style.display = 'block';
+      });
+
+      // 로그인 화면으로 돌아가기
+      backToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        signupCard.style.display = 'none';
+        loginCard.style.display = 'block';
+      });
+
+      // 회원가입 버튼 클릭
+      signupBtn.addEventListener('click', () => {
+        const newUser = document.getElementById('newUsername').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        const confirmPass = document.getElementById('confirmPassword').value.trim();
+        if (!newUser || !newPass || !confirmPass) {
+          alert('모든 항
