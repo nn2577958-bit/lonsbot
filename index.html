@@ -5,211 +5,249 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인 / 회원가입</title>
   <style>
-    /* 기본 스타일 */
-    body {
+    /* 공통 폰트 */
+    body, input, button, p {
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #6a11cb, #2575fc); /* 그라데이션 배경 */
+    }
+
+    /* 배경 그라데이션 */
+    body {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      flex-direction: column;
     }
 
-    /* 카드 스타일 */
-    .card {
-      background: rgba(255, 255, 255, 0.9);
+    /* 로그인/회원가입 화면 */
+    .login-container, .home-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      width: 380px;
       text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.6s forwards;
     }
 
-    h1 {
+    .login-container h1, .home-container h1 {
       margin-bottom: 20px;
       font-size: 24px;
       color: #333;
     }
 
-    /* 입력 필드 스타일 */
+    .login-container p, .home-container p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    /* 로그인/회원가입 입력 필드 */
     input {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
+      margin-bottom: 15px;
       border-radius: 8px;
       border: 1px solid #ddd;
       font-size: 14px;
       background: #f9f9f9;
-      transition: border 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     input:focus {
       border-color: #66a6ff;
       background: #fff;
+      box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
+      outline: none;
     }
 
     /* 버튼 스타일 */
     button {
       width: 100%;
       padding: 12px;
-      background-color: #66a6ff;
-      color: white;
       border: none;
       border-radius: 10px;
+      background: #333;
+      color: #fff;
+      font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: transform 0.2s, background-color 0.3s;
     }
 
     button:hover {
-      background-color: #5a94e3;
+      transform: scale(1.05);
+      background: #555;
     }
 
     button:active {
-      background-color: #4c82c0;
+      transform: scale(0.95);
     }
 
-    /* 텍스트 스타일 */
-    p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    /* 에러 메시지 */
+    /* 오류 메시지 */
     .error {
       color: red;
+      margin-bottom: 15px;
       font-size: 14px;
     }
 
-    /* 회원가입 화면 */
-    .hidden {
-      display: none;
-    }
-    
-    /* 링크 스타일 */
-    a {
-      color: #66a6ff;
-      text-decoration: none;
+    /* 홈 화면 배경 + 그라데이션 */
+    .home-bg {
+      background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
     }
 
-    a:hover {
-      text-decoration: underline;
+    /* 디스코드 버튼 */
+    #discord-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 20px 0;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #7289DA, #99AAB5);
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    #discord-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #99AAB5, #7289DA);
+    }
+
+    /* 로그아웃 버튼 */
+    #logout-btn {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #ff5733;
+      color: #fff;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #logout-btn:hover {
+      background-color: #e04e2a;
+    }
+
+    /* 애니메이션 */
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* footer */
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #fff;
     }
 
   </style>
 </head>
-<body>
+<body class="home-bg">
+
+  <!-- 홈 화면 -->
+  <div class="home-container show" id="homeCard">
+    <h1>환영합니다!</h1>
+    <p>여기에서 로그인하고 다양한 서비스를 이용해보세요. 회원가입을 통해 새로운 계정을 만들 수 있습니다.</p>
+    <button id="goToLogin">로그인 화면으로</button>
+    <button id="goToSignup">회원가입 화면으로</button>
+    <a href="https://discord.com" id="discord-btn" target="_blank">디스코드 서버로</a>
+  </div>
 
   <!-- 로그인 화면 -->
-  <div id="authContainer" class="card">
+  <div class="login-container" id="loginCard" style="display:none;">
     <h1>로그인</h1>
-    <form id="login-form">
-      <input type="email" id="login-email" placeholder="이메일" required />
-      <input type="password" id="login-password" placeholder="비밀번호" required />
-      <button type="submit" id="loginBtn">로그인</button>
-      <p id="login-msg" class="error"></p>
-    </form>
+    <input type="text" id="username" placeholder="아이디" />
+    <input type="password" id="password" placeholder="비밀번호" />
+    <button id="loginBtn">로그인</button>
     <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
   </div>
 
   <!-- 회원가입 화면 -->
-  <div id="signupContainer" class="card hidden">
+  <div class="login-container" id="signupCard" style="display:none;">
     <h1>회원가입</h1>
-    <form id="signup-form">
-      <input type="email" id="signup-email" placeholder="이메일" required />
-      <input type="password" id="signup-password" placeholder="비밀번호" required />
-      <button type="submit" id="signupBtn">회원가입</button>
-      <p id="signup-msg" class="error"></p>
-    </form>
+    <input type="text" id="newUsername" placeholder="아이디" />
+    <input type="password" id="newPassword" placeholder="비밀번호" />
+    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" />
+    <button id="signupBtn">회원가입</button>
     <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { 
-      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
-      onAuthStateChanged, signOut 
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeCard = document.getElementById('homeCard');
+      const loginCard = document.getElementById('loginCard');
+      const signupCard = document.getElementById('signupCard');
+      const goToLogin = document.getElementById('goToLogin');
+      const goToSignup = document.getElementById('goToSignup');
+      const showSignup = document.getElementById('showSignup');
+      const backToLogin = document.getElementById('backToLogin');
+      const loginBtn = document.getElementById('loginBtn');
+      const signupBtn = document.getElementById('signupBtn');
 
-    // Firebase 설정
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-      authDomain: "lons-dc24d.firebaseapp.com",
-      projectId: "lons-dc24d",
-      storageBucket: "lons-dc24d.appspot.com",
-      messagingSenderId: "755692328918",
-      appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
-    };
+      // 홈 화면 -> 로그인 화면 이동
+      goToLogin.addEventListener('click', () => {
+        homeCard.style.display = 'none';
+        loginCard.style.display = 'block';
+        loginCard.classList.add('show');
+      });
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+      // 홈 화면 -> 회원가입 화면 이동
+      goToSignup.addEventListener('click', () => {
+        homeCard.style.display = 'none';
+        signupCard.style.display = 'block';
+        signupCard.classList.add('show');
+      });
 
-    // DOM 요소
-    const signupForm = document.getElementById("signup-form");
-    const signupMsg = document.getElementById("signup-msg");
-    const loginForm = document.getElementById("login-form");
-    const loginMsg = document.getElementById("login-msg");
-    const showSignup = document.getElementById("showSignup");
-    const backToLogin = document.getElementById("backToLogin");
+      // 로그인 버튼 클릭
+      loginBtn.addEventListener('click', () => {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        if (!username || !password) {
+          alert('아이디와 비밀번호를 입력해주세요.');
+          return;
+        }
+        alert('로그인 성공!');
+        // 로그인 후 처리
+      });
 
-    const loginContainer = document.getElementById("authContainer");
-    const signupContainer = document.getElementById("signupContainer");
+      // 회원가입 화면으로 이동
+      showSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginCard.style.display = 'none';
+        signupCard.style.display = 'block';
+      });
 
-    // 로그인 처리
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value.trim();
-      const password = document.getElementById("login-password").value.trim();
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          window.location.href = "home.html"; // 로그인 후 홈 페이지로 이동
-        })
-        .catch((err) => {
-          loginMsg.innerText = err.message;
-        });
-    });
+      // 로그인 화면으로 돌아가기
+      backToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        signupCard.style.display = 'none';
+        loginCard.style.display = 'block';
+      });
 
-    // 회원가입 처리
-    signupForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signup-email").value.trim();
-      const password = document.getElementById("signup-password").value;
-      if (password.length < 6) {
-        signupMsg.innerText = "비밀번호는 최소 6자 이상이어야 합니다.";
-        return;
-      }
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          signupMsg.innerText = "회원가입 성공! 로그인 해주세요.";
-          signupForm.reset();
-        })
-        .catch((err) => {
-          signupMsg.innerText = err.message;
-        });
-    });
-
-    // 로그인 화면 -> 회원가입 화면
-    showSignup.addEventListener("click", (e) => {
-      e.preventDefault();
-      loginContainer.style.display = "none";
-      signupContainer.style.display = "block";
-    });
-
-    // 회원가입 화면 -> 로그인 화면
-    backToLogin.addEventListener("click", (e) => {
-      e.preventDefault();
-      signupContainer.style.display = "none";
-      loginContainer.style.display = "block";
-    });
-
-    // 로그인 상태 체크
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "home.html"; // 이미 로그인 상태라면 홈 페이지로 이동
-      }
-    });
-  </script>
-</body>
-</html>
+      // 회원가입 버튼 클릭
+      signupBtn.addEventListener('click', () => {
+        const newUser = document.getElementById('newUsername').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        const confirmPass = document.getElementById('confirmPassword').value.trim();
+        if (!newUser || !newPass || !confirmPass) {
+          alert('모든 항
