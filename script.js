@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// Firebase 초기화
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
@@ -10,11 +9,11 @@ const firebaseConfig = {
   messagingSenderId: "755692328918",
   appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// DOM
 const signupForm = document.getElementById("signup-form");
 const signupMsg = document.getElementById("signup-msg");
 const loginForm = document.getElementById("login-form");
@@ -24,6 +23,8 @@ const googleMsg = document.getElementById("google-msg");
 const logoutBtn = document.getElementById("logout-btn");
 const authSection = document.getElementById("auth-section");
 const featuresSection = document.getElementById("features-section");
+const formsSection = document.getElementById("forms-section");
+const userInfo = document.getElementById("user-info");
 
 // 회원가입
 signupForm.addEventListener("submit", e => {
@@ -31,22 +32,13 @@ signupForm.addEventListener("submit", e => {
   const email = document.getElementById("signup-email").value.trim();
   const pw = document.getElementById("signup-password").value;
   if(pw.length < 6){
-    signupMsg.innerText = "비밀번호는 최소 6자 이상입니다.";
+    signupMsg.innerText = "비밀번호는 최소 6자 이상";
     signupMsg.className = "error";
     return;
   }
   createUserWithEmailAndPassword(auth, email, pw)
-    .then(() => {
-      signupMsg.innerText = "회원가입 완료! 로그인해주세요.";
-      signupMsg.className = "";
-      signupForm.reset();
-    })
-    .catch(err => {
-      if(err.code === "auth/email-already-in-use"){
-        signupMsg.innerText = "이미 가입된 이메일입니다. 로그인 해주세요.";
-      } else { signupMsg.innerText = err.message; }
-      signupMsg.className = "error";
-    });
+    .then(() => { signupMsg.innerText = "회원가입 완료! 로그인 해주세요."; signupMsg.className = ""; signupForm.reset(); })
+    .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
 });
 
 // 로그인
@@ -62,29 +54,30 @@ loginForm.addEventListener("submit", e => {
 // Google 로그인
 googleBtn.addEventListener("click", () => {
   signInWithPopup(auth, provider)
-    .then(result => {
-      const user = result.user;
-      googleMsg.innerText = `로그인 성공! ${user.displayName || "사용자"} (${user.email})`;
-      googleMsg.className = "";
-    })
+    .then(result => { const user = result.user; googleMsg.innerText = `로그인 성공! ${user.displayName || "사용자"} (${user.email})`; googleMsg.className = ""; })
     .catch(err => { googleMsg.innerText = err.message; googleMsg.className = "error"; });
 });
 
 // 로그아웃
 logoutBtn.addEventListener("click", () => {
-  const user = auth.currentUser;
-  if(user){
-    signOut(auth).then(() => { alert("로그아웃 완료!"); });
-  } else { alert("로그인 상태가 아닙니다."); }
+  signOut(auth).then(() => {
+    featuresSection.style.display = "none";
+    authSection.style.display = "block";
+    formsSection.style.display = "block";
+    userInfo.style.display = "none";
+  });
 });
 
-// 로그인 상태 감지 → 브랜치 전환
+// 로그인 상태 체크
 onAuthStateChanged(auth, user => {
   if(user){
     authSection.style.display = "none";
-    featuresSection.style.display = "block";
+    featuresSection.style.display = "flex";
+    userInfo.style.display = "block";
+    userInfo.innerText = `로그인 중: ${user.displayName || "사용자"} (${user.email})`;
   } else {
     authSection.style.display = "block";
     featuresSection.style.display = "none";
+    userInfo.style.display = "none";
   }
 });
