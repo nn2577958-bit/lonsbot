@@ -1,71 +1,77 @@
-body {
-  font-family: sans-serif;
-  background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
-  padding: 20px;
-  text-align: center;
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-header h1 {
-  margin-bottom: 20px;
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
+  authDomain: "lons-dc24d.firebaseapp.com",
+  projectId: "lons-dc24d",
+  storageBucket: "lons-dc24d.firebasestorage.app",
+  messagingSenderId: "755692328918",
+  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+};
 
-section {
-  background: white;
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border: 5px solid;
-  border-image-slice: 1;
-  border-width: 5px;
-  border-image-source: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-input, button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
+// DOM
+const signupForm = document.getElementById("signup-form");
+const signupMsg = document.getElementById("signup-msg");
+const loginForm = document.getElementById("login-form");
+const loginMsg = document.getElementById("login-msg");
+const googleBtn = document.getElementById("google-login");
+const googleMsg = document.getElementById("google-msg");
+const authSection = document.getElementById("auth-section");
+const featuresSection = document.getElementById("features-section");
+const logoutBtn = document.getElementById("logout-btn");
 
-button {
-  background: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
+// 회원가입
+signupForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const email = document.getElementById("signup-email").value.trim();
+  const pw = document.getElementById("signup-password").value;
+  if(pw.length < 6){ signupMsg.innerText="비밀번호 6자 이상"; signupMsg.className="error"; return; }
 
-button:hover {
-  background: #555;
-}
+  createUserWithEmailAndPassword(auth, email, pw)
+    .then(()=> { signupMsg.innerText="회원가입 완료! 로그인 해주세요."; signupMsg.className=""; signupForm.reset(); })
+    .catch(err=>{ 
+      if(err.code==="auth/email-already-in-use") signupMsg.innerText="이미 가입된 이메일입니다. 로그인 해주세요.";
+      else signupMsg.innerText=err.message;
+      signupMsg.className="error";
+    });
+});
 
-.error {
-  color: red;
-  margin-bottom: 10px;
-}
+// 로그인
+loginForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const email = document.getElementById("login-email").value.trim();
+  const pw = document.getElementById("login-password").value;
+  signInWithEmailAndPassword(auth,email,pw)
+    .then(()=>{ loginMsg.innerText="로그인 성공!"; loginMsg.className=""; loginForm.reset(); })
+    .catch(err=>{ loginMsg.innerText=err.message; loginMsg.className="error"; });
+});
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+// Google 로그인
+googleBtn.addEventListener("click", ()=>{
+  signInWithPopup(auth, provider)
+    .then(result=>{ googleMsg.innerText=`로그인 성공! ${result.user.email}`; googleMsg.className=""; })
+    .catch(err=>{ googleMsg.innerText=err.message; googleMsg.className="error"; });
+});
 
-ul li {
-  margin-bottom: 8px;
-}
+// 로그아웃
+logoutBtn.addEventListener("click", ()=>{
+  signOut(auth).then(()=>{
+    alert("로그아웃 완료!");
+  });
+});
 
-#discord-btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 15px;
-  background-color: #7289DA;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-}
-
-#discord-btn img {
-  vertical-align: middle;
-  margin-right: 5px;
-}
+// 로그인 상태 감지
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authSection.style.display="none";
+    featuresSection.style.display="block";
+  } else {
+    authSection.style.display="block";
+    featuresSection.style.display="none";
+  }
+});
