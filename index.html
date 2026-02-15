@@ -8,55 +8,56 @@
 </head>
 <body>
   <header>
-    LONS SV Palworld
+    <h1>LONS SV Palworld</h1>
   </header>
 
-  <!-- 로그인/회원가입 섹션 -->
-  <section id="auth-section">
-    <div id="user-info" style="display:none;"></div>
+  <main>
+    <!-- 로그인/회원가입 -->
+    <section id="auth-section">
+      <div id="user-info" style="display:none;"></div>
+      <div id="forms-section">
+        <h2>회원가입</h2>
+        <form id="signup-form">
+          <input type="email" id="signup-email" placeholder="이메일" required />
+          <input type="password" id="signup-password" placeholder="비밀번호" required />
+          <button type="submit">회원가입</button>
+        </form>
+        <p id="signup-msg" class="error"></p>
 
-    <div id="forms-section">
-      <h2>회원가입</h2>
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required />
-        <input type="password" id="signup-password" placeholder="비밀번호" required />
-        <button type="submit">회원가입</button>
-      </form>
-      <p id="signup-msg" class="error"></p>
+        <h2>로그인</h2>
+        <form id="login-form">
+          <input type="email" id="login-email" placeholder="이메일" required />
+          <input type="password" id="login-password" placeholder="비밀번호" required />
+          <button type="submit">로그인</button>
+        </form>
+        <p id="login-msg" class="error"></p>
 
-      <h2>로그인</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required />
-        <input type="password" id="login-password" placeholder="비밀번호" required />
-        <button type="submit">로그인</button>
-      </form>
-      <p id="login-msg" class="error"></p>
+        <h2>Google 로그인</h2>
+        <button id="google-login">Google 계정으로 로그인</button>
+        <p id="google-msg" class="error"></p>
+      </div>
+    </section>
 
-      <h2>Google 로그인</h2>
-      <button id="google-login">Google 계정으로 로그인</button>
-      <p id="google-msg" class="error"></p>
-    </div>
-  </section>
-
-  <!-- 로그인 후 주요 기능 -->
-  <section id="features-section" style="display:none;">
-    <button id="logout-btn">로그아웃</button>
-    <h2>주요 기능</h2>
-    <ul>
-      <li>실시간 알림 & 다양한 소식 & 정보</li>
-      <li>공지사항 & 꿀팁 정보</li>
-      <li>02월 20일 새로운 하드코어 OPEN</li>
-      <li>즐거운 명절 보내시기 바랍니다</li>
-    </ul>
-
-    <a id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">디스코드 바로가기</a>
-  </section>
+    <!-- 로그인 후 주요 기능 -->
+    <section id="features-section" style="display:none;">
+      <button id="logout-btn">로그아웃</button>
+      <h2>주요 기능</h2>
+      <ul>
+        <li>실시간 알림 & 다양한 소식 & 정보</li>
+        <li>공지사항 & 꿀팁 정보</li>
+        <li>02월 20일 새로운 하드코어 OPEN</li>
+        <li>즐거운 명절 보내시기 바랍니다</li>
+      </ul>
+      <a id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="Discord" width="20"> 디스코드 바로가기
+      </a>
+    </section>
+  </main>
 
   <footer>
-    © 2026 LONS SV ONLINE
+    <p>© 2026 LONS SV ONLINE</p>
   </footer>
 
-  <!-- Firebase v9 모듈 -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
