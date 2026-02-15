@@ -3,197 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 공식 홈페이지</title>
+  <title>LONS SV 로그인</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
-    header { background: #333; color: #fff; padding: 10px 20px; position: sticky; top: 0; z-index: 100; }
-    header h1 { margin: 0; font-size: 1.5rem; }
-    nav { margin-top: 5px; }
-    nav a { color: #fff; text-decoration: none; margin-right: 15px; font-weight: bold; }
-    nav a:hover { text-decoration: underline; }
-
-    main { padding: 20px; }
-
-    /* 로그인/회원가입 카드 */
-    #auth-section { 
-      background: #fff; 
-      max-width: 400px; 
-      margin: 20px auto; 
-      padding: 20px; 
-      border-radius: 10px; 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    #auth-section h2 { margin-top: 0; }
-    #auth-section input { 
-      display: block; 
-      width: 100%; 
-      margin-bottom: 10px; 
-      padding: 8px; 
-      border: 1px solid #ccc; 
-      border-radius: 5px; 
-    }
-    #auth-section button { 
-      width: 100%; 
-      padding: 10px; 
-      background: #333; 
-      color: #fff; 
-      border: none; 
-      border-radius: 5px; 
-      cursor: pointer; 
-    }
-    #auth-section button:hover { background: #555; }
-    #auth-section p { margin: 5px 0; }
-    #auth-section p.error { color: red; }
-
-    /* 메시지 표시 */
-    #login-status { 
-      max-width: 400px; 
-      margin: 10px auto; 
-      padding: 10px; 
-      text-align: center; 
-      font-weight: bold; 
-      color: green;
-    }
-
-    /* 주요 기능 */
-    .features { max-width: 600px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .features h2 { margin-top: 0; }
-    .features ul { padding-left: 20px; }
-
-    #invite-btn { display: block; max-width: 400px; margin: 20px auto; text-align: center; background: #7289da; color: #fff; padding: 10px; border-radius: 5px; text-decoration: none; }
-
-    #scrollTopBtn {
-      position: fixed; bottom: 20px; right: 20px; padding: 10px 15px; font-size: 14px;
-      border-radius: 5px; background-color: #333; color: #fff; border: none; cursor: pointer; display: none; z-index: 1000;
-    }
-
-    footer { text-align: center; padding: 20px; background: #333; color: #fff; margin-top: 40px; }
+    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
+    #auth-section { background: #fff; max-width: 400px; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    input, button { width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #333; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #555; }
+    p.error { color: red; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>LONS SV Palworld</h1>
-    <nav>
-      <a href="#auth-section">회원가입/로그인</a>
-      <a href="#features">팰월드 정보</a>
-      <a href="#invite-btn">커뮤니티</a>
-    </nav>
-  </header>
+  <section id="auth-section">
+    <h2>회원가입</h2>
+    <form id="signup-form">
+      <input type="email" id="signup-email" placeholder="이메일" required />
+      <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required />
+      <button type="submit">회원가입</button>
+    </form>
+    <p id="signup-msg"></p>
 
-  <!-- 로그인/회원가입 상태 메시지 -->
-  <div id="login-status"></div>
+    <h2>로그인</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="이메일" required />
+      <input type="password" id="login-password" placeholder="비밀번호" required />
+      <button type="submit">로그인</button>
+    </form>
+    <p id="login-msg"></p>
+  </section>
 
-  <main>
-    <section id="auth-section">
-      <h2>회원가입</h2>
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required />
-        <input type="password" id="signup-password" placeholder="비밀번호 (최소 6자)" required />
-        <button type="submit">회원가입</button>
-      </form>
-      <p id="signup-msg"></p>
-
-      <h2>로그인</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required />
-        <input type="password" id="login-password" placeholder="비밀번호" required />
-        <button type="submit">로그인</button>
-      </form>
-      <p id="login-msg"></p>
-    </section>
-
-    <a id="invite-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">커뮤니티 바로가기</a>
-
-    <section id="features" class="features">
-      <h2>주요 기능</h2>
-      <ul>
-        <li>실시간 알림 & 다양한 소식 & 정보</li>
-        <li>공지사항 꿀팁 정보 얻어 보세요!</li>
-        <li>02월 20일 새로운 하드코어 OPEN</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2026 LONS SV ONLINE</p>
-  </footer>
-
-  <button id="scrollTopBtn">▲ 맨 위로</button>
-
-  <!-- Firebase v8 CDN -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const firebaseConfig = {
-        apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-        authDomain: "lons-dc24d.firebaseapp.com",
-        projectId: "lons-dc24d",
-        storageBucket: "lons-dc24d.firebasestorage.app",
-        messagingSenderId: "755692328918",
-        appId: "1:755692328918:web:a4eb4563cb862d3eb5b677",
-        measurementId: "G-NCE37YM3LF"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
+      authDomain: "lons-dc24d.firebaseapp.com",
+      projectId: "lons-dc24d",
+      storageBucket: "lons-dc24d.firebasestorage.app",
+      messagingSenderId: "755692328918",
+      appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-      const signupForm = document.getElementById("signup-form");
-      const signupMsg = document.getElementById("signup-msg");
-      const loginForm = document.getElementById("login-form");
-      const loginMsg = document.getElementById("login-msg");
-      const loginStatus = document.getElementById("login-status");
+    const signupForm = document.getElementById("signup-form");
+    const signupMsg = document.getElementById("signup-msg");
+    const loginForm = document.getElementById("login-form");
+    const loginMsg = document.getElementById("login-msg");
 
-      // 회원가입
-      signupForm.addEventListener("submit", e => {
-        e.preventDefault();
-        const email = document.getElementById("signup-email").value;
-        const pw = document.getElementById("signup-password").value;
+    signupForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value;
+      const pw = document.getElementById("signup-password").value;
 
-        if(pw.length < 6){
-          signupMsg.innerText = "비밀번호는 최소 6자 이상이어야 합니다.";
-          signupMsg.className = "error";
-          return;
-        }
+      if(pw.length < 6){
+        signupMsg.innerText = "비밀번호는 최소 6자 이상이어야 합니다.";
+        signupMsg.className = "error";
+        return;
+      }
 
-        auth.createUserWithEmailAndPassword(email, pw)
-          .then(() => {
-            signupMsg.innerText = "";
-            loginMsg.innerText = "";
-            loginStatus.innerText = `회원가입 완료! 자동 로그인됨: ${email}`;
-            loginStatus.style.color = "green";
-            document.querySelector("#auth-section").scrollIntoView({ behavior: "smooth" });
-          })
-          .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
-      });
+      auth.createUserWithEmailAndPassword(email, pw)
+        .then(() => {
+          window.location.href = "member.html";
+        })
+        .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
+    });
 
-      // 로그인
-      loginForm.addEventListener("submit", e => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const pw = document.getElementById("login-password").value;
+    loginForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const pw = document.getElementById("login-password").value;
 
-        auth.signInWithEmailAndPassword(email, pw)
-          .then(() => {
-            loginMsg.innerText = "";
-            signupMsg.innerText = "";
-            loginStatus.innerText = `로그인 성공: ${email}`;
-            loginStatus.style.color = "green";
-            document.querySelector("#features").scrollIntoView({ behavior: "smooth" });
-          })
-          .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
-      });
-
-      // 스크롤 맨 위 버튼
-      const scrollBtn = document.getElementById("scrollTopBtn");
-      window.onscroll = () => {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-          scrollBtn.style.display = "block";
-        } else { scrollBtn.style.display = "none"; }
-      };
-      scrollBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      auth.signInWithEmailAndPassword(email, pw)
+        .then(() => {
+          window.location.href = "member.html";
+        })
+        .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
     });
   </script>
 </body>
