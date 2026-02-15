@@ -1,165 +1,117 @@
-/* === 전체 배경 === */
-body, html {
+/* 전체 배경 구름 */
+body {
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  min-height: 100vh;
   background: url('https://cdn.discordapp.com/attachments/1463400037416439869/1468509808406695977/anime-baby-character-with-dragon-costume-illustration.jpg?ex=69921f95&is=6990ce15&hm=0855314524805761ebf0415b0d954c05c62b1e93fcef2a5d4e26f75c2b7e362a') no-repeat center top;
   background-size: cover;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* === 헤더 === */
+/* 헤더 */
 header {
   text-align: center;
-  padding: 20px 0;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2em;
-}
-
-header p {
-  margin: 5px 0 0;
-  font-size: 1.1em;
-}
-
-/* === 메인 카드 공통 === */
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
+/* 카드 공통 */
 .card {
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  padding: 25px 30px;
-  width: 100%;
   max-width: 400px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-  text-align: center;
+  margin: 30px auto;
+  padding: 25px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* === 입력창 & 버튼 === */
+/* 카드 제목 */
+.card h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* 폼 요소 */
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 10px 12px;
-  margin: 8px 0;
-  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
 }
 
-button, .discord-btn {
+/* 일반 버튼 공통 */
+button {
   width: 100%;
-  padding: 12px 0;
-  margin-top: 10px;
+  padding: 10px;
+  border: none;
   border-radius: 8px;
+  background-color: #5865F2; /* 디스코드 보라색 계열 */
+  color: #fff;
   font-weight: bold;
-  font-size: 14px;
   cursor: pointer;
+  font-size: 14px;
   transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
+  margin-bottom: 10px;
 }
 
-/* 회원가입 버튼 */
-button#signup-btn {
-  background-color: #43b581;
-  color: #fff;
-  border: none;
+button:hover {
+  background-color: #4752c4;
+  transform: scale(1.03);
 }
 
-button#signup-btn:hover {
-  background-color: #369c6e;
-}
-
-/* 로그인 버튼 */
-button#login-btn {
-  background-color: #7289da;
-  color: #fff;
-  border: none;
-}
-
-button#login-btn:hover {
-  background-color: #5b6eae;
-}
-
-/* Google 로그인 버튼 */
-button#google-login {
-  background-color: #db4437;
-  color: #fff;
-  border: none;
-}
-
-button#google-login:hover {
-  background-color: #c13527;
-}
-
-/* === 에러 메시지 === */
+/* 오류 메시지 */
 .error {
   color: red;
+  text-align: center;
   font-size: 13px;
-  margin: 5px 0 0;
+  margin-bottom: 5px;
 }
 
-/* === 주요 기능 카드 목록 === */
+/* 주요 기능 리스트 중앙 정렬 */
 #main-card ul {
   list-style: none;
   padding: 0;
-  margin: 15px 0;
+  text-align: center;
 }
 
-#main-card li {
-  margin: 8px 0;
-  font-size: 14px;
+#main-card ul li {
+  margin: 6px 0;
 }
 
-/* === 버튼 그룹 (로그아웃 + 디스코드) === */
+/* 버튼 그룹 (로그아웃 + 디스코드) */
 .button-group {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-top: 15px;
-  flex-wrap: nowrap;
 }
 
-.button-group button.logout-btn {
-  flex: 1;
-  background-color: #f04747;
-  color: #fff;
-  border: none;
-}
-
-.button-group button.logout-btn:hover {
-  background-color: #d63a3a;
-}
-
-.button-group .discord-btn {
-  flex: 1;
+/* 디스코드 버튼 */
+.discord-btn {
+  display: inline-block;
+  padding: 10px 20px;
   background-color: #5865F2;
   color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
   border: 2px solid #fff;
+  transition: all 0.3s ease;
 }
 
-.button-group .discord-btn:hover {
+.discord-btn:hover {
   background-color: #4752c4;
   transform: scale(1.05);
 }
 
-/* === 푸터 === */
-footer {
+/* 푸터 중앙 정렬 */
+footer p {
   text-align: center;
-  padding: 10px 0;
   color: #fff;
-  font-size: 12px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  margin-top: 20px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
