@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로그인 | LONS</title>
+  <title>LONS 로그인 & 모듈9 데모</title>
   <style>
     body {
       margin: 0;
@@ -15,14 +15,14 @@
       background: linear-gradient(to right, #89f7fe, #66a6ff);
     }
 
-    .card {
+    .card, .module9 {
       background: white;
-      padding: 40px 30px;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       width: 360px;
+      padding: 30px 25px;
       text-align: center;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     input {
@@ -50,6 +50,7 @@
       color: white;
       font-size: 16px;
       cursor: pointer;
+      margin-bottom: 10px;
       transition: transform 0.2s, background 0.3s;
     }
 
@@ -59,7 +60,7 @@
     }
 
     p {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 14px;
       color: #666;
     }
@@ -74,24 +75,26 @@
       text-decoration: underline;
     }
 
-    /* 모듈 화면 스타일 */
-    .module9 {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      width: 360px;
+    .module-card {
+      background: #f7f9ff;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: left;
     }
 
-    .module9 h2 {
+    .module-card h3 {
+      margin: 0 0 5px 0;
       color: #333;
     }
 
-    .module9 button {
-      margin-top: 20px;
+    .module-card p {
+      margin: 0;
+      font-size: 13px;
+      color: #555;
     }
+
   </style>
 </head>
 <body>
@@ -106,9 +109,12 @@
   </div>
 
   <!-- 모듈 9 화면 -->
-  <div class="module9" id="module9">
-    <h2>모듈 9 화면</h2>
-    <p>로그인 성공! 여기가 모듈 9 화면입니다.</p>
+  <div class="module9" id="module9" style="display:none;">
+    <h2 id="welcomeMsg">모듈 9</h2>
+    <p id="introMsg">로그인 성공! 아래는 모듈 9의 주요 내용입니다.</p>
+
+    <div id="moduleContent"></div>
+
     <button id="logoutBtn">로그아웃</button>
   </div>
 
@@ -117,6 +123,16 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const loginCard = document.getElementById('loginCard');
     const module9 = document.getElementById('module9');
+    const moduleContent = document.getElementById('moduleContent');
+    const welcomeMsg = document.getElementById('welcomeMsg');
+
+    // 예시 데이터 (동적으로 표시)
+    const moduleData = [
+      { title: "공지사항", text: "오늘 시스템 점검이 있습니다." },
+      { title: "업무 알림", text: "마감된 보고서를 확인해주세요." },
+      { title: "통계", text: "이번 주 방문자 수: 1,234명" },
+      { title: "새 메시지", text: "새로운 쪽지가 도착했습니다." }
+    ];
 
     loginBtn.addEventListener('click', () => {
       const username = document.getElementById('username').value.trim();
@@ -127,9 +143,20 @@
         return;
       }
 
-      // 로그인 성공 시 화면 전환
+      // 로그인 성공 시 모듈9 화면 표시
       loginCard.style.display = 'none';
       module9.style.display = 'block';
+
+      welcomeMsg.textContent = `${username}님, 모듈 9에 오신 것을 환영합니다!`;
+
+      // 동적 카드 생성
+      moduleContent.innerHTML = '';
+      moduleData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>`;
+        moduleContent.appendChild(card);
+      });
     });
 
     logoutBtn.addEventListener('click', () => {
@@ -137,6 +164,7 @@
       loginCard.style.display = 'block';
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
+      moduleContent.innerHTML = '';
     });
   </script>
 
