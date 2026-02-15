@@ -1,125 +1,184 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  signOut, onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import {
-  getFirestore, collection, addDoc, getDocs, query, orderBy
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// Firebase 초기화
-const firebaseConfig = {
-  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-  authDomain: "lons-dc24d.firebaseapp.com",
-  projectId: "lons-dc24d",
-  storageBucket: "lons-dc24d.firebasestorage.app",
-  messagingSenderId: "755692328918",
-  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// DOM 요소
-const signupForm = document.getElementById("signup-form");
-const signupMsg = document.getElementById("signup-msg");
-const loginForm = document.getElementById("login-form");
-const loginMsg = document.getElementById("login-msg");
-const postTitle = document.getElementById("post-title");
-const postContent = document.getElementById("post-content");
-const submitPost = document.getElementById("submit-post");
-const postsDiv = document.getElementById("posts");
-
-// 회원가입
-signupForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const email = document.getElementById("signup-email").value.trim();
-  const pw = document.getElementById("signup-password").value;
-  createUserWithEmailAndPassword(auth, email, pw)
-    .then(() => {
-      signupMsg.innerText = "회원가입 완료! 로그인 해주세요.";
-      signupMsg.className = "";
-      signupForm.reset();
-    })
-    .catch(err => {
-      signupMsg.innerText = err.message;
-      signupMsg.className = "error";
-    });
-});
-
-// 이메일 로그인
-loginForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const email = document.getElementById("login-email").value.trim();
-  const pw = document.getElementById("login-password").value;
-  signInWithEmailAndPassword(auth, email, pw)
-    .then(() => {
-      window.location.href = "home.html";
-    })
-    .catch(err => {
-      loginMsg.innerText = err.message;
-      loginMsg.className = "error";
-    });
-});
-
-// 로그아웃
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = "index.html";
-    });
-  });
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LONS SPA 로그인/회원가입</title>
+<style>
+/* 전체 화면 중앙 배치 */
+body{
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  font-family:'Noto Sans KR',sans-serif;
+  background:linear-gradient(135deg,#89f7fe,#66a6ff);
 }
 
-// 로그인 상태 확인
-onAuthStateChanged(auth, user => {
-  if (user) {
-    document.getElementById("user-info").innerText = `로그인 중: ${user.email}`;
-    document.getElementById("forms-section").style.display = "none";
-    document.getElementById("status-msg").innerText = `로그인 상태: ${user.email}`;
-  } else {
-    document.getElementById("user-info").style.display = "none";
-    document.getElementById("forms-section").style.display = "block";
-    document.getElementById("status-msg").innerText = "로그아웃 상태";
+/* 카드 스타일 */
+.card{
+  width:90%;
+  max-width:360px;
+  padding:25px 20px;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 5px 18px rgba(0,0,0,0.15);
+  text-align:center;
+  box-sizing:border-box;
+  display:none;
+}
+.card.show{display:block;}
+
+.card h1{
+  margin-bottom:20px;
+  font-size:22px;
+  color:#333;
+}
+.input-group{
+  position:relative;
+  width:100%;
+  margin-bottom:15px;
+}
+.input-group input{
+  width:100%;
+  padding:12px 15px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:14px;
+  box-sizing:border-box;
+}
+.password-group input{
+  padding-right:42px;
+}
+.toggle-eye{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:18px;
+  color:#66a6ff;
+}
+
+/* 버튼 스타일 */
+button{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(45deg,#66a6ff,#89f7fe);
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+  transition:all 0.2s ease;
+}
+button:hover{opacity:0.9;}
+
+/* 링크 스타일 */
+p{
+  margin-top:12px;
+  font-size:14px;
+  color:#666;
+}
+p a{
+  color:#66a6ff;
+  text-decoration:none;
+}
+p a:hover{text-decoration:underline;}
+
+/* 반응형 조정 */
+@media(max-width:480px){
+  .card{
+    padding:20px 15px;
   }
-});
+  .card h1{font-size:20px;}
+  button{font-size:15px;padding:10px;}
+  .input-group input{font-size:13px;padding:10px 12px;}
+  .toggle-eye{font-size:16px;}
+}
+</style>
+</head>
+<body>
 
-// 게시글 작성
-submitPost.addEventListener("click", () => {
-  const title = postTitle.value.trim();
-  const content = postContent.value.trim();
-  const user = auth.currentUser;
-  if (!title || !content) return alert("제목과 내용을 입력해주세요.");
+<!-- 로그인 화면 -->
+<div class="card show" id="loginCard">
+  <h1>LONS SPA 로그인</h1>
+  <div class="input-group">
+    <input type="text" id="username" placeholder="아이디 입력" autocomplete="username">
+  </div>
+  <div class="input-group password-group">
+    <input type="password" id="password" placeholder="비밀번호 입력" autocomplete="current-password">
+    <span class="toggle-eye" id="togglePasswordLogin">👁️</span>
+  </div>
+  <button id="loginBtn">로그인</button>
+  <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
+</div>
 
-  addDoc(collection(db, "posts"), {
-    author: user.email,
-    title: title,
-    content: content,
-    createdAt: new Date()
-  }).then(() => {
-    postTitle.value = "";
-    postContent.value = "";
-    loadPosts();
-  }).catch(err => {
-    alert("게시글 작성 실패: " + err.message);
-  });
-});
+<!-- 회원가입 화면 -->
+<div class="card" id="signupCard">
+  <h1>LONS SPA 회원가입</h1>
+  <div class="input-group">
+    <input type="text" id="newUsername" placeholder="아이디 입력" autocomplete="username">
+  </div>
+  <div class="input-group password-group">
+    <input type="password" id="newPassword" placeholder="비밀번호 입력" autocomplete="new-password">
+    <span class="toggle-eye" id="togglePasswordSignup">👁️</span>
+  </div>
+  <div class="input-group password-group">
+    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" autocomplete="new-password">
+    <span class="toggle-eye" id="toggleConfirmPassword">👁️</span>
+  </div>
+  <button id="signupBtn">회원가입</button>
+  <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
+</div>
 
-// 게시글 불러오기
-function loadPosts() {
-  postsDiv.innerHTML = "";
-  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-  getDocs(q).then(snapshot => {
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement("div");
-      div.className = "post";
-      div.innerHTML = `<strong>${data.title}</strong><br>${data.content}<br><small>${data.author}</small>`;
-      postsDiv.appendChild(div);
-    });
-  }).catch(err => {
-    alert("게시글 불러오기 실패: " + err.message);
+<script>
+// 비밀번호 토글 함수
+function addToggle(inputId, btnId){
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', ()=>{
+    if(input.type === 'password'){ input.type='text'; btn.textContent='🙈'; }
+    else{ input.type='password'; btn.textContent='👁️'; }
   });
 }
+addToggle('password','togglePasswordLogin');
+addToggle('newPassword','togglePasswordSignup');
+addToggle('confirmPassword','toggleConfirmPassword');
+
+// 화면 전환
+const loginCard = document.getElementById('loginCard');
+const signupCard = document.getElementById('signupCard');
+document.getElementById('showSignup').addEventListener('click', e=>{
+  e.preventDefault();
+  loginCard.classList.remove('show');
+  signupCard.classList.add('show');
+});
+document.getElementById('backToLogin').addEventListener('click', e=>{
+  e.preventDefault();
+  signupCard.classList.remove('show');
+  loginCard.classList.add('show');
+});
+
+// 로그인/회원가입 예시
+document.getElementById('loginBtn').addEventListener('click', ()=>{
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if(!username || !password){ alert('아이디와 비밀번호를 입력해주세요.'); return; }
+  alert(`${username}님, 로그인 성공!`);
+});
+
+document.getElementById('signupBtn').addEventListener('click', ()=>{
+  const user = document.getElementById('newUsername').value.trim();
+  const pass = document.getElementById('newPassword').value.trim();
+  const confirm = document.getElementById('confirmPassword').value.trim();
+  if(!user || !pass || !confirm){ alert('모든 항목을 입력해주세요.'); return; }
+  if(pass !== confirm){ alert('비밀번호가 일치하지 않습니다.'); return; }
+  alert(`${user}님, 회원가입 완료!`);
+});
+</script>
+
+</body>
+</html>
