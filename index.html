@@ -1,74 +1,165 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV Palworld</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- 배경 구름 -->
-  <div class="background"></div>
+/* === 전체 배경 === */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  background: url('https://cdn.discordapp.com/attachments/1463400037416439869/1468509808406695977/anime-baby-character-with-dragon-costume-illustration.jpg?ex=69921f95&is=6990ce15&hm=0855314524805761ebf0415b0d954c05c62b1e93fcef2a5d4e26f75c2b7e362a') no-repeat center top;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+}
 
-  <header>
-    <h1>LONS SV Palworld</h1>
-    <p>오늘도 찾아 와주셔서 감사 합니다!</p>
-  </header>
+/* === 헤더 === */
+header {
+  text-align: center;
+  padding: 20px 0;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+}
 
-  <main>
-    <!-- 로그인/회원가입 카드 -->
-    <div class="card" id="auth-card">
-      <h2>계정 로그인 / 회원 가입</h2>
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
 
-      <!-- 이메일 회원가입 -->
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required />
-        <input type="password" id="signup-password" placeholder="비밀번호 (6자 이상)" required />
-        <button type="submit" id="signup-btn">회원가입</button>
-      </form>
-      <p id="signup-msg" class="error"></p>
+header p {
+  margin: 5px 0 0;
+  font-size: 1.1em;
+}
 
-      <hr style="margin: 10px 0;">
+/* === 메인 카드 공통 === */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
-      <!-- 이메일 로그인 -->
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required />
-        <input type="password" id="login-password" placeholder="비밀번호" required />
-        <button type="submit" id="login-btn">로그인</button>
-      </form>
-      <p id="login-msg" class="error"></p>
+.card {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
 
-      <hr style="margin: 10px 0;">
+/* === 입력창 & 버튼 === */
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
 
-      <!-- Google 로그인 -->
-      <button id="google-login">Google 계정으로 로그인</button>
-      <p id="google-msg" class="error"></p>
-    </div>
+button, .discord-btn {
+  width: 100%;
+  padding: 12px 0;
+  margin-top: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
 
-<!-- 로그인 후 주요 기능 카드 -->
-<div class="card" id="main-card" style="display:none;">
-  <h2>주요 기능</h2>
-  <ul>
-    <li>실시간 알림 & 다양한 소식 & 정보</li>
-    <li>공지사항 & 꿀팁 정보</li>
-    <li>02월 15일 [ 1 SV ] OPEN</li>
-    <li>02월 20일 새로운 하드코어 OPEN</li>
-    <li>즐거운 명절 보내시기 바랍니다</li>
-  </ul>
+/* 회원가입 버튼 */
+button#signup-btn {
+  background-color: #43b581;
+  color: #fff;
+  border: none;
+}
 
-  <!-- 버튼 그룹 -->
-  <div class="button-group">
-    <button class="logout-btn" id="logout-btn">로그아웃</button>
-    <a class="discord-btn" id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank">디스코드 바로가기</a>
-  </div>
-</div>
-</div>
-  </main>
+button#signup-btn:hover {
+  background-color: #369c6e;
+}
 
-  <footer>
-    <p>© 2026 LONS SV ONLINE</p>
-  </footer>
+/* 로그인 버튼 */
+button#login-btn {
+  background-color: #7289da;
+  color: #fff;
+  border: none;
+}
 
-  <script type="module" src="script.js"></script>
-</body>
-</html>
+button#login-btn:hover {
+  background-color: #5b6eae;
+}
+
+/* Google 로그인 버튼 */
+button#google-login {
+  background-color: #db4437;
+  color: #fff;
+  border: none;
+}
+
+button#google-login:hover {
+  background-color: #c13527;
+}
+
+/* === 에러 메시지 === */
+.error {
+  color: red;
+  font-size: 13px;
+  margin: 5px 0 0;
+}
+
+/* === 주요 기능 카드 목록 === */
+#main-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+#main-card li {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* === 버튼 그룹 (로그아웃 + 디스코드) === */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+  flex-wrap: nowrap;
+}
+
+.button-group button.logout-btn {
+  flex: 1;
+  background-color: #f04747;
+  color: #fff;
+  border: none;
+}
+
+.button-group button.logout-btn:hover {
+  background-color: #d63a3a;
+}
+
+.button-group .discord-btn {
+  flex: 1;
+  background-color: #5865F2;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+.button-group .discord-btn:hover {
+  background-color: #4752c4;
+  transform: scale(1.05);
+}
+
+/* === 푸터 === */
+footer {
+  text-align: center;
+  padding: 10px 0;
+  color: #fff;
+  font-size: 12px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
