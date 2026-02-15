@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LONS SV 공식 홈페이지</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 로그인/사용자 관리 섹션 스타일 */
+    #auth-section { margin-top: 50px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+    #auth-section input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
+    #auth-section button { padding: 8px 16px; margin-bottom: 10px; }
+    #auth-section p { margin: 5px 0; }
+    #auth-section p.error { color: red; }
+  </style>
 </head>
 <body>
   <header>
@@ -25,12 +33,122 @@
         <li>02월 20일 새로운 하드코어 OPEN</li>
       </ul>
     </section>
+
+    <!-- Firebase 로그인/사용자 관리 섹션 -->
+    <section id="auth-section">
+      <h2>회원가입</h2>
+      <form id="signup-form">
+        <input type="email" id="signup-email" placeholder="이메일" required />
+        <input type="password" id="signup-password" placeholder="비밀번호" required />
+        <button type="submit">회원가입</button>
+      </form>
+      <p id="signup-msg"></p>
+
+      <h2>로그인</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="이메일" required />
+        <input type="password" id="login-password" placeholder="비밀번호" required />
+        <button type="submit">로그인</button>
+      </form>
+      <p id="login-msg"></p>
+
+      <h2>구글 로그인</h2>
+      <button id="google-login">Google 계정으로 로그인</button>
+      <p id="google-msg"></p>
+
+      <h2>사용자 관리</h2>
+      <button id="logout-btn">로그아웃</button>
+      <button id="delete-btn">계정 삭제</button>
+
+      <h2>로그인 상태</h2>
+      <p id="status-msg">로그인 상태를 확인 중...</p>
+    </section>
+
   </main>
 
   <footer>
     <p>© 2026 LONS SV ONLINE</p>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+
+  <script>
+    // 🔹 Firebase 설정 (본인 프로젝트 config로 교체)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // 🔹 회원가입
+    const signupForm = document.getElementById("signup-form");
+    const signupMsg = document.getElementById("signup-msg");
+    signupForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value;
+      const pw = document.getElementById("signup-password").value;
+      auth.createUserWithEmailAndPassword(email, pw)
+        .then(() => { signupMsg.innerText = "회원가입 완료!"; signupMsg.className = ""; })
+        .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
+    });
+
+    // 🔹 이메일 로그인
+    const loginForm = document.getElementById("login-form");
+    const loginMsg = document.getElementById("login-msg");
+    loginForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const pw = document.getElementById("login-password").value;
+      auth.signInWithEmailAndPassword(email, pw)
+        .then(() => { loginMsg.innerText = "로그인 성공!"; loginMsg.className = ""; })
+        .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
+    });
+
+    // 🔹 구글 로그인
+    const googleBtn = document.getElementById("google-login");
+    const googleMsg = document.getElementById("google-msg");
+    const provider = new firebase.auth.GoogleAuthProvider();
+    googleBtn.addEventListener("click", () => {
+      auth.signInWithPopup(provider)
+        .then(result => {
+          const user = result.user;
+          googleMsg.innerText = `로그인 성공! ${user.displayName} (${user.email})`;
+          googleMsg.className = "";
+        })
+        .catch(err => { googleMsg.innerText = err.message; googleMsg.className = "error"; });
+    });
+
+    // 🔹 로그아웃
+    const logoutBtn = document.getElementById("logout-btn");
+    logoutBtn.addEventListener("click", () => {
+      auth.signOut().then(() => { alert("로그아웃 완료!"); });
+    });
+
+    // 🔹 계정 삭제
+    const deleteBtn = document.getElementById("delete-btn");
+    deleteBtn.addEventListener("click", () => {
+      const user = auth.currentUser;
+      if(user){
+        user.delete().then(() => { alert("계정 삭제 완료!"); })
+          .catch(err => { alert("계정 삭제 실패: " + err.message); });
+      } else {
+        alert("로그인 상태가 아닙니다.");
+      }
+    });
+
+    // 🔹 로그인 상태 확인
+    const statusMsg = document.getElementById("status-msg");
+    auth.onAuthStateChanged(user => {
+      if(user) statusMsg.innerText = `로그인 중: ${user.email}`;
+      else statusMsg.innerText = "로그아웃 상태";
+    });
+  </script>
 </body>
 </html>
