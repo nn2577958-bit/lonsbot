@@ -3,7 +3,7 @@
   position: fixed;
   top:0; left:0; width:100%; height:100%;
   background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-              url('images/background.png') no-repeat center center fixed;
+              url('https://raw.githubusercontent.com/nn2577958-bit/lons/main/images/background.png') no-repeat center center fixed;
   background-size: cover;
   z-index:-1;
 }
