@@ -6,58 +6,53 @@
   <title>LONS SV 공식 홈페이지</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 로그인/사용자 관리 섹션 스타일 */
+    /* 로그인/사용자 관리 */
     #auth-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
     #auth-section input { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
     #auth-section button { padding: 8px 16px; margin-bottom: 10px; }
     #auth-section p { margin: 5px 0; }
     #auth-section p.error { color: red; }
+    #user-info { margin-bottom: 10px; padding: 10px; border: 1px solid #666; border-radius: 5px; background-color: #f1f1f1; }
 
     /* 맨 위로 버튼 */
     #scrollTopBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      font-size: 14px;
-      border-radius: 5px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      display: none;
-      z-index: 1000;
+      position: fixed; bottom: 20px; right: 20px; padding: 10px 15px; font-size: 14px;
+      border-radius: 5px; background-color: #333; color: #fff; border: none; cursor: pointer; display: none; z-index: 1000;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>LONS SV Palworld </h1>
-    <p>꿀팁 & 커뮤니티 & 팰월드 정보 아래를 클릭해주세요! </p>
+    <h1>LONS SV Palworld</h1>
+    <p>꿀팁 & 커뮤니티 & 팰월드 정보 아래를 클릭해주세요!</p>
   </header>
 
   <main>
-    <!-- 🔹 로그인/회원가입 섹션 상단 배치 -->
+    <!-- 로그인/회원가입 섹션 -->
     <section id="auth-section">
-      <h2>회원가입</h2>
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required />
-        <input type="password" id="signup-password" placeholder="비밀번호" required />
-        <button type="submit">회원가입</button>
-      </form>
-      <p id="signup-msg"></p>
+      <div id="user-info" style="display:none;"></div>
 
-      <h2>로그인</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required />
-        <input type="password" id="login-password" placeholder="비밀번호" required />
-        <button type="submit">로그인</button>
-      </form>
-      <p id="login-msg"></p>
+      <div id="forms-section">
+        <h2>회원가입</h2>
+        <form id="signup-form">
+          <input type="email" id="signup-email" placeholder="이메일" required />
+          <input type="password" id="signup-password" placeholder="비밀번호" required />
+          <button type="submit">회원가입</button>
+        </form>
+        <p id="signup-msg"></p>
 
-      <h2>구글 로그인</h2>
-      <button id="google-login">Google 계정으로 로그인</button>
-      <p id="google-msg"></p>
+        <h2>로그인</h2>
+        <form id="login-form">
+          <input type="email" id="login-email" placeholder="이메일" required />
+          <input type="password" id="login-password" placeholder="비밀번호" required />
+          <button type="submit">로그인</button>
+        </form>
+        <p id="login-msg"></p>
+
+        <h2>구글 로그인</h2>
+        <button id="google-login">Google 계정으로 로그인</button>
+        <p id="google-msg"></p>
+      </div>
 
       <h2>사용자 관리</h2>
       <button id="logout-btn">로그아웃</button>
@@ -86,7 +81,7 @@
     <p>© 2026 LONS SV ONLINE</p>
   </footer>
 
-  <!-- 🔹 맨 위로 버튼 -->
+  <!-- 맨 위로 버튼 -->
   <button id="scrollTopBtn">▲ 맨 위로</button>
 
   <!-- Firebase SDK -->
@@ -94,7 +89,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
 
   <script>
-    // 🔹 Firebase 설정 (실제 프로젝트 config)
+    // 🔹 Firebase 초기화
     const firebaseConfig = {
       apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
       authDomain: "lons-dc24d.firebaseapp.com",
@@ -107,9 +102,19 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // 🔹 회원가입
     const signupForm = document.getElementById("signup-form");
     const signupMsg = document.getElementById("signup-msg");
+    const loginForm = document.getElementById("login-form");
+    const loginMsg = document.getElementById("login-msg");
+    const googleBtn = document.getElementById("google-login");
+    const googleMsg = document.getElementById("google-msg");
+    const logoutBtn = document.getElementById("logout-btn");
+    const deleteBtn = document.getElementById("delete-btn");
+    const statusMsg = document.getElementById("status-msg");
+    const userInfo = document.getElementById("user-info");
+    const formsSection = document.getElementById("forms-section");
+
+    // 회원가입
     signupForm.addEventListener("submit", e => {
       e.preventDefault();
       const email = document.getElementById("signup-email").value;
@@ -119,9 +124,7 @@
         .catch(err => { signupMsg.innerText = err.message; signupMsg.className = "error"; });
     });
 
-    // 🔹 이메일 로그인
-    const loginForm = document.getElementById("login-form");
-    const loginMsg = document.getElementById("login-msg");
+    // 이메일 로그인
     loginForm.addEventListener("submit", e => {
       e.preventDefault();
       const email = document.getElementById("login-email").value;
@@ -131,9 +134,7 @@
         .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
     });
 
-    // 🔹 구글 로그인
-    const googleBtn = document.getElementById("google-login");
-    const googleMsg = document.getElementById("google-msg");
+    // 구글 로그인
     const provider = new firebase.auth.GoogleAuthProvider();
     googleBtn.addEventListener("click", () => {
       auth.signInWithPopup(provider)
@@ -145,14 +146,12 @@
         .catch(err => { googleMsg.innerText = err.message; googleMsg.className = "error"; });
     });
 
-    // 🔹 로그아웃
-    const logoutBtn = document.getElementById("logout-btn");
+    // 로그아웃
     logoutBtn.addEventListener("click", () => {
       auth.signOut().then(() => { alert("로그아웃 완료!"); });
     });
 
-    // 🔹 계정 삭제
-    const deleteBtn = document.getElementById("delete-btn");
+    // 계정 삭제
     deleteBtn.addEventListener("click", () => {
       const user = auth.currentUser;
       if(user){
@@ -163,14 +162,21 @@
       }
     });
 
-    // 🔹 로그인 상태 확인
-    const statusMsg = document.getElementById("status-msg");
+    // 로그인 상태 감지 및 UI 조정
     auth.onAuthStateChanged(user => {
-      if(user) statusMsg.innerText = `로그인 중: ${user.email}`;
-      else statusMsg.innerText = "로그아웃 상태";
+      if(user){
+        userInfo.style.display = "block";
+        userInfo.innerText = `로그인 중: ${user.displayName || "사용자"} (${user.email})`;
+        formsSection.style.display = "none";
+        statusMsg.innerText = `로그인 상태: ${user.email}`;
+      } else {
+        userInfo.style.display = "none";
+        formsSection.style.display = "block";
+        statusMsg.innerText = "로그아웃 상태";
+      }
     });
 
-    // 🔹 맨 위로 버튼 동작
+    // 맨 위로 버튼
     const scrollBtn = document.getElementById("scrollTopBtn");
     window.onscroll = () => {
       if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
@@ -185,3 +191,4 @@
   </script>
 </body>
 </html>
+
