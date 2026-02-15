@@ -3,55 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 공식 홈페이지</title>
-  <link rel="stylesheet" href="style.css">
+  <title>LONS SV Palworld</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5; /* 전체 배경 색 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+    }
+    main {
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+    #discord-link {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 12px 20px;
+      background: #7289da;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    #discord-link:hover {
+      background: #5b6eae;
+    }
+    #main-image {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      background: #333;
+      color: #fff;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>LONS SV Palworld</h1>
+    <p>로그인 후 주요 기능과 정보를 확인하세요!</p>
   </header>
 
   <main>
-    <!-- 로그인/회원가입 -->
-    <section id="auth-section">
-      <div id="forms-section">
-        <h2>회원가입</h2>
-        <form id="signup-form">
-          <input type="email" id="signup-email" placeholder="이메일" required />
-          <input type="password" id="signup-password" placeholder="비밀번호" required />
-          <button type="submit">회원가입</button>
-        </form>
-        <p id="signup-msg" class="error"></p>
+    <!-- 디스코드 바로가기 -->
+    <a id="discord-link" href="https://discord.gg/tnMXbQ65Hk" target="_blank">
+      디스코드 바로가기
+    </a>
 
-        <h2>로그인</h2>
-        <form id="login-form">
-          <input type="email" id="login-email" placeholder="이메일" required />
-          <input type="password" id="login-password" placeholder="비밀번호" required />
-          <button type="submit">로그인</button>
-        </form>
-        <p id="login-msg" class="error"></p>
+    <!-- 메인 화면 예시 이미지 -->
+    <img id="main-image" src="/mnt/data/A_digital_illustration_showcases_the_homepage_of_".png" alt="메인 화면 예시">
 
-        <h2>Google 로그인</h2>
-        <button id="google-login">Google 계정으로 로그인</button>
-        <p id="google-msg" class="error"></p>
-      </div>
-    </section>
-
-    <!-- 로그인 후 화면 -->
-    <section id="main-section" style="display:none;">
-      <button id="logout-btn">로그아웃</button>
-      <h2 class="center-text">주요 기능</h2>
-      <a href="https://discord.gg/tnMXbQ65Hk" target="_blank">
-        <img src="discord-link.png" alt="디스코드 바로가기" class="center-img">
-      </a>
-    </section>
+    <!-- 주요 기능 -->
+    <h2>주요 기능</h2>
+    <ul>
+      <li>실시간 알림 & 다양한 소식 & 정보</li>
+      <li>공지사항 & 꿀팁 정보</li>
+      <li>02월 20일 새로운 하드코어 OPEN</li>
+      <li>즐거운 명절 보내시기 바랍니다</li>
+    </ul>
   </main>
 
   <footer>
-    <p>© 2026 LONS SV ONLINE</p>
+    © 2026 LONS SV ONLINE
   </footer>
-
-  <!-- Firebase v9 모듈 -->
-  <script type="module" src="script.js"></script>
 </body>
 </html>
