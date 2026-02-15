@@ -5,98 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS SPA 로그인/회원가입</title>
 <style>
-/* 전체 화면 중앙 배치 */
-body{
-  margin:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  font-family:'Noto Sans KR',sans-serif;
-  background:linear-gradient(135deg,#89f7fe,#66a6ff);
+/* 전체 배경 */
+body {
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
 }
 
 /* 카드 스타일 */
-.card{
-  width:90%;
-  max-width:360px;
-  padding:25px 20px;
-  background:#fff;
-  border-radius:12px;
-  box-shadow:0 5px 18px rgba(0,0,0,0.15);
-  text-align:center;
-  box-sizing:border-box;
-  display:none;
-}
-.card.show{display:block;}
-
-.card h1{
-  margin-bottom:20px;
-  font-size:22px;
-  color:#333;
-}
-.input-group{
-  position:relative;
-  width:100%;
-  margin-bottom:15px;
-}
-.input-group input{
-  width:100%;
-  padding:12px 15px;
-  border:1px solid #ccc;
-  border-radius:8px;
-  font-size:14px;
-  box-sizing:border-box;
-}
-.password-group input{
-  padding-right:42px;
-}
-.toggle-eye{
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:18px;
-  color:#66a6ff;
+.card, .module8 {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 360px;
+  padding: 30px 25px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* 버튼 스타일 */
-button{
-  width:100%;
-  padding:12px;
-  background:linear-gradient(45deg,#66a6ff,#89f7fe);
-  border:none;
-  border-radius:8px;
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-  margin-top:10px;
-  transition:all 0.2s ease;
+.card.show, .module8.show {
+  opacity: 1;
+  transform: translateY(0);
 }
-button:hover{opacity:0.9;}
 
-/* 링크 스타일 */
-p{
-  margin-top:12px;
-  font-size:14px;
-  color:#666;
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s;
 }
-p a{
-  color:#66a6ff;
-  text-decoration:none;
-}
-p a:hover{text-decoration:underline;}
 
-/* 반응형 조정 */
-@media(max-width:480px){
-  .card{
-    padding:20px 15px;
+input:focus {
+  border-color: #66a6ff;
+  box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #66a6ff, #89f7fe);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1) rotate(-2deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #89f7fe, #66a6ff);
+}
+
+button:active {
+  transform: scale(0.95) rotate(0deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+a {
+  color: #66a6ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 30px;
+}
+
+@keyframes fadeInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  .card h1{font-size:20px;}
-  button{font-size:15px;padding:10px;}
-  .input-group input{font-size:13px;padding:10px 12px;}
-  .toggle-eye{font-size:16px;}
 }
 </style>
 </head>
@@ -104,81 +107,42 @@ p a:hover{text-decoration:underline;}
 
 <!-- 로그인 화면 -->
 <div class="card show" id="loginCard">
-  <h1>LONS SPA 로그인</h1>
-  <div class="input-group">
-    <input type="text" id="username" placeholder="아이디 입력" autocomplete="username">
-  </div>
-  <div class="input-group password-group">
-    <input type="password" id="password" placeholder="비밀번호 입력" autocomplete="current-password">
-    <span class="toggle-eye" id="togglePasswordLogin">👁️</span>
-  </div>
+  <img class="logo" src="https://via.placeholder.com/150x50?text=LONS+Logo" alt="LONS 로고">
+  <h1>로그인</h1>
+  <input type="text" id="username" placeholder="아이디">
+  <input type="password" id="password" placeholder="비밀번호">
   <button id="loginBtn">로그인</button>
   <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
 </div>
 
 <!-- 회원가입 화면 -->
-<div class="card" id="signupCard">
-  <h1>LONS SPA 회원가입</h1>
-  <div class="input-group">
-    <input type="text" id="newUsername" placeholder="아이디 입력" autocomplete="username">
-  </div>
-  <div class="input-group password-group">
-    <input type="password" id="newPassword" placeholder="비밀번호 입력" autocomplete="new-password">
-    <span class="toggle-eye" id="togglePasswordSignup">👁️</span>
-  </div>
-  <div class="input-group password-group">
-    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" autocomplete="new-password">
-    <span class="toggle-eye" id="toggleConfirmPassword">👁️</span>
-  </div>
+<div class="card" id="signupCard" style="display:none;">
+  <img class="logo" src="https://via.placeholder.com/150x50?text=LONS+Logo" alt="LONS 로고">
+  <h1>회원가입</h1>
+  <input type="text" id="newUsername" placeholder="아이디">
+  <input type="password" id="newPassword" placeholder="비밀번호">
+  <input type="password" id="confirmPassword" placeholder="비밀번호 확인">
   <button id="signupBtn">회원가입</button>
   <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
 </div>
 
-<script>
-// 비밀번호 토글 함수
-function addToggle(inputId, btnId){
-  const input = document.getElementById(inputId);
-  const btn = document.getElementById(btnId);
-  btn.addEventListener('click', ()=>{
-    if(input.type === 'password'){ input.type='text'; btn.textContent='🙈'; }
-    else{ input.type='password'; btn.textContent='👁️'; }
-  });
-}
-addToggle('password','togglePasswordLogin');
-addToggle('newPassword','togglePasswordSignup');
-addToggle('confirmPassword','toggleConfirmPassword');
+<!-- 모듈 8 화면 -->
+<div class="module8" id="module8" style="display:none;">
+  <h2 id="welcomeMsg">모듈 8</h2>
+  <p id="introMsg">로그인 성공! 아래는 모듈 8의 주요 내용입니다.</p>
+  <div id="moduleContent"></div>
+  <button id="logoutBtn">로그아웃</button>
+</div>
 
-// 화면 전환
+<script>
+// 로그인 / 회원가입 화면 전환
 const loginCard = document.getElementById('loginCard');
 const signupCard = document.getElementById('signupCard');
-document.getElementById('showSignup').addEventListener('click', e=>{
+const showSignup = document.getElementById('showSignup');
+const backToLogin = document.getElementById('backToLogin');
+const module8 = document.getElementById('module8');
+
+// 회원가입 화면으로 전환
+showSignup.addEventListener('click', (e) => {
   e.preventDefault();
-  loginCard.classList.remove('show');
-  signupCard.classList.add('show');
-});
-document.getElementById('backToLogin').addEventListener('click', e=>{
-  e.preventDefault();
-  signupCard.classList.remove('show');
-  loginCard.classList.add('show');
-});
-
-// 로그인/회원가입 예시
-document.getElementById('loginBtn').addEventListener('click', ()=>{
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if(!username || !password){ alert('아이디와 비밀번호를 입력해주세요.'); return; }
-  alert(`${username}님, 로그인 성공!`);
-});
-
-document.getElementById('signupBtn').addEventListener('click', ()=>{
-  const user = document.getElementById('newUsername').value.trim();
-  const pass = document.getElementById('newPassword').value.trim();
-  const confirm = document.getElementById('confirmPassword').value.trim();
-  if(!user || !pass || !confirm){ alert('모든 항목을 입력해주세요.'); return; }
-  if(pass !== confirm){ alert('비밀번호가 일치하지 않습니다.'); return; }
-  alert(`${user}님, 회원가입 완료!`);
-});
-</script>
-
-</body>
-</html>
+  loginCard.style.display = 'none'
