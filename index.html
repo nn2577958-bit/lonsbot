@@ -7,9 +7,10 @@
   <style>
     /* 기본 스타일 */
     body {
+      font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       padding: 0;
-      background: url('https://i.ibb.co/gYpDVdT/your-image-url.jpg') no-repeat center center fixed; /* 여기에 아기 공룡 이미지 URL을 넣으세요 */
+      background: url('https://ibb.co/YrNcLdk') no-repeat center center fixed; /* 여기에 아기 공룡 이미지 URL을 넣으세요 */
       background-size: cover;
       display: flex;
       justify-content: center;
@@ -19,7 +20,7 @@
 
     /* 카드 스타일 */
     .card {
-      background: rgba(255, 255, 255, 0.8); /* 배경을 살짝 투명하게 */
+      background: rgba(255, 255, 255, 0.9); /* 배경을 살짝 투명하게 */
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       padding: 40px;
@@ -186,34 +187,4 @@
 
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-          signupMsg.innerText = "회원가입 성공! 로그인 해주세요.";
-          signupForm.reset();
-        })
-        .catch((err) => {
-          signupMsg.innerText = err.message;
-        });
-    });
-
-    // 로그인 화면 -> 회원가입 화면
-    showSignup.addEventListener("click", (e) => {
-      e.preventDefault();
-      loginContainer.style.display = "none";
-      signupContainer.style.display = "block";
-    });
-
-    // 회원가입 화면 -> 로그인 화면
-    backToLogin.addEventListener("click", (e) => {
-      e.preventDefault();
-      signupContainer.style.display = "none";
-      loginContainer.style.display = "block";
-    });
-
-    // 로그인 상태 체크
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "home.html"; // 이미 로그인 상태라면 홈 페이지로 이동
-      }
-    });
-  </script>
-</body>
-</html>
+          signupMsg.innerText = "회원가입 성공! 로그인
