@@ -1,44 +1,60 @@
+/* 기본 스타일 */
 body {
-  font-family: sans-serif;
-  background: #f7f7f7;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f7f7f7;
   padding: 20px;
+  margin: 0;
 }
 
+/* 헤더 */
 header {
-  background: #333;
+  background-color: #333;
   color: #fff;
-  padding: 10px;
+  padding: 15px;
   text-align: center;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+/* 섹션 */
 section {
-  background: #fff;
+  background-color: #fff;
   max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 30px auto;
+  padding: 25px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* 입력창, 버튼 공통 스타일 */
 input, button {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
+/* 버튼 스타일 */
 button {
-  background: #333;
+  background-color: #333;
   color: #fff;
   border: none;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background: #555;
+  background-color: #555;
 }
 
+/* 오류 메시지 */
 .error {
-  color: red;
+  color: #d33;
+  text-align: center;
+  font-weight: 500;
+  margin-top: -8px;
+  margin-bottom: 12px;
 }
