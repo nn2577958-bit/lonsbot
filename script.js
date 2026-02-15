@@ -1,4 +1,4 @@
-// Firebase 초기화
+// Firebase 초기화 (v8)
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
@@ -11,12 +11,11 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// DOM
+// DOM 요소
 const signupForm = document.getElementById("signup-form");
 const signupMsg = document.getElementById("signup-msg");
 const loginForm = document.getElementById("login-form");
 const loginMsg = document.getElementById("login-msg");
-
 const authSection = document.getElementById("auth-section");
 const boardSection = document.getElementById("board-section");
 const userEmail = document.getElementById("user-email");
@@ -29,10 +28,11 @@ signupForm.addEventListener("submit", e => {
   e.preventDefault();
   const email = document.getElementById("signup-email").value;
   const pw = document.getElementById("signup-password").value;
-  if(pw.length < 6){ signupMsg.innerText = "비밀번호는 최소 6자 이상"; return; }
+  if(pw.length < 6){ signupMsg.innerText="비밀번호는 최소 6자 이상"; return; }
+
   auth.createUserWithEmailAndPassword(email,pw)
-    .then(() => { signupMsg.innerText=""; })
-    .catch(err => { signupMsg.innerText = err.message; });
+    .then(() => { signupMsg.innerText="회원가입 완료!"; })
+    .catch(err => { signupMsg.innerText=err.message; });
 });
 
 // 로그인
@@ -40,35 +40,34 @@ loginForm.addEventListener("submit", e => {
   e.preventDefault();
   const email = document.getElementById("login-email").value;
   const pw = document.getElementById("login-password").value;
+
   auth.signInWithEmailAndPassword(email,pw)
-    .then(() => { loginMsg.innerText=""; })
-    .catch(err => { loginMsg.innerText = err.message; });
+    .then(() => { loginMsg.innerText="로그인 성공!"; })
+    .catch(err => { loginMsg.innerText=err.message; });
 });
 
-// 로그인 상태 확인
+// 로그인 상태 체크
 auth.onAuthStateChanged(user => {
   if(user){
-    authSection.style.display = "none";
-    boardSection.style.display = "block";
-    userEmail.innerText = `로그인 계정: ${user.email}`;
+    authSection.style.display="none";
+    boardSection.style.display="block";
+    userEmail.innerText=`로그인 계정: ${user.email}`;
     loadPosts();
   } else {
-    authSection.style.display = "block";
-    boardSection.style.display = "none";
+    authSection.style.display="block";
+    boardSection.style.display="none";
   }
 });
 
 // 로그아웃
-logoutBtn.addEventListener("click", () => {
-  auth.signOut();
-});
+logoutBtn.addEventListener("click",()=>auth.signOut());
 
 // 게시글 작성
-submitBtn.addEventListener("click", () => {
+submitBtn.addEventListener("click",()=>{
   const title = document.getElementById("post-title").value.trim();
   const content = document.getElementById("post-content").value.trim();
   const user = auth.currentUser;
-  if(!title||!content) return alert("제목과 내용을 입력해주세요.");
+  if(!title || !content) return alert("제목과 내용을 입력해주세요.");
 
   db.collection("posts").add({
     author: user.email,
