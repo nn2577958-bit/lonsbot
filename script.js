@@ -14,29 +14,18 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // DOM 요소
-const loginForm = document.getElementById("login-form");
-const loginMsg = document.getElementById("login-msg");
 const logoutBtn = document.getElementById("logout-btn");
-
-// 로그인 처리
-loginForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const email = document.getElementById("login-email").value.trim();
-  const pw = document.getElementById("login-password").value;
-  
-  signInWithEmailAndPassword(auth, email, pw)
-    .then(() => { window.location.href = "home.html"; })  // 로그인 후 홈 화면으로 리디렉션
-    .catch(err => { loginMsg.innerText = err.message; loginMsg.className = "error"; });
-});
 
 // 로그아웃 처리
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => { window.location.href = "index.html"; });  // 로그아웃 후 로그인 화면으로 리디렉션
+    signOut(auth).then(() => {
+      window.location.href = "index.html"; // 로그아웃 후 로그인 화면으로 리디렉션
+    });
   });
 }
 
-// 로그인 상태 확인
+// 로그인 상태 확인 및 화면 전환
 onAuthStateChanged(auth, user => {
   if (!user) {
     window.location.href = "index.html";  // 로그인하지 않으면 로그인 화면으로 리디렉션
