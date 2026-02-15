@@ -1,4 +1,3 @@
-// Firebase v9 모듈 방식
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
@@ -15,7 +14,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// DOM 요소
+// DOM
 const signupForm = document.getElementById("signup-form");
 const signupMsg = document.getElementById("signup-msg");
 const loginForm = document.getElementById("login-form");
@@ -32,13 +31,13 @@ signupForm.addEventListener("submit", e => {
   const email = document.getElementById("signup-email").value.trim();
   const pw = document.getElementById("signup-password").value;
   if(pw.length < 6){
-    signupMsg.innerText = "비밀번호는 최소 6자 이상이어야 합니다.";
+    signupMsg.innerText = "비밀번호는 최소 6자 이상입니다.";
     signupMsg.className = "error";
     return;
   }
   createUserWithEmailAndPassword(auth, email, pw)
     .then(() => {
-      signupMsg.innerText = "회원가입 완료! 로그인 해주세요.";
+      signupMsg.innerText = "회원가입 완료! 로그인해주세요.";
       signupMsg.className = "";
       signupForm.reset();
     })
@@ -75,15 +74,11 @@ googleBtn.addEventListener("click", () => {
 logoutBtn.addEventListener("click", () => {
   const user = auth.currentUser;
   if(user){
-    signOut(auth).then(() => {
-      alert("로그아웃 완료!");
-    });
-  } else {
-    alert("로그인 상태가 아닙니다.");
-  }
+    signOut(auth).then(() => { alert("로그아웃 완료!"); });
+  } else { alert("로그인 상태가 아닙니다."); }
 });
 
-// 로그인 상태 감지
+// 로그인 상태 감지 → 브랜치 전환
 onAuthStateChanged(auth, user => {
   if(user){
     authSection.style.display = "none";
