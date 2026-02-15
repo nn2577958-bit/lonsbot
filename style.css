@@ -1,85 +1,109 @@
+/* 전체 배경 구름 */
 body {
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
-  background: #87ceeb; /* 하늘색 기본 */
-  overflow-x: hidden;
-}
-
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('https://cdn.discordapp.com/attachments/1463400037416439869/1472466823978160281/OIP.webp?ex=6992ad17&is=69915b97&hm=a255caf7787407a8826913ce6d491f9d0df361b038f1a33cd26676f65773922b') 
-              no-repeat center top;
+  background: url('https://cdn.discordapp.com/attachments/1463400037416439869/1468509808406695977/anime-baby-character-with-dragon-costume-illustration.jpg?ex=69921f95&is=6990ce15&hm=0855314524805761ebf0415b0d954c05c62b1e93fcef2a5d4e26f75c2b7e362a') no-repeat center top;
   background-size: cover;
-  z-index: -1;
-  opacity: 0.8;
+  min-height: 100vh;
 }
 
+/* 헤더 */
 header {
   text-align: center;
-  padding: 20px 0;
+  padding: 20px;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
+/* 카드 공통 */
 .card {
-  background: rgba(255,255,255,0.9);
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 15px;
   max-width: 400px;
-  width: 90%;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  margin: 30px auto;
+  padding: 25px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* 카드 제목 */
+.card h2 {
   text-align: center;
+  margin-bottom: 15px;
 }
 
-.card-image img {
-  width: 150px;
-  height: auto;
-  margin: 0 auto 15px auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-input, button {
+/* 폼 요소 */
+input[type="email"],
+input[type="password"] {
   width: 100%;
-  margin-bottom: 10px;
   padding: 10px;
-  border-radius: 8px;
+  margin-bottom: 12px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: 14px;
 }
 
+/* 버튼 공통 */
 button {
-  background-color: #5c6bc0;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #5865F2; /* 디스코드 보라색 계열 */
   color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background-color: #3949ab;
+  background-color: #4752c4;
+  transform: scale(1.03);
 }
 
+/* 오류 메시지 */
 .error {
   color: red;
-  font-size: 0.9rem;
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 5px;
 }
 
-footer {
+/* 주요 기능 리스트 중앙 정렬 */
+#main-card ul {
+  list-style: none;
+  padding: 0;
   text-align: center;
-  padding: 10px 0;
-  color: #fff;
 }
+
+#main-card ul li {
+  margin: 6px 0;
+}
+
+/* 디스코드 버튼 */
+.discord-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #5865F2;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 2px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.discord-btn:hover {
+  background-color: #4752c4;
+  transform: scale(1.05);
+}
+
+/* 푸터 중앙 정렬 */
+footer p {
+  text-align: center;
+  color: #fff;
+  margin-top: 20px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
