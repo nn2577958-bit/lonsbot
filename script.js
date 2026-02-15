@@ -57,7 +57,7 @@ signupForm.addEventListener("submit", e => {
     })
     .catch(err => {
       if(err.code === "auth/email-already-in-use"){
-        signupMsg.innerText = "이미 가입된 이메일입니다. 로그인 해주세요.";
+        signupMsg.innerText = "이미 가입된 이메일 입니다.";
       } else { signupMsg.innerText = err.message; }
       signupMsg.className = "error";
     });
