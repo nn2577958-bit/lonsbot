@@ -3,68 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV Palworld</title>
-  <link rel="stylesheet" href="style.css">
+  <title>로그인 / 회원가입</title>
+  <style>
+    /* 전체 배경 */
+    body {
+      margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f4f7f6;
+      overflow: hidden;
+    }
+
+    /* 애니메이션 초기화 */
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 360px;
+      padding: 30px 25px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.6s forwards;
+    }
+
+    /* 로그인 폼 애니메이션 */
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 아이콘 스타일 */
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #66a6ff;
+    }
+
+    /* 입력창 스타일 */
+    input {
+      width: 100%;
+      padding: 12px 15px 12px 40px; /* 왼쪽에 아이콘 공간 추가 */
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      border-color: #66a6ff;
+      box-shadow: 0 0 5px rgba(102, 166, 255, 0.5);
+    }
+
+    /* 버튼 스타일 */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #66a6ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      background: #5a94e3;
+    }
+    
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 텍스트 및 링크 스타일 */
+    p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    a {
+      color: #66a6ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <div class="background"></div>
 
-  <header>
-    <h1>LONS SV Palworld</h1>
-    <p>오늘도 찾아 와주셔서 감사 합니다!</p>
-  </header>
+<!-- 로그인 화면 -->
+<div class="card show" id="loginCard">
+  <h1>로그인</h1>
+  
+  <!-- 아이디 입력창 -->
+  <div style="position: relative;">
+    <i class="input-icon fas fa-user"></i>
+    <input type="text" id="username" placeholder="아이디" />
+  </div>
+  
+  <!-- 비밀번호 입력창 -->
+  <div style="position: relative;">
+    <i class="input-icon fas fa-lock"></i>
+    <input type="password" id="password" placeholder="비밀번호" />
+  </div>
+  
+  <button id="loginBtn">로그인</button>
+  <p>회원이 아니신가요? <a href="#" id="showSignup">회원가입</a></p>
+</div>
 
-  <main>
-    <div class="card" id="auth-card">
-      <h2>계정 로그인 / 회원가입</h2>
+<!-- 회원가입 화면 -->
+<div class="card" id="signupCard" style="display:none;">
+  <h1>회원가입</h1>
+  <div style="position: relative;">
+    <i class="input-icon fas fa-user"></i>
+    <input type="text" id="newUsername" placeholder="아이디" />
+  </div>
+  <div style="position: relative;">
+    <i class="input-icon fas fa-lock"></i>
+    <input type="password" id="newPassword" placeholder="비밀번호" />
+  </div>
+  <div style="position: relative;">
+    <i class="input-icon fas fa-lock"></i>
+    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" />
+  </div>
+  <button id="signupBtn">회원가입</button>
+  <p>이미 계정이 있으신가요? <a href="#" id="backToLogin">로그인</a></p>
+</div>
 
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required />
-        <input type="password" id="signup-password" placeholder="비밀번호 (6자 이상)" required />
-        <button type="submit">회원가입</button>
-      </form>
-      <p id="signup-msg" class="error"></p>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const loginCard = document.getElementById('loginCard');
+  const signupCard = document.getElementById('signupCard');
+  const showSignup = document.getElementById('showSignup');
+  const backToLogin = document.getElementById('backToLogin');
+  
+  // 로그인 버튼 클릭
+  loginBtn.addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    if (!username || !password) {
+      alert('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+    alert('로그인 성공!');
+    // 로그인 후 처리
+  });
 
-      <hr>
+  // 회원가입 화면으로 이동
+  showSignup.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginCard.style.display = 'none';
+    signupCard.style.display = 'block';
+  });
 
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required />
-        <input type="password" id="login-password" placeholder="비밀번호" required />
-        <button type="submit">로그인</button>
-      </form>
-      <p id="login-msg" class="error"></p>
+  // 로그인 화면으로 돌아가기
+  backToLogin.addEventListener('click', (e) => {
+    e.preventDefault();
+    signupCard.style.display = 'none';
+    loginCard.style.display = 'block';
+  });
 
-      <hr>
+  // 회원가입 버튼 클릭
+  signupBtn.addEventListener('click', () => {
+    const newUser = document.getElementById('newUsername').value.trim();
+    const newPass = document.getElementById('newPassword').value.trim();
+    const confirmPass = document.getElementById('confirmPassword').value.trim();
+    if (!newUser || !newPass || !confirmPass) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+    if (newPass !== confirmPass) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    alert(`${newUser}님, 회원가입 완료!`);
+    loginCard.style.display = 'block';
+    signupCard.style.display = 'none';
+  });
+});
+</script>
 
-      <button id="google-login">Google 계정으로 로그인</button>
-      <p id="google-msg" class="error"></p>
-    </div>
-
-    <div class="card" id="main-card" style="display:none;">
-      <div class="button-group">
-        <button class="logout-btn" id="logout-btn">로그아웃</button>
-        <a id="discord-btn" href="https://discord.gg/tnMXbQ65Hk" target="_blank" class="btn">디스코드 바로가기</a>
-      </div>
-
-      <h2 style="text-align:center;">서버가 좋은점.</h2>
-      <ul style="text-align:center;">
-        <li>실시간 알림 & 다양한 소식 & 정보</li>
-        <li>공지사항 & 꿀팁 정보</li>
-        <li>고성능 패키지 권장 멀티 권장 SV</li>
-        <li>잊혀 질만 하면 찾을수 있는곳.</li>
-        <li>생동감 넘치는 힐링 SVS</li>
-        <li>많은 응원과 홍보 많이 해주세요.</li>
-        <li>02월 15일 [ 1 SV ] 정상 접속 가능</li>
-        <li>02월 20일 새로운 하드코어 OPEN</li>
-        <li>즐거운 명절 보내시기 바랍니다</li>
-      </ul>
-    </div>
-  </main>
-
-  <footer>
-    <p style="text-align:center;">© 2026 LONS SV ONLINE</p>
-  </footer>
-
-  <script type="module" src="script.js"></script>
 </body>
 </html>
