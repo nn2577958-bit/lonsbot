@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>로그인 / 회원가입</title>
+  <title>홈 - 로그인 / 회원가입</title>
   <style>
     /* 전체 배경 */
     body {
@@ -30,7 +30,7 @@
       animation: slideIn 0.6s forwards;
     }
 
-    /* 로그인 폼 애니메이션 */
+    /* 애니메이션 정의 */
     @keyframes slideIn {
       0% {
         opacity: 0;
@@ -114,12 +114,61 @@
     a:hover {
       text-decoration: underline;
     }
+
+    /* 홈 화면 */
+    .home-card {
+      background: white;
+      width: 80%;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.8s forwards;
+    }
+
+    .home-card h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .home-card p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .home-card button {
+      width: auto;
+      padding: 12px 20px;
+      background-color: #66a6ff;
+      color: white;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-card button:hover {
+      background-color: #5a94e3;
+    }
   </style>
 </head>
 <body>
 
+<!-- 홈 화면 -->
+<div class="home-card show" id="homeCard">
+  <h2>환영합니다!</h2>
+  <p>여기에서 로그인하고, 다양한 서비스를 이용하세요. 더 많은 정보는 아래 버튼을 통해 확인하실 수 있습니다.</p>
+  <button id="goToLogin">로그인 화면으로</button>
+  <button id="goToSignup">회원가입 화면으로</button>
+</div>
+
 <!-- 로그인 화면 -->
-<div class="card show" id="loginCard">
+<div class="card" id="loginCard" style="display:none;">
   <h1>로그인</h1>
   
   <!-- 아이디 입력창 -->
@@ -160,13 +209,30 @@
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const loginBtn = document.getElementById('loginBtn');
-  const signupBtn = document.getElementById('signupBtn');
+  const homeCard = document.getElementById('homeCard');
   const loginCard = document.getElementById('loginCard');
   const signupCard = document.getElementById('signupCard');
+  const goToLogin = document.getElementById('goToLogin');
+  const goToSignup = document.getElementById('goToSignup');
   const showSignup = document.getElementById('showSignup');
   const backToLogin = document.getElementById('backToLogin');
-  
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+
+  // 홈 화면 -> 로그인 화면 이동
+  goToLogin.addEventListener('click', () => {
+    homeCard.style.display = 'none';
+    loginCard.style.display = 'block';
+    loginCard.classList.add('show');
+  });
+
+  // 홈 화면 -> 회원가입 화면 이동
+  goToSignup.addEventListener('click', () => {
+    homeCard.style.display = 'none';
+    signupCard.style.display = 'block';
+    signupCard.classList.add('show');
+  });
+
   // 로그인 버튼 클릭
   loginBtn.addEventListener('click', () => {
     const username = document.getElementById('username').value.trim();
@@ -179,39 +245,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // 로그인 후 처리
   });
 
-  // 회원가입 화면으로 이동
-  showSignup.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginCard.style.display = 'none';
-    signupCard.style.display = 'block';
-  });
-
-  // 로그인 화면으로 돌아가기
-  backToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    signupCard.style.display = 'none';
-    loginCard.style.display = 'block';
-  });
-
-  // 회원가입 버튼 클릭
-  signupBtn.addEventListener('click', () => {
-    const newUser = document.getElementById('newUsername').value.trim();
-    const newPass = document.getElementById('newPassword').value.trim();
-    const confirmPass = document.getElementById('confirmPassword').value.trim();
-    if (!newUser || !newPass || !confirmPass) {
-      alert('모든 항목을 입력해주세요.');
-      return;
-    }
-    if (newPass !== confirmPass) {
-      alert('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-    alert(`${newUser}님, 회원가입 완료!`);
-    loginCard.style.display = 'block';
-    signupCard.style.display = 'none';
-  });
-});
-</script>
-
-</body>
-</html>
+  // 회원가입 화면
