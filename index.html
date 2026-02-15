@@ -3,139 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LONS SV 공식 홈페이지</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background:#f7f7f7; }
-    header { text-align:center; margin-bottom:20px; }
-    #auth-section { max-width:400px; margin:0 auto 20px; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-    #auth-section input, #auth-section button { width:100%; margin-bottom:10px; padding:10px; border-radius:5px; border:1px solid #ccc; }
-    #auth-section button { background:#333; color:#fff; border:none; cursor:pointer; }
-    #auth-section button:hover { background:#555; }
-    #auth-section p.error { color:red; text-align:center; }
-
-    #user-info { display:none; margin-bottom:10px; padding:10px; background:#eee; border-radius:5px; text-align:center; }
-    .features { max-width:600px; margin:0 auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-    .features h2 { text-align:center; }
-    .features ul { list-style-type: disc; margin-left:20px; }
-    footer { text-align:center; margin-top:20px; }
-  </style>
+  <title>LONS SV 로그인</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
+  <div class="login-container">
     <h1>LONS SV Palworld</h1>
-    <p>꿀팁 & 커뮤니티 & 팰월드 정보 확인</p>
-  </header>
-
-  <main>
-    <!-- 로그인/회원가입 -->
-    <section id="auth-section">
-      <div id="user-info"></div>
-
-      <h2>회원가입</h2>
-      <form id="signup-form">
-        <input type="email" id="signup-email" placeholder="이메일" required>
-        <input type="password" id="signup-password" placeholder="비밀번호" required>
-        <button type="submit">회원가입</button>
-      </form>
-      <p id="signup-msg" class="error"></p>
-
-      <h2>로그인</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="이메일" required>
-        <input type="password" id="login-password" placeholder="비밀번호" required>
-        <button type="submit">로그인</button>
-      </form>
-      <p id="login-msg" class="error"></p>
-
-      <button id="google-login">Google 로그인</button>
-      <p id="google-msg" class="error"></p>
-    </section>
-
-    <!-- 주요 기능 -->
-    <section class="features">
-      <h2>주요 기능</h2>
-      <ul>
-        <li>실시간 알림 & 다양한 소식 & 정보</li>
-        <li>공지사항 & 꿀팁 정보</li>
-        <li>02월 20일 새로운 하드코어 OPEN</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2026 LONS SV ONLINE</p>
-  </footer>
-
-  <!-- Firebase v9 모듈 -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-      authDomain: "lons-dc24d.firebaseapp.com",
-      projectId: "lons-dc24d",
-      storageBucket: "lons-dc24d.firebasestorage.app",
-      messagingSenderId: "755692328918",
-      appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    // DOM
-    const signupForm = document.getElementById("signup-form");
-    const signupMsg = document.getElementById("signup-msg");
-    const loginForm = document.getElementById("login-form");
-    const loginMsg = document.getElementById("login-msg");
-    const googleBtn = document.getElementById("google-login");
-    const googleMsg = document.getElementById("google-msg");
-    const userInfo = document.getElementById("user-info");
-    const authSection = document.getElementById("auth-section");
-
-    // 회원가입
-    signupForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const email = document.getElementById("signup-email").value.trim();
-      const pw = document.getElementById("signup-password").value;
-      if(pw.length < 6){ signupMsg.innerText="비밀번호는 최소 6자 이상"; signupMsg.className="error"; return; }
-      createUserWithEmailAndPassword(auth, email, pw)
-        .then(() => { signupMsg.innerText="회원가입 완료! 로그인 해주세요."; signupMsg.className=""; signupForm.reset(); })
-        .catch(err => { signupMsg.innerText = err.code==="auth/email-already-in-use"?"이미 가입된 이메일입니다.":err.message; signupMsg.className="error"; });
-    });
-
-    // 로그인
-    loginForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value.trim();
-      const pw = document.getElementById("login-password").value;
-      signInWithEmailAndPassword(auth, email, pw)
-        .then(()=> { loginMsg.innerText="로그인 성공!"; loginMsg.className=""; loginForm.reset(); })
-        .catch(err=> { loginMsg.innerText=err.message; loginMsg.className="error"; });
-    });
-
-    // Google 로그인
-    googleBtn.addEventListener("click", ()=> {
-      signInWithPopup(auth, provider)
-        .then(result => { 
-          const user = result.user;
-          googleMsg.innerText = `로그인 성공! ${user.displayName || "사용자"} (${user.email})`;
-          googleMsg.className="";
-        })
-        .catch(err=> { googleMsg.innerText=err.message; googleMsg.className="error"; });
-    });
-
-    // 로그인 상태 감지
-    onAuthStateChanged(auth, user => {
-      if(user){
-        userInfo.style.display="block";
-        userInfo.innerText = `로그인 중: ${user.displayName || "사용자"} (${user.email})`;
-        authSection.style.display="none"; // 로그인 시 폼 숨김
-      } else {
-        userInfo.style.display="none";
-        authSection.style.display="block"; // 로그아웃 시 폼 보임
-      }
-    });
-  </script>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="이메일" required />
+      <input type="password" id="login-password" placeholder="비밀번호" required />
+      <button type="submit">로그인</button>
+    </form>
+    <p id="login-msg" class="error"></p>
+  </div>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
