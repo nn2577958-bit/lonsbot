@@ -10,65 +10,67 @@
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
       padding: 0;
-      background: url('https://discord.com/channels/@me/1463400037416439869') no-repeat center center fixed;
-      background-size: cover; /* 이미지가 화면 전체에 꽉 차도록 설정 */
+      background: linear-gradient(135deg, #FFB6C1, #FF6347); /* 그라데이션 배경 */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
 
-    /* 카드 스타일 */
+    /* 로그인 폼 스타일 */
     .card {
-      background: rgba(255, 255, 255, 0.8); /* 투명한 배경 */
+      background: rgba(255, 255, 255, 0.9); /* 투명한 배경 */
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      width: 380px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 40px 50px;
+      width: 400px;
       text-align: center;
+      transition: all 0.3s ease;
     }
 
     h1 {
       margin-bottom: 20px;
-      font-size: 24px;
+      font-size: 28px;
       color: #333;
+      font-weight: 700;
     }
 
     /* 입력 필드 스타일 */
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 10px 0;
       border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-      background: #f9f9f9;
-      transition: border 0.3s ease;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background: #f8f8f8;
+      transition: border 0.3s ease, background 0.3s ease;
     }
 
     input:focus {
-      border-color: #66a6ff;
+      border-color: #FF6347; /* 오렌지색 포커스 */
       background: #fff;
     }
 
     /* 버튼 스타일 */
     button {
       width: 100%;
-      padding: 12px;
-      background-color: #66a6ff;
+      padding: 14px;
+      background-color: #FF6347; /* 오렌지색 버튼 */
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      font-size: 18px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #5a94e3;
+      background-color: #FF4500; /* 버튼 hover 효과 */
     }
 
     button:active {
-      background-color: #4c82c0;
+      background-color: #FF8C00; /* 클릭 시 효과 */
     }
 
     /* 텍스트 스타일 */
@@ -87,11 +89,12 @@
     .hidden {
       display: none;
     }
-    
+
     /* 링크 스타일 */
     a {
-      color: #66a6ff;
+      color: #FF6347;
       text-decoration: none;
+      font-weight: 600;
     }
 
     a:hover {
