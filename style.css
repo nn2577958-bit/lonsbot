@@ -1,96 +1,108 @@
-/* 배경 */
+/* 기본 스타일 */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #cce7ff;
+}
+
+/* 배경 구름 이미지 */
 .background {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-image: url("https://cdn.discordapp.com/attachments/1463400037416439869/1468509808406695977/anime-baby-character-with-dragon-costume-illustration.jpg");
+  background: url('https://cdn.discordapp.com/attachments/1463400037416439869/1468509808406695977/anime-baby-character-with-dragon-costume-illustration.jpg?ex=69921f95&is=6990ce15&hm=0855314524805761ebf0415b0d954c05c62b1e93fcef2a5d4e26f75c2b7e362a') no-repeat center top;
   background-size: cover;
-  background-position: center;
   z-index: -1;
-}
-
-/* 전체 글씨 */
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: #333;
+  filter: brightness(0.85);
 }
 
 /* 헤더 */
 header {
   text-align: center;
-  padding: 20px 0;
+  padding: 20px;
   color: #fff;
   text-shadow: 1px 1px 2px #000;
 }
 
 /* 카드 */
 .card {
-  max-width: 400px;
-  margin: 40px auto;
+  background: rgba(255,255,255,0.95);
+  max-width: 380px;
+  margin: 20px auto;
   padding: 20px;
   border-radius: 15px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* 입력창 */
+/* input, button */
 .card input {
-  display: block;
   width: 100%;
-  margin-bottom: 10px;
   padding: 10px;
+  margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 14px;
 }
 
-/* 버튼 */
-.card button,
-.card .btn {
+.card button {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
-  border: none;
   border-radius: 8px;
+  border: none;
   background-color: #4a90e2;
   color: #fff;
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
 }
 
-.card button:hover,
-.card .btn:hover {
+.card button:hover {
   background-color: #357ABD;
 }
 
-/* 에러 메시지 */
+/* 오류 메시지 */
 .error {
   color: red;
   font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/* 버튼 그룹 (로그아웃 + 디스코드) */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.button-group button,
+.button-group .btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #4a90e2;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
   text-align: center;
-  margin-bottom: 5px;
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
 }
 
-/* 리스트 중앙 */
-.card ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.card ul li {
-  margin: 5px 0;
+.button-group button:hover,
+.button-group .btn:hover {
+  background-color: #357ABD;
 }
 
 /* footer */
 footer {
-  text-align: center;
-  margin: 30px 0;
+  margin-top: auto;
+  padding: 10px;
   color: #fff;
   text-shadow: 1px 1px 2px #000;
 }
