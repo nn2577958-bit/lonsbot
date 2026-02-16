@@ -52,6 +52,7 @@ button {
   cursor: pointer;
   transition: all 0.23s ease;
   box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  position: relative;
 }
 
 button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
@@ -64,6 +65,24 @@ button i { margin-right: 8px; color: #DB4437; }
 
 #discord-btn { background: #7289DA; color: white; margin-top: 10px; }
 #discord-btn:hover { background: #5b6eae; }
+
+#discord-btn.disabled { cursor: not-allowed; opacity: 0.6; }
+
+/* 툴팁 */
+#discord-btn[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #444;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
 
 #admin-status {
   color: white;
@@ -91,7 +110,7 @@ button i { margin-right: 8px; color: #DB4437; }
   <div id="admin-status">관리자 상태 확인중...</div>
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="discord-btn" disabled><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
@@ -112,13 +131,13 @@ function updateAdminClock(user) {
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
 
-  let isOnline = true; // 기본 온라인
+  let isOnline = true;
   if(user && user.email === ADMIN_EMAIL) isOnline = true;
   if(user && user.email !== ADMIN_EMAIL) isOnline = false;
 
   adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
 
-  // 깜빡임 효과
+  // 깜빡임
   if(fadingOut){
     opacity -= 0.05;
     if(opacity <= 0){ opacity = 0; fadingOut = false; }
@@ -133,7 +152,18 @@ function updateAdminClock(user) {
 setInterval(() => updateAdminClock(auth.currentUser), 1000);
 
 // ===== 로그인 상태 감지 =====
-onAuthStateChanged(auth, (user) => updateAdminClock(user));
+onAuthStateChanged(auth, (user) => {
+  updateAdminClock(user);
+
+  // 로그인 되면 디스코드 버튼 활성화
+  if(user){
+    discordBtn.classList.remove('disabled');
+    discordBtn.removeAttribute('data-tooltip');
+  } else {
+    discordBtn.classList.add('disabled');
+    discordBtn.setAttribute('data-tooltip', '로그인 후 활성화됩니다');
+  }
+});
 
 // ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
@@ -142,8 +172,7 @@ googleBtn.addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    loginMsg.textContent = "구글 로그인 완료! 이제 디스코드 참여하기 버튼을 클릭하세요.";
-    discordBtn.disabled = false;  // 디스코드 버튼 활성화
+    loginMsg.textContent = "로그인 성공! 디스코드 참여하기 버튼이 활성화되었습니다.";
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled = false;
@@ -152,8 +181,8 @@ googleBtn.addEventListener("click", async () => {
 
 // ===== 디스코드 참여하기 버튼 =====
 discordBtn.addEventListener("click", () => {
-  if(!auth.currentUser){
-    loginMsg.textContent = "구글 로그인 후 참여하기 버튼이 활성화 됩니다!";
+  if(discordBtn.classList.contains('disabled')){
+    loginMsg.textContent = "구글 로그인 후 참여하기 버튼이 활성화됩니다!";
     return;
   }
   loginMsg.textContent = "잠시 후 홈으로 이동합니다...";
