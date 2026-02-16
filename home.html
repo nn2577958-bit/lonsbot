@@ -19,6 +19,7 @@ body {
   background-repeat: no-repeat;
 }
 
+/* ===== 상단바 ===== */
 .topbar {
   width:100%;
   background:rgba(0,0,0,0.85);
@@ -30,10 +31,15 @@ body {
   box-sizing:border-box;
 }
 
+.topbar-left {
+  font-weight:bold;
+  font-size:18px;
+}
+
 .topbar-right {
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:15px;
 }
 
 #admin-status {
@@ -44,10 +50,7 @@ body {
   font-size:13px;
 }
 
-#user-count{
-  font-size:14px;
-}
-
+/* ===== 중앙 카드 ===== */
 .main-wrapper {
   min-height:calc(100vh - 60px);
   display:flex;
@@ -64,6 +67,11 @@ body {
   box-shadow:0 10px 30px rgba(0,0,0,0.25);
   padding:20px 25px;
   text-align:center;
+  transition:transform 0.3s ease;
+}
+
+.container:hover {
+  transform:translateY(-5px) scale(1.02);
 }
 
 .user-box {
@@ -83,6 +91,11 @@ button {
   font-size:16px;
   font-weight:600;
   cursor:pointer;
+  transition:all 0.25s;
+}
+
+button:hover {
+  transform:translateY(-2px);
 }
 
 .logout-btn { background:#f44336; color:#fff; }
@@ -90,7 +103,7 @@ button {
 #kakao-btn { background:#FFDC00; color:#000; }
 
 .notice-container {
-  max-height:150px;
+  max-height:120px;
   overflow-y:auto;
   text-align:left;
 }
@@ -103,6 +116,10 @@ button {
   border-left:4px solid #4CAF50;
 }
 
+.notice strong { display:block; margin-bottom:3px; }
+.notice small { display:block; font-size:11px; color:#666; margin-bottom:3px; }
+
+/* ===== PC 모달 ===== */
 .modal {
   display:none;
   position:fixed;
@@ -120,14 +137,19 @@ button {
   text-align:center;
   width:300px;
 }
+
+.modal-content button {
+  margin-top:15px;
+  background:#333;
+  color:white;
+}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div>🎮 LONS Palworld</div>
+  <div class="topbar-left">🎮 LONS Palworld</div>
   <div class="topbar-right">
-    <div id="user-count">👥 0</div>
     <div id="admin-status">확인중...</div>
     <button id="logout-btn" class="logout-btn" style="width:auto;padding:6px 12px;margin:0;">
       로그아웃
@@ -142,13 +164,7 @@ button {
 
 <div class="user-box">
   <h3>📢 공지사항</h3>
-  <div id="notice-list" class="notice-container"></div>
-</div>
-
-<div id="admin-write" class="user-box" style="display:none;">
-  <input id="notice-title" placeholder="제목" style="width:100%;padding:8px;margin-bottom:5px;">
-  <input id="notice-content" placeholder="내용" style="width:100%;padding:8px;margin-bottom:5px;">
-  <button id="notice-submit">공지 작성</button>
+  <div id="notice-list" class="notice-container">불러오는 중...</div>
 </div>
 
 <div class="user-box">
@@ -174,15 +190,10 @@ button {
 </div>
 
 <script type="module">
-import { auth, db } from "./firebase.js";
-import { onAuthStateChanged, signOut }
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import {
-  ref, set, onValue, push,
-  onDisconnect
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { auth } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-const ADMIN_EMAIL = "관리자이메일@gmail.com"; // 수정
+const ADMIN_EMAIL = "관리자이메일@gmail.com"; // ← 반드시 수정
 
 const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
@@ -191,27 +202,31 @@ const kakaoBtn = document.getElementById("kakao-btn");
 const adminStatus = document.getElementById("admin-status");
 const modal = document.getElementById("pc-modal");
 
+const notices = [
+  { title: "공지 사항", content: "항상 모니터링 중이며 모든 파일은 데이터 베이스에 기록 됩니다.", createdAt: "2026-02-12 13:00~13:10" },
+  { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
+  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
+  { title: "SV 오픈 날짜", content: "2026 01.12", createdAt: "2026-01-12 01:00" },
+  { title: "지원금 안내", content: "모든 지원금은 운영비에 쓰이고 있습니다,", createdAt: "2026-02-16 14:30" },
+  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
+  { title: "서버 오픈 안내", content: "하드코어 02 / 20 大 오픈 많이 사랑 해주세요!", createdAt: "2026-02-20 12:00" }
+];
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html";
-    return;
-  }
+  } else {
 
-  const userRef = ref(db, "onlineUsers/" + user.uid);
-  set(userRef, true);
-  onDisconnect(userRef).remove();
+    if (user.email === ADMIN_EMAIL) {
+      adminStatus.innerHTML = "🟢 관리자 온라인";
+      adminStatus.style.background = "#28a745";
+    } else {
+      adminStatus.innerHTML = "🔴 관리자 오프라인";
+      adminStatus.style.background = "#dc3545";
+    }
 
-  if (user.email === ADMIN_EMAIL) {
-    const adminRef = ref(db, "adminOnline");
-    set(adminRef, true);
-    onDisconnect(adminRef).set(false);
-    document.getElementById("admin-write").style.display = "block";
-  }
-
-  onValue(ref(db, "notices"), (snapshot) => {
     noticeList.innerHTML = "";
-    snapshot.forEach(child => {
-      const data = child.val();
+    notices.forEach(data => {
       const div = document.createElement("div");
       div.className = "notice";
       div.innerHTML = `
@@ -221,37 +236,7 @@ onAuthStateChanged(auth, (user) => {
       `;
       noticeList.appendChild(div);
     });
-  });
-});
-
-onValue(ref(db, "adminOnline"), (snapshot) => {
-  if (snapshot.val()) {
-    adminStatus.innerHTML = "🟢 관리자 온라인";
-    adminStatus.style.background = "#28a745";
-  } else {
-    adminStatus.innerHTML = "🔴 관리자 오프라인";
-    adminStatus.style.background = "#dc3545";
   }
-});
-
-onValue(ref(db, "onlineUsers"), (snapshot) => {
-  document.getElementById("user-count").innerText = "👥 " + snapshot.numChildren();
-});
-
-document.getElementById("notice-submit").addEventListener("click", () => {
-  const title = document.getElementById("notice-title").value;
-  const content = document.getElementById("notice-content").value;
-
-  if (!title || !content) return alert("내용 입력");
-
-  push(ref(db, "notices"), {
-    title,
-    content,
-    createdAt: new Date().toLocaleString()
-  });
-
-  document.getElementById("notice-title").value = "";
-  document.getElementById("notice-content").value = "";
 });
 
 logoutBtn.addEventListener("click", async () => {
