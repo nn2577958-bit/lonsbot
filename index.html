@@ -76,7 +76,12 @@ button i { margin-right: 8px; color: #DB4437; }
   line-height: 1.4;
 }
 
-#login-msg { color: #ff4444; margin-bottom: 10px; font-weight: 500; text-align: center; }
+#login-msg {
+  color: #ff4444;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-align: center;
+}
 </style>
 </head>
 <body>
@@ -102,19 +107,16 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// ===== 현재 시각 문자열 반환 =====
-function getKSTString() {
+// ===== 관리자 상태 + 시계 갱신 =====
+function updateAdminClock(user) {
   const now = new Date();
-  return now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
-}
+  const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
 
-// ===== 관리자 상태 + 깜빡임 =====
-function updateAdminStatus(user) {
-  const kst = getKSTString();
-
-  // 로그인 전이라도 온라인으로 보이게, 로그인 후 이메일 비교
-  const isAdmin = !user || (user && user.email === ADMIN_EMAIL);
-  adminStatus.innerHTML = `${isAdmin ? '🟢 관리자 온라인' : '🔴 관리자 오프라인'}<br>${kst}`;
+  if(user && user.email === ADMIN_EMAIL){
+    adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
+  } else {
+    adminStatus.innerHTML = `🔴 관리자 오프라인<br>${kstString}`;
+  }
 
   // 깜빡임
   if(fadingOut){
@@ -128,10 +130,10 @@ function updateAdminStatus(user) {
 }
 
 // ===== 1초마다 시계 + 상태 갱신 =====
-setInterval(() => updateAdminStatus(auth.currentUser), 1000);
+setInterval(() => updateAdminClock(auth.currentUser), 1000);
 
 // ===== 로그인 상태 변화 감지 =====
-onAuthStateChanged(auth, user => updateAdminStatus(user));
+onAuthStateChanged(auth, (user) => updateAdminClock(user));
 
 // ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
@@ -140,7 +142,7 @@ googleBtn.addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    window.location.href = "home.html";
+    updateAdminClock(auth.currentUser);
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled = false;
@@ -150,9 +152,13 @@ googleBtn.addEventListener("click", async () => {
 // ===== 디스코드 참여하기 버튼 =====
 discordBtn.addEventListener("click", () => {
   if(!auth.currentUser){
-    loginMsg.textContent = "구글 로그인 후 가능합니다!";
+    loginMsg.textContent = "구글 로그인 후 참여하기 버튼이 활성화 됩니다!";
+    setTimeout(() => {
+      window.location.href = "home.html";
+    }, 2000);
     return;
   }
+  // 로그인 되어 있으면 바로 홈 이동
   window.location.href = "home.html";
 });
 </script>
