@@ -90,18 +90,14 @@ onAuthStateChanged(auth, (user) => {
   if(user.email === ADMIN_EMAIL){
       function updateAdminStatus(){
           const now = new Date();
-          // 한국 시간: UTC+9
-          const kst = new Date(now.getTime() + 9*60*60*1000);
-          const y = kst.getFullYear();
-          const m = String(kst.getMonth()+1).padStart(2,'0');
-          const d = String(kst.getDate()).padStart(2,'0');
-          const h = String(kst.getHours()).padStart(2,'0');
-          const min = String(kst.getMinutes()).padStart(2,'0');
-          const s = String(kst.getSeconds()).padStart(2,'0');
-          adminStatus.innerHTML = `🟢 관리자 온라인 – ${y}-${m}-${d} ${h}:${min}:${s}`;
-      }
-      updateAdminStatus();
-      setInterval(updateAdminStatus, 1000);
+          function updateAdminStatus(){
+    const now = new Date();
+    // 한국 시간 문자열
+    const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
+    adminStatus.innerHTML = `🟢 관리자 온라인 – ${kstString}`;
+    }
+    updateAdminStatus();
+    setInterval(updateAdminStatus, 1000);
 
       // 깜빡임
       setInterval(()=>{
