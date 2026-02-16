@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworl SV</title>
+<!-- Font Awesome for Discord Icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pap6GqRk4PjQb0O2x57GqgL7kFSqP0Zg3e4c3+lQ1IF6bYjPtcT6+ZGVVq0Z6I9OCz3hWZkMtiFZk7wIh2GJ7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
-/* 전체 배경 - 그라데이션 */
 body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin:0;
   padding:0;
   min-height:100vh;
   display:flex;
-  justify-content:center; /* 수평 중앙 */
-  align-items:center;     /* 수직 중앙 */
+  justify-content:center;
+  align-items:center;
   background: linear-gradient(135deg, #6a11cb, #2575fc);
 }
 
-/* 로그인 박스 */
 .container {
   width: 400px;
   background: rgba(255,255,255,0.95);
@@ -27,30 +27,44 @@ body {
   text-align:center;
 }
 
-/* 제목 */
 h2 {
   color:#333;
   margin-bottom:25px;
   font-size:26px;
 }
 
-/* Google 로그인 버튼 */
 button {
   width:100%;
   padding:14px;
   margin:12px 0;
   border:none;
   border-radius:8px;
-  background:#4285F4;
-  color:#fff;
   font-size:18px;
   font-weight:600;
   cursor:pointer;
   transition: background 0.2s, transform 0.1s;
 }
+
 button:hover {
-  background:#3367d6;
   transform: translateY(-1px);
+}
+
+#google-btn {
+  background:#4285F4;
+  color:#fff;
+}
+#google-btn:hover {
+  background:#3367d6;
+}
+
+/* Discord 버튼 */
+#discord-btn {
+  background:#5865F2;
+  color:#fff;
+  display:none; /* 초기 숨김 */
+}
+#discord-btn:hover {
+  background:#4752c4;
 }
 
 /* 에러 메시지 */
@@ -61,33 +75,57 @@ button:hover {
   text-align:center;
   display:block;
 }
+
+/* 아이콘 위치 */
+button i {
+  margin-right:8px;
+}
 </style>
 </head>
 <body>
 <div class="container">
   <h2>LONS SV Palworld 로그인</h2>
   <div id="login-msg" class="error"></div>
-  <button id="google-btn">Google 로그인</button>
+  <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
+  <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
 import { auth } from "./firebase.js";
-import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const googleBtn = document.getElementById("google-btn");
+const discordBtn = document.getElementById("discord-btn");
 const loginMsg = document.getElementById("login-msg");
 
+// 로그인 상태 확인
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 로그인 되어있으면 Discord 버튼 표시
+    discordBtn.style.display = "block";
+    googleBtn.style.display = "none"; // Google 버튼 숨기기
+  } else {
+    discordBtn.style.display = "none";
+    googleBtn.style.display = "block";
+  }
+});
+
+// Google 로그인
 googleBtn.addEventListener("click", async () => {
   loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    // 로그인 성공 시 home.html 이동
-    window.location.href = "home.html";
+    loginMsg.textContent = "로그인 성공!";
   } catch (err) {
     console.error(err);
     loginMsg.textContent = "Google 로그인 실패: " + err.message;
   }
+});
+
+// Discord 버튼 클릭
+discordBtn.addEventListener("click", () => {
+  window.open("https://discord.gg/YOUR_DISCORD_INVITE", "_blank");
 });
 </script>
 </body>
