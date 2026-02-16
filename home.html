@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Palworld 홈</title>
+<title>Palworld 대시보드</title>
 
 <style>
 body {
@@ -18,59 +18,38 @@ body {
 }
 
 .container {
-  background: rgba(0,0,0,0.7);
-  padding: 40px;
+  background: rgba(0,0,0,0.75);
+  padding: 35px;
   border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  width: 95%;
+  max-width: 650px;
 }
 
-h1 {
-  margin-bottom: 10px;
-  font-size: 28px;
-}
-
-.subtitle {
-  color: #aaa;
-  margin-bottom: 25px;
-}
-
-.user-box {
+.box {
   background: rgba(255,255,255,0.1);
   padding: 15px;
   border-radius: 10px;
-  margin-bottom: 20px;
-  text-align: left;
+  margin-top: 15px;
 }
 
-.user-box p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.link-btn {
-  display: inline-block;
-  margin-top: 10px;
-  color: #4da6ff;
-  text-decoration: none;
-  font-weight: bold;
+.notice {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 0;
 }
 
 .logout-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px 20px;
   background: #ff4d4d;
+  border: none;
+  border-radius: 8px;
   color: white;
-  font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.logout-btn:hover {
-  transform: scale(1.05);
+.admin-box {
+  display: none;
+  background: rgba(255,0,0,0.2);
 }
 </style>
 </head>
@@ -78,27 +57,48 @@ h1 {
 <body>
 
 <div class="container">
-  <h1>🎮 LONS Palworld</h1>
-  <div class="subtitle">론즈서버 팰월드 24시간</div>
 
-  <div class="user-box">
-    <p>이메일: <strong id="user-name"></strong></p>
-    <p>UID: <span id="user-uid"></span></p>
-    <p>이메일 인증: <span id="user-verified"></span></p>
+  <h2>🎮 Palworld 통합 대시보드</h2>
 
-    <a href="profile.html" class="link-btn">마이 페이지 이동</a>
+  <div class="box">
+    <p>이메일: <strong id="user-email"></strong></p>
+    <p>닉네임: <span id="user-nickname"></span></p>
+    <p>역할: <span id="user-role"></span></p>
+  </div>
+
+  <div class="box">
+    <h3>🖥 서버 상태</h3>
+    <p>상태: <span id="server-status">불러오는 중...</span></p>
+    <p>현재 접속자: <span id="online-users">-</span></p>
+    <p id="server-message"></p>
+  </div>
+
+  <div class="box">
+    <h3>📢 공지사항</h3>
+    <div id="notice-list">불러오는 중...</div>
+  </div>
+
+  <div class="box admin-box" id="admin-panel">
+    <h3>🛠 관리자 전용</h3>
+    <p>관리자 권한 확인됨</p>
   </div>
 
   <button id="logout-btn" class="logout-btn">로그아웃</button>
+
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { 
-  getAuth, 
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  getFirestore, 
+  doc, 
+  getDoc,
+  collection,
+  getDocs,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
@@ -111,28 +111,58 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-const logoutBtn = document.getElementById("logout-btn");
-const userName = document.getElementById("user-name");
-const userUid = document.getElementById("user-uid");
-const userVerified = document.getElementById("user-verified");
-
-// 로그인 상태 확인
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async (user) => {
 
   if (!user) {
     window.location.href = "index.html";
     return;
   }
 
-  userName.textContent = user.email;
-  userUid.textContent = user.uid;
-  userVerified.textContent = user.emailVerified ? "인증됨 ✅" : "미인증 ❌";
+  document.getElementById("user-email").textContent = user.email;
+
+  // 🔥 사용자 정보 불러오기
+  const userSnap = await getDoc(doc(db, "users", user.uid));
+  if (userSnap.exists()) {
+    const data = userSnap.data();
+    document.getElementById("user-nickname").textContent = data.nickname || "-";
+    document.getElementById("user-role").textContent = data.role || "user";
+
+    if (data.role === "admin") {
+      document.getElementById("admin-panel").style.display = "block";
+    }
+  }
+
+  // 🔥 서버 상태 실시간 감지
+  onSnapshot(doc(db, "server", "status"), (snap) => {
+    if (snap.exists()) {
+      const data = snap.data();
+      document.getElementById("server-status").textContent = data.status;
+      document.getElementById("online-users").textContent = data.onlineUsers;
+      document.getElementById("server-message").textContent = data.message;
+    }
+  });
+
+  // 🔥 공지사항 불러오기
+  const noticeList = document.getElementById("notice-list");
+  noticeList.innerHTML = "";
+
+  const querySnapshot = await getDocs(collection(db, "notices"));
+
+  querySnapshot.forEach(doc => {
+    const data = doc.data();
+    noticeList.innerHTML += `
+      <div class="notice">
+        <strong>${data.title}</strong>
+        <div>${data.content}</div>
+      </div>
+    `;
+  });
 
 });
 
-// 로그아웃
-logoutBtn.addEventListener("click", () => {
+document.getElementById("logout-btn").addEventListener("click", () => {
   signOut(auth).then(() => {
     window.location.href = "index.html";
   });
