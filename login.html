@@ -4,14 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Palworld 로그인</title>
-<link rel="stylesheet" href="./style.css">
 <style>
-body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-.container { max-width:400px; margin:80px auto; background:#fff; padding:25px 20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); }
-h2 { text-align:center; color:#333; margin-bottom:20px; }
-button { width:100%; padding:12px; margin:8px 0; border:none; border-radius:6px; background:#4285F4; color:#fff; font-size:16px; cursor:pointer; transition:background 0.2s; }
-button:hover { background:#3367d6; }
-.error { color:#e74c3c; text-align:center; margin-bottom:12px; font-weight:500; }
+/* 전체 배경 - 그라데이션 */
+body {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center; /* 수평 중앙 */
+  align-items:center;     /* 수직 중앙 */
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+/* 로그인 박스 */
+.container {
+  width: 400px;
+  background: rgba(255,255,255,0.95);
+  padding: 35px 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+/* 제목 */
+h2 {
+  color:#333;
+  margin-bottom:25px;
+  font-size:26px;
+}
+
+/* Google 로그인 버튼 */
+button {
+  width:100%;
+  padding:14px;
+  margin:12px 0;
+  border:none;
+  border-radius:8px;
+  background:#4285F4;
+  color:#fff;
+  font-size:18px;
+  font-weight:600;
+  cursor:pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+button:hover {
+  background:#3367d6;
+  transform: translateY(-1px);
+}
+
+/* 에러 메시지 */
+#error-msg, .error {
+  color:#e74c3c;
+  font-weight:500;
+  margin-bottom:12px;
+  text-align:center;
+  display:block;
+}
 </style>
 </head>
 <body>
