@@ -3,124 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS Palworld Home</title>
-
+<title>LONS Palworld Home (테스트용)</title>
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-2fc87bae-3744-4c0a-891f-19f3a20b09fd.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#111;
-  color:white;
-}
-
-/* ===== 상단바 ===== */
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 25px;
-  background:#000;
-  border-bottom:1px solid #333;
-}
-
-.topbar-left{
-  font-size:20px;
-  font-weight:bold;
-}
-
-.topbar-right{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.top-btn{
-  padding:6px 14px;
-  border-radius:20px;
-  border:none;
-  cursor:pointer;
-  font-size:14px;
-  font-weight:600;
-}
-
-#admin-status{
-  padding:6px 14px;
-  border-radius:20px;
-  background:#444;
-}
-
+body{ margin:0; font-family:'Segoe UI',sans-serif; background:#111; color:white; }
+.topbar{ display:flex; justify-content:space-between; align-items:center; padding:15px 25px; background:#000; border-bottom:1px solid #333; }
+.topbar-left{ font-size:20px; font-weight:bold; }
+.topbar-right{ display:flex; align-items:center; gap:15px; }
+.top-btn{ padding:6px 14px; border-radius:20px; border:none; cursor:pointer; font-size:14px; font-weight:600; }
+#admin-status{ padding:6px 14px; border-radius:20px; background:#444; }
 .pay-btn{ background:#FFDC00; color:#000; }
 .discord-btn{ background:#5865F2; color:#fff; }
 .logout-btn{ background:#f44336; color:#fff; }
-
-/* ===== 공지 전체 화면 ===== */
-.notice-section{
-  padding:40px;
-}
-
-.notice-section h2{
-  font-size:26px;
-  margin-bottom:20px;
-}
-
-.notice-list{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
-
-.notice-item{
-  background:#1c1c1c;
-  padding:20px;
-  border-radius:12px;
-  border-left:5px solid #4CAF50;
-}
-
-.notice-item strong{
-  font-size:18px;
-}
-
-.notice-item small{
-  display:block;
-  color:#aaa;
-  margin:5px 0;
-}
-
-/* ===== PC 모달 ===== */
-.modal{
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.6);
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-content{
-  background:white;
-  color:black;
-  padding:25px;
-  border-radius:12px;
-  text-align:center;
-  width:300px;
-}
-.modal-content button{
-  margin-top:15px;
-  padding:8px 15px;
-  border:none;
-  background:#333;
-  color:white;
-  border-radius:8px;
-}
+.notice-section{ padding:40px; }
+.notice-section h2{ font-size:26px; margin-bottom:20px; }
+.notice-list{ display:flex; flex-direction:column; gap:15px; }
+.notice-item{ background:#1c1c1c; padding:20px; border-radius:12px; border-left:5px solid #4CAF50; }
+.notice-item strong{ font-size:18px; }
+.notice-item small{ display:block; color:#aaa; margin:5px 0; }
+.modal{ display:none; position:fixed; top:0;left:0; width:100%;height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
+.modal-content{ background:white; color:black; padding:25px; border-radius:12px; text-align:center; width:300px; }
+.modal-content button{ margin-top:15px; padding:8px 15px; border:none; background:#333; color:white; border-radius:8px; }
 </style>
 </head>
 <body>
 
-<!-- 상단바 -->
 <div class="topbar">
   <div class="topbar-left">🎮 LONS Palworld</div>
   <div class="topbar-right">
@@ -133,13 +41,11 @@ body{
   </div>
 </div>
 
-<!-- 공지 전체화면 -->
 <div class="notice-section">
   <h2>📢 공지사항</h2>
   <div class="notice-list" id="notice-list"></div>
 </div>
 
-<!-- PC 안내 팝업 -->
 <div class="modal" id="pc-modal">
   <div class="modal-content">
     <h3>📱 모바일 전용</h3>
@@ -205,12 +111,15 @@ discordBtn.onclick=()=>{
  window.open("https://discord.gg/tnMXbQ65Hk","_blank");
 };
 
+// ===== Pay 버튼 테스트용 =====
 kakaoBtn.onclick=()=>{
  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
  if(isMobile){
-  window.location.href="https://qr.kakaopay.com/FRydbZ6Gr";
+  // 실제 결제 이동 막고 콘솔 로그로 테스트
+  console.log("모바일 테스트: 카카오페이 링크로 이동 (실제 결제 안됨)");
  }else{
   modal.style.display="flex";
+  console.log("PC 테스트: 모달 표시");
  }
 };
 
