@@ -9,7 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
   projectId: "lons-dc24d",
   storageBucket: "lons-dc24d.appspot.com",
