@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Palworld 로그인</title>
 <link rel="stylesheet" href="./style.css">
+<style>
+  .error { color:red; margin-bottom:10px; }
+  .login-btn, .signup-btn, .google-btn { display:block; margin:10px 0; padding:8px 12px; }
+</style>
 </head>
 <body>
 <div class="container">
@@ -19,6 +23,83 @@
   <button id="google-btn" class="google-btn">Google 로그인</button>
 </div>
 
-<script type="module" src="./script.js" defer></script>
+<script type="module">
+import { auth } from "./firebase.js";
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  sendEmailVerification, 
+  signInWithPopup, 
+  GoogleAuthProvider 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("login-btn");
+const signupBtn = document.getElementById("signup-btn");
+const googleBtn = document.getElementById("google-btn");
+const loginMsg = document.getElementById("login-msg");
+
+// 🔹 이메일/비밀번호 로그인
+loginBtn.addEventListener("click", async () => {
+  loginMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!email || !password) { loginMsg.textContent = "이메일과 비밀번호를 입력해주세요."; return; }
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    if (!user.emailVerified) {
+      alert("이메일 인증 완료 후 이용 가능합니다.");
+      return;
+    }
+
+    // 로그인 성공 시 홈으로 이동
+    window.location.href = "home.html";
+  } catch (err) {
+    console.error(err);
+    loginMsg.textContent = "로그인 실패: " + err.message;
+  }
+});
+
+// 🔹 이메일/비밀번호 회원가입
+signupBtn.addEventListener("click", async () => {
+  loginMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!email || !password) { loginMsg.textContent = "이메일과 비밀번호를 입력해주세요."; return; }
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // 이메일 인증 발송
+    await sendEmailVerification(user);
+    alert("회원가입 성공! 인증 이메일을 보냈습니다. 이메일 확인 후 로그인해주세요.");
+  } catch (err) {
+    console.error(err);
+    loginMsg.textContent = "회원가입 실패: " + err.message;
+  }
+});
+
+// 🔹 Google 로그인
+googleBtn.addEventListener("click", async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+
+    // 구글 로그인은 기본 emailVerified = true
+    window.location.href = "home.html";
+  } catch (err) {
+    console.error(err);
+    loginMsg.textContent = "Google 로그인 실패: " + err.message;
+  }
+});
+</script>
 </body>
 </html>
