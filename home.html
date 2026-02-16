@@ -9,22 +9,20 @@
 body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f2f5; margin:0; padding:0; }
 .container { max-width:500px; margin:50px auto; background:#fff; padding:25px 20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); }
 h1,h3 { text-align:center; color:#333; margin-bottom:15px; }
-.user-box { background:#f9f9f9; padding:15px 20px; margin:15px 0; border-radius:10px; border:1px solid #eee; }
+.user-box { background:#f9f9f9; padding:15px 20px; margin:15px 0; border-radius:10px; border:1px solid #eee; text-align:center; }
 button { width:100%; padding:12px; margin:5px 0; border:none; border-radius:6px; font-size:15px; cursor:pointer; transition: all 0.3s; }
 button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
 .logout-btn { background:#f44336; color:#fff; }
 .logout-btn:hover { background:#d32f2f; }
 #discord-btn { background:#5865F2; display:none; color:#fff; }
 #discord-btn:hover { background:#4752c4; }
-#kakao-btn { background:#FFEB00; color:#3C1E1E; display:none; }
-#kakao-btn:hover { background:#f5dd00; }
 .notice { background:#e8e8e8; padding:12px 15px; margin:10px 0; border-radius:8px; border-left:4px solid #4CAF50; }
 .notice strong { display:block; font-size:1.1em; margin-bottom:5px; color:#333; }
 .notice small { display:block; color:#666; margin-bottom:8px; font-size:12px; }
 #load-more-btn { width:100%; padding:10px; background:#2196F3; color:#fff; border-radius:6px; border:none; cursor:pointer; margin-top:10px; transition: background 0.2s; }
 #load-more-btn:hover { background:#1976d2; }
-button i { margin-right:8px; }
-#donation-note { font-size:12px; color:#666; text-align:center; margin-top:5px; }
+#donation-note { font-size:12px; color:#666; margin-top:5px; }
+#kakao-qr { width:200px; border:2px solid #333; border-radius:10px; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -48,11 +46,14 @@ button i { margin-right:8px; }
     <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
   </div>
 
-  <!-- 카카오페이 후원 -->
-  <div class="user-box">
-    <button id="kakao-btn"><i class="fas fa-hand-holding-usd"></i> 카카오페이 후원</button>
+  <!-- 카카오페이 후원 QR -->
+  <div class="user-box" id="kakao-box" style="display:none;">
+    <h3>💛 카카오페이 후원</h3>
+    <p>휴대폰으로 스캔 후 금액 확인 후 송금해주세요.</p>
+    <img id="kakao-qr" src="https://qr.kakaopay.com/FRydbZ6Gr.png" alt="카카오페이 QR">
     <div id="donation-note">후원은 자발적이며, 최소 1,000원 이상 권장. 보내기 전 금액 확인 필수.</div>
   </div>
+
 </div>
 
 <script type="module">
@@ -63,7 +64,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
 const discordBtn = document.getElementById("discord-btn");
-const kakaoBtn = document.getElementById("kakao-btn");
+const kakaoBox = document.getElementById("kakao-box");
 
 let currentIndex = 0;
 const PAGE_SIZE = 5;
@@ -72,10 +73,10 @@ const PAGE_SIZE = 5;
 const notices = [
   { title: "서버 오픈 안내", content: "02/20 하드코어 오픈점검", createdAt: "2026-02-20 15:00~15:10" },
   { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
-  { title: "업데이트 완료", content: "최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
+  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
   { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
-  { title: "공지사항", content: "홍보 많이 해주세요. 책임감 있게 운영합니다.", createdAt: "2026-02-15 12:00" },
-  { title: "이벤트 안내", content: "많은 이벤트 준비 중입니다. 기대해주세요!", createdAt: "2026-02-14 10:00" }
+  { title: "공지 사항", content: "항상 모니터링 중이며 모든 파일은 데이터 베이스에 저장됩니다", createdAt: "2026-02-15 12:00" },
+  { title: "지원금 안내", content: "지원 해주신 모든 지원금은 운영비에 쓰입니다,", createdAt: "2026-02-14 10:00" }
 ];
 
 // 로그인 상태 체크
@@ -83,9 +84,9 @@ onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html";
   } else {
-    // 로그인 성공 시 버튼 표시
+    // 로그인 시 버튼 표시
     discordBtn.style.display = "block";
-    kakaoBtn.style.display = "block";
+    kakaoBox.style.display = "block";
 
     noticeList.innerHTML = "";
     currentIndex = 0;
@@ -130,11 +131,6 @@ loadMoreBtn.addEventListener("click", loadNextPage);
 // Discord 버튼 클릭
 discordBtn.addEventListener("click", () => {
   window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
-});
-
-// 카카오페이 버튼 클릭
-kakaoBtn.addEventListener("click", () => {
-  window.open("https://qr.kakaopay.com/FRydbZ6Gr", "_blank");
 });
 </script>
 </body>
