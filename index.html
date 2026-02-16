@@ -133,7 +133,7 @@ function updateAdminClock(user) {
 }
 
 // ===== 0.05초마다 상태/시계 갱신 =====
-setInterval(() => updateAdminClock(auth.currentUser), 50);
+setInterval(() => updateAdminClock(auth.currentUser), 1500);
 
 // ===== 로그인 상태 감지 =====
 onAuthStateChanged(auth, (user) => updateAdminClock(user));
