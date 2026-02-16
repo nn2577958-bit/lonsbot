@@ -6,23 +6,9 @@
 <title>Palworld 홈</title>
 <link rel="stylesheet" href="./style.css">
 <style>
-  /* 간단한 공지 스타일 */
-  .notice {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  .notice strong {
-    display: block;
-    font-size: 1.1em;
-    margin-bottom: 3px;
-  }
-  .notice small {
-    color: #555;
-    display: block;
-    margin-bottom: 5px;
-  }
+  .notice { border: 1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px; }
+  .notice strong { display:block; font-size:1.1em; margin-bottom:3px; }
+  .notice small { color:#555; display:block; margin-bottom:5px; }
 </style>
 </head>
 <body>
@@ -73,11 +59,13 @@ onAuthStateChanged(auth, async (user) => {
     const isMember = userDoc.exists() && userDoc.data()?.isMember;
     if (!isMember) { noticeList.textContent = "디스코드 서버 가입 후 이용 가능합니다."; return; }
 
-    // Firestore에서 모든 공지 가져오기 (createdAt 없어도 표시 가능)
+    // 🔹 Firestore 모든 공지 가져오기 (createdAt 없어도 표시)
     const postsSnapshot = await getDocs(collection(db, "posts"));
+    console.log("postsSnapshot docs:", postsSnapshot.docs); // 디버그: 문서 배열
     notices = postsSnapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+    console.log("notices array:", notices); // 디버그: 데이터 배열 확인
 
-    // createdAt이 있으면 최신순 정렬, 없으면 뒤로
+    // createdAt이 있으면 최신순 정렬
     notices.sort((a, b) => {
       const aTime = a.createdAt?.toDate?.().getTime() || 0;
       const bTime = b.createdAt?.toDate?.().getTime() || 0;
@@ -88,7 +76,7 @@ onAuthStateChanged(auth, async (user) => {
     currentIndex = 0;
     loadNextPage();
   } catch (err) {
-    console.error(err);
+    console.error("공지 불러오기 오류:", err);
     noticeList.textContent = "공지사항에 오류가 발생했습니다.";
   }
 });
