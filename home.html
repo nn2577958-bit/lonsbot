@@ -4,48 +4,187 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworld Home</title>
-<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-2fc87bae-3744-4c0a-891f-19f3a20b09fd.png">
+
+<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-2fc87bae-3744-4c0a-891f-19f3a20b09fd.png" type="image/png">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
 <style>
-body { margin:0; font-family:'Segoe UI',sans-serif; background:#111; color:white; }
-.topbar{ display:flex; justify-content:space-between; align-items:center; padding:15px 25px; background:#000; border-bottom:1px solid #333; }
-.topbar-left{ font-size:20px; font-weight:bold; }
-.topbar-right{ display:flex; align-items:center; gap:15px; }
-.top-btn{ padding:6px 14px; border-radius:20px; border:none; cursor:pointer; font-size:14px; font-weight:600; }
-#admin-status{ padding:6px 14px; border-radius:20px; background:#444; }
-.pay-btn{ background:#FFDC00; color:#000; }
-.discord-btn{ background:#5865F2; color:#fff; }
-.logout-btn{ background:#f44336; color:#fff; }
-.notice-section{ padding:40px; }
-.notice-section h2{ font-size:26px; margin-bottom:20px; }
-.notice-list{ display:flex; flex-direction:column; gap:15px; }
-.notice-item{ background:#1c1c1c; padding:20px; border-radius:12px; border-left:5px solid #4CAF50; }
-.notice-item strong{ font-size:18px; }
-.notice-item small{ display:block; color:#aaa; margin:5px 0; }
-.modal{ display:none; position:fixed; top:0;left:0; width:100%;height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
-.modal-content{ background:white; color:black; padding:25px; border-radius:12px; text-align:center; width:300px; }
-.modal-content button{ margin-top:15px; padding:8px 15px; border:none; background:#333; color:white; border-radius:8px; }
+
+/* ===== 배경 ===== */
+body {
+  margin: 0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://written-orange-nkzgqhkmqv.edgeone.app/OIP.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ===== 상단바 ===== */
+.topbar {
+  width:100%;
+  background:rgba(0,0,0,0.85);
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 20px;
+  box-sizing:border-box;
+}
+
+.topbar-left {
+  font-weight:bold;
+  font-size:18px;
+}
+
+.topbar-right {
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+#admin-status {
+  padding:6px 12px;
+  border-radius:20px;
+  background:#555;
+  font-weight:600;
+  font-size:13px;
+}
+
+/* ===== 중앙 카드 유지 ===== */
+.main-wrapper {
+  min-height:calc(100vh - 60px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px;
+}
+
+.container {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  padding: 20px 25px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.container:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+.user-box {
+  background:#f9f9f9;
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #eee;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition: all 0.25s;
+}
+button:hover {
+  transform: translateY(-2px);
+}
+
+.logout-btn { background:#f44336; color:#fff; }
+#discord-btn { background:#5865F2; color:#fff; }
+#kakao-btn { background:#FFDC00; color:#000; }
+
+.notice-container {
+  max-height:120px;
+  overflow-y:auto;
+  text-align:left;
+}
+
+.notice {
+  background:#e8e8e8;
+  padding:8px 10px;
+  margin:5px 0;
+  border-radius:8px;
+  border-left:4px solid #4CAF50;
+}
+
+.notice strong { display:block; margin-bottom:3px; }
+.notice small { display:block; font-size:11px; color:#666; margin-bottom:3px; }
+
+/* ===== PC 팝업 ===== */
+.modal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content {
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+  width:300px;
+}
+
+.modal-content button {
+  margin-top:15px;
+  background:#333;
+  color:white;
+}
+
 </style>
 </head>
 <body>
 
+<!-- 상단바 -->
 <div class="topbar">
   <div class="topbar-left">🎮 LONS Palworld</div>
   <div class="topbar-right">
     <div id="admin-status">확인중...</div>
-    <button class="top-btn pay-btn" id="kakao-btn">💛 Pay 지원금</button>
-    <button class="top-btn discord-btn" id="discord-btn">
-      <i class="fab fa-discord"></i> Discord
+    <button id="logout-btn" class="logout-btn" style="width:auto;padding:6px 12px;margin:0;">
+      로그아웃
     </button>
-    <button class="top-btn logout-btn" id="logout-btn">로그아웃</button>
   </div>
 </div>
 
-<div class="notice-section">
-  <h2>📢 공지사항</h2>
-  <div class="notice-list" id="notice-list"></div>
+<div class="main-wrapper">
+<div class="container">
+
+  <h1>🎮 LONS Palworld</h1>
+
+  <div class="user-box">
+    <h3>📢 공지사항</h3>
+    <div id="notice-list" class="notice-container">불러오는 중...</div>
+  </div>
+
+  <div class="user-box">
+    <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  </div>
+
+  <div class="user-box">
+    <button id="kakao-btn">💛Pay 지원금💛</button>
+    <div style="font-size:12px;color:#666;margin-top:5px;">
+      모바일에서 이용 가능합니다.
+    </div>
+  </div>
+
+</div>
 </div>
 
+<!-- PC 안내 팝업 -->
 <div class="modal" id="pc-modal">
   <div class="modal-content">
     <h3>📱 모바일 전용</h3>
@@ -55,49 +194,45 @@ body { margin:0; font-family:'Segoe UI',sans-serif; background:#111; color:white
 </div>
 
 <script type="module">
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, doc, getDocs, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const ADMIN_EMAIL = "관리자이메일@gmail.com";
-const adminStatus = document.getElementById("admin-status");
-const noticeList = document.getElementById("notice-list");
-const kakaoBtn = document.getElementById("kakao-btn");
-const discordBtn = document.getElementById("discord-btn");
 const logoutBtn = document.getElementById("logout-btn");
+const noticeList = document.getElementById("notice-list");
+const discordBtn = document.getElementById("discord-btn");
+const kakaoBtn = document.getElementById("kakao-btn");
+const adminStatus = document.getElementById("admin-status");
 const modal = document.getElementById("pc-modal");
 
-onAuthStateChanged(auth, async(user) => {
-  if (!user) { window.location.href = "index.html"; return; }
+const ADMIN_EMAIL = "관리자이메일@gmail.com"; // ← 수정
 
-  // 관리자라면 Firestore에 온라인 상태 기록
-  const adminDocRef = doc(db, "adminStatus/current");
-  if (user.email === ADMIN_EMAIL) {
-    await setDoc(adminDocRef, { online: true, lastLogin: Date.now() });
-  }
+const notices = [
+  { title: "공지 사항", content: "항상 모니터링 중이며 모든 파일은 데이터 베이스에 기록 됩니다.", createdAt: "2026-02-12 13:00~13:10" },
+  { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
+  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
+  { title: "SV 오픈 날짜", content: "2026 01.12", createdAt: "2026-01-12 01:00" },
+  { title: "지원금 안내", content: "모든 지원금은 운영비에 쓰이고 있습니다,", createdAt: "2026-02-16 14:30" },
+  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
+  { title: "서버 오픈 안내", content: "하드코어 02 / 20 大 오픈 많이 사랑 해주세요!", createdAt: "2026-02-20 12:00" }
+];
 
-  // 실시간 관리자 상태 감시
-  onSnapshot(adminDocRef, (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      if (data.online) {
-        adminStatus.innerHTML = "🟢 관리자 온라인";
-        adminStatus.style.background = "#28a745";
-      } else {
-        adminStatus.innerHTML = "🔴 관리자 오프라인";
-        adminStatus.style.background = "#dc3545";
-      }
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+  } else {
+
+    if (user.email === ADMIN_EMAIL) {
+      adminStatus.innerHTML = "🟢 관리자 온라인";
+      adminStatus.style.background = "#28a745";
+    } else {
+      adminStatus.innerHTML = "🔴 관리자 오프라인";
+      adminStatus.style.background = "#dc3545";
     }
-  });
 
-  // 공지사항 실시간 불러오기
-  const noticesRef = collection(db, "notices");
-  onSnapshot(noticesRef, (snapshot) => {
     noticeList.innerHTML = "";
-    snapshot.docs.forEach(doc => {
-      const data = doc.data();
+    notices.forEach(data => {
       const div = document.createElement("div");
-      div.className = "notice-item";
+      div.className = "notice";
       div.innerHTML = `
         <strong>${data.title}</strong>
         <small>${data.createdAt}</small>
@@ -105,28 +240,31 @@ onAuthStateChanged(auth, async(user) => {
       `;
       noticeList.appendChild(div);
     });
-  });
+  }
 });
 
-logoutBtn.onclick = async () => {
-  const user = auth.currentUser;
-  if (user && user.email === ADMIN_EMAIL) {
-    const adminDocRef = doc(db, "adminStatus/current");
-    await setDoc(adminDocRef, { online: false, lastLogout: Date.now() });
-  }
+logoutBtn.addEventListener("click", async () => {
   await signOut(auth);
   window.location.href = "index.html";
-};
+});
 
-discordBtn.onclick = () => window.open("https://discord.gg/tnMXbQ65Hk","_blank");
+discordBtn.addEventListener("click", () => {
+  window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
+});
 
-kakaoBtn.onclick = () => {
+/* 카카오페이 모바일 체크 */
+kakaoBtn.addEventListener("click", () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) window.location.href = "https://qr.kakaopay.com/FRydbZ6Gr";
-  else modal.style.display = "flex";
-};
+  if (isMobile) {
+    window.location.href = "https://qr.kakaopay.com/FRydbZ6Gr";
+  } else {
+    modal.style.display = "flex";
+  }
+});
 
-window.closeModal = () => modal.style.display = "none";
+window.closeModal = function() {
+  modal.style.display = "none";
+};
 </script>
 </body>
 </html>
