@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworld Home</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pap6GqRk4PjQb0O2x57GqgL7kFSqP0Zg3e4c3+lQ1IF6bYjPtcT6+ZGVVq0Z6I9OCz3hWZkMtiFZk7wIh2GJ7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
 body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f2f5; margin:0; padding:0; }
 .container { max-width:500px; margin:50px auto; background:#fff; padding:25px 20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); }
@@ -17,12 +17,15 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 .logout-btn:hover { background:#d32f2f; }
 #discord-btn { background:#5865F2; display:none; color:#fff; }
 #discord-btn:hover { background:#4752c4; }
+#donation-btn { background:#FFAA00; display:none; color:#fff; }
+#donation-btn:hover { background:#e69500; }
 .notice { background:#e8e8e8; padding:12px 15px; margin:10px 0; border-radius:8px; border-left:4px solid #4CAF50; }
 .notice strong { display:block; font-size:1.1em; margin-bottom:5px; color:#333; }
 .notice small { display:block; color:#666; margin-bottom:8px; font-size:12px; }
 #load-more-btn { width:100%; padding:10px; background:#2196F3; color:#fff; border-radius:6px; border:none; cursor:pointer; margin-top:10px; transition: background 0.2s; }
 #load-more-btn:hover { background:#1976d2; }
 button i { margin-right:8px; }
+#donation-info { font-size:13px; color:#555; margin-top:5px; text-align:center; }
 </style>
 </head>
 <body>
@@ -41,17 +44,22 @@ button i { margin-right:8px; }
 
   <div class="user-box">
     <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+    <button id="donation-btn"><i class="fas fa-money-bill-wave"></i> 후원하기</button>
+    <div id="donation-info"></div>
   </div>
 </div>
 
 <script type="module">
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js"; 
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
 const discordBtn = document.getElementById("discord-btn");
+const donationBtn = document.getElementById("donation-btn");
+const donationInfo = document.getElementById("donation-info");
 
 let currentIndex = 0;
 const PAGE_SIZE = 5;
@@ -62,20 +70,30 @@ const notices = [
   { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
   { title: "업데이트 완료", content: "최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
   { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
-  { title: "공지사항", content: "홍보 많이 해주세요. 책임감 있게 운영합니다.", createdAt: "2026-02-15 12:00" },
-  { title: "이벤트 안내", content: "많은 이벤트 준비 중입니다. 기대해주세요!", createdAt: "2026-02-14 10:00" }
+  { title: "서버 오픈 날짜", content: "1월12일 오픈 하여 현재까지 운영중.", createdAt: "2026-01-12 12:00" },
+  { title: "운영비 지원", content: "모든 지원은 운영비에 쓰이고 있습니다,", createdAt: "2026-02-14 10:00" }
 ];
 
 // 로그인 상태 체크
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "index.html"; // 로그인 안 되어 있으면 인덱스로
+    window.location.href = "index.html"; 
   } else {
-    // Discord 버튼 표시
     discordBtn.style.display = "block";
     noticeList.innerHTML = "";
     currentIndex = 0;
     loadNextPage();
+
+    // 1회성 후원 OR 체크
+    const orDocRef = doc(db, "donation_codes", user.uid); 
+    const orDocSnap = await getDoc(orDocRef);
+    if (!orDocSnap.exists()) {
+      donationBtn.style.display = "block"; 
+      donationInfo.textContent = "";
+    } else {
+      donationBtn.style.display = "none";
+      donationInfo.innerHTML = "추가 요청 <strong>Discord로 UID 삭제 요청</strong> 후 다시 이용하세요.";
+    }
   }
 });
 
@@ -112,6 +130,24 @@ loadMoreBtn.addEventListener("click", loadNextPage);
 // Discord 버튼 클릭
 discordBtn.addEventListener("click", () => {
   window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
+});
+
+// 후원 버튼 클릭
+donationBtn.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  // 1회성 기록
+  await setDoc(doc(db, "donation_codes", user.uid), {
+    used: true,
+    createdAt: new Date().toISOString()
+  });
+
+  donationBtn.style.display = "none";
+  donationInfo.innerHTML = "추가 요청 <strong>Discord로 UID 삭제 요청</strong> 후 다시 이용하세요.";
+
+  // 카카오페이 OR 링크 (실전용, 금액 제한 없음)
+  window.open("https://qr.kakaopay.com/your-kakaopay-link", "_blank");
 });
 </script>
 </body>
