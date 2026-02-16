@@ -72,7 +72,7 @@ button:hover {
 
 button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
 }
 
 button i {
@@ -95,7 +95,7 @@ button i {
   color: white;
   font-weight: bold;
   margin-bottom: 10px;
-  background: rgba(0,0,0,0.5); /* 글씨 뒤 배경 */
+  background: rgba(0,0,0,0.5);
   padding: 6px 12px;
   border-radius: 8px;
   display: inline-block;
@@ -120,14 +120,14 @@ button i {
 
 <script type="module">
 import { auth } from "./firebase.js";
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const ADMIN_EMAIL = "nn2577958@gmail.com";
 const adminStatus = document.getElementById("admin-status");
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// ===== 관리자 온라인/오프라인 + 한국 시간 시계 =====
+// ===== 관리자 상태 갱신 함수 =====
 function updateAdminClock(user) {
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
@@ -142,18 +142,18 @@ function updateAdminClock(user) {
   }
 }
 
-// Firebase 로그인 상태 변화를 실시간 감시
+// ===== 로그인 상태 변화 감지 =====
 onAuthStateChanged(auth, (user) => {
-  // 즉시 상태 업데이트
   updateAdminClock(user);
+
+  // 1초마다 시계 갱신
+  const intervalId = setInterval(() => updateAdminClock(auth.currentUser), 1000);
+
+  // 로그아웃 시 interval 종료
+  return () => clearInterval(intervalId);
 });
 
-// 1초마다 관리자 시계 갱신 (로그인/로그아웃 모두 반영)
-setInterval(() => {
-  updateAdminClock(auth.currentUser);
-}, 1000);
-
-// ===== Google 로그인 =====
+// ===== Google 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
   googleBtn.disabled = true;
   loginMsg.textContent = "";
