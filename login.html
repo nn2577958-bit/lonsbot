@@ -6,59 +6,34 @@
 <title>Palworld 로그인</title>
 <link rel="stylesheet" href="./style.css">
 <style>
-  .error { color:red; margin-bottom:10px; }
-  .input-box { display:block; margin:10px 0; padding:8px 12px; width:100%; max-width:300px; }
-  .google-btn { display:block; margin:20px 0; padding:10px 16px; font-size:16px; }
+body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f2f5; margin:0; padding:0; }
+.container { max-width:400px; margin:80px auto; background:#fff; padding:25px 20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); }
+h2 { text-align:center; color:#333; margin-bottom:20px; }
+button { width:100%; padding:12px; margin:8px 0; border:none; border-radius:6px; background:#4285F4; color:#fff; font-size:16px; cursor:pointer; transition:background 0.2s; }
+button:hover { background:#3367d6; }
+.error { color:#e74c3c; text-align:center; margin-bottom:12px; font-weight:500; }
 </style>
 </head>
 <body>
 <div class="container">
   <h2>Palworld 로그인</h2>
   <div id="login-msg" class="error"></div>
-
-  <!-- Discord 닉네임 입력 -->
-  <input type="text" id="discord-nick" class="input-box" placeholder="디스코드 닉네임 입력">
-
-  <button id="google-btn" class="google-btn">Google 로그인</button>
+  <button id="google-btn">Google 로그인</button>
 </div>
 
 <script type="module">
-import { auth, db } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
-const discordInput = document.getElementById("discord-nick");
 
 googleBtn.addEventListener("click", async () => {
   loginMsg.textContent = "";
-  const discordNick = discordInput.value.trim();
-
-  if (!discordNick) {
-    loginMsg.textContent = "디스코드 닉네임을 입력해주세요.";
-    return;
-  }
-
   const provider = new GoogleAuthProvider();
-
   try {
-    const userCredential = await signInWithPopup(auth, provider);
-    const user = userCredential.user;
-
-    // Firebase에 사용자 정보 저장 (가입)
-    const userRef = doc(db, "users", user.uid);
-    const userDoc = await getDoc(userRef);
-    if (!userDoc.exists()) {
-      await setDoc(userRef, {
-        discordNick,
-        email: user.email,
-        isMember: true, // 디스코드 서버 가입 체크 필요 시 true/false로 나중에 수정 가능
-        createdAt: serverTimestamp()
-      });
-    }
-
-    // 홈 화면으로 이동
+    await signInWithPopup(auth, provider);
+    // 로그인 성공 시 home.html 이동
     window.location.href = "home.html";
   } catch (err) {
     console.error(err);
