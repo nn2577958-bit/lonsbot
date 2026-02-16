@@ -6,16 +6,69 @@
 <title>Palworld 로그인</title>
 <link rel="stylesheet" href="./style.css">
 <style>
-  .error { color:red; margin-bottom:10px; }
-  .google-btn { display:block; margin:20px 0; padding:10px 16px; font-size:16px; }
+/* 전체 배경 */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;    /* 수직 중앙 */
+  justify-content: center; /* 수평 중앙 */
+}
+
+/* 중앙 박스 */
+.container {
+  width: 450px;              /* 박스 가로 크기 */
+  background: #fff;
+  padding: 40px 30px;        /* 패딩 크게 */
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* 제목 */
+h2 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 26px;
+}
+
+/* Google 로그인 버튼 */
+button {
+  width: 100%;
+  padding: 15px;
+  margin: 15px 0;
+  border: none;
+  border-radius: 8px;
+  background: #4285F4;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #3367d6;
+}
+
+/* 에러 메시지 */
+#error-msg {
+  color: #e74c3c;
+  font-weight: 500;
+  margin-bottom: 12px;
+  display: block;
+  text-align: center;
+}
 </style>
 </head>
 <body>
 <div class="container">
   <h2>Palworld 로그인</h2>
-  <div id="login-msg" class="error"></div>
-
-  <button id="google-btn" class="google-btn">Google 로그인</button>
+  <span id="login-msg" class="error"></span>
+  <button id="google-btn">Google 로그인</button>
 </div>
 
 <script type="module">
@@ -25,15 +78,11 @@ import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/fir
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// 🔹 Google 로그인
 googleBtn.addEventListener("click", async () => {
   loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
   try {
-    const userCredential = await signInWithPopup(auth, provider);
-    const user = userCredential.user;
-
-    // 구글 로그인은 기본 emailVerified = true
+    await signInWithPopup(auth, provider);
     window.location.href = "home.html";
   } catch (err) {
     console.error(err);
