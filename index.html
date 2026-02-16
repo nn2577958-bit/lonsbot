@@ -5,14 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworld 로그인</title>
 
-<!-- 사이트 파비콘 -->
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
-
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* ===== 전체 배경 ===== */
 body {
   margin: 0;
   height: 100vh;
@@ -20,8 +16,6 @@ body {
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-  /* CDN 배경 이미지 적용 */
   background-image:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
     url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
@@ -30,7 +24,6 @@ body {
   background-repeat: no-repeat;
 }
 
-/* ===== 로그인 카드 ===== */
 .container {
   width: 380px;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
@@ -39,6 +32,7 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.35);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
 .container:hover {
@@ -52,7 +46,6 @@ h2 {
   font-size: 24px;
 }
 
-/* ===== 버튼 ===== */
 button {
   width: 100%;
   padding: 14px;
@@ -66,36 +59,24 @@ button {
   box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 6px 16px rgba(0,0,0,0.3);
-}
+button:hover { transform: translateY(-2px); box-shadow: 0px 6px 16px rgba(0,0,0,0.3); }
+button:active { transform: translateY(1px); box-shadow: 0px 2px 6px rgba(0,0,0,0.2); }
+button i { margin-right: 8px; color: #DB4437; }
 
-button:active {
-  transform: translateY(1px);
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-}
+#google-btn { background: #fff; color: #444; border: 1px solid #ccc; }
+#google-btn:hover { background: #f0f0f0; }
 
-button i {
-  margin-right: 8px;
-  color: #DB4437;
-}
+#login-msg { color: #ff4444; margin-bottom: 10px; font-weight: 500; }
 
-#google-btn {
-  background: #fff;
-  color: #444;
-  border: 1px solid #ccc;
-}
-
-#google-btn:hover {
-  background: #f0f0f0;
-}
-
-/* 에러 메시지 */
-#login-msg {
-  color: #ff4444;
-  margin-bottom: 10px;
-  font-weight: 500;
+/* 관리자 표시 */
+#admin-status {
+  margin-bottom: 15px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: #444;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s;
 }
 </style>
 </head>
@@ -103,16 +84,20 @@ button i {
 
 <div class="container">
   <h2>LONS SV Palworld 로그인</h2>
+  <!-- 관리자 온라인 표시 -->
+  <div id="admin-status">관리자 상태 확인중...</div>
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
 </div>
 
 <script type="module">
 import { auth } from "./firebase.js";
-import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
+const adminStatus = document.getElementById("admin-status");
+const ADMIN_EMAIL = "nn2577958@gmail.com";
 
 googleBtn.addEventListener("click", async () => {
   googleBtn.disabled = true;
@@ -126,6 +111,39 @@ googleBtn.addEventListener("click", async () => {
     googleBtn.disabled = false;
   }
 });
+
+// ===== 관리자 상태 실시간 표시 + 깜빡임 (KST) =====
+onAuthStateChanged(auth, (user) => {
+  if(!user){ return; }
+
+  if(user.email === ADMIN_EMAIL){
+    function updateAdminStatus(){
+      const now = new Date();
+      const kst = new Date(now.getTime() + 9*60*60*1000); // 한국 시간
+      const y = kst.getFullYear();
+      const m = String(kst.getMonth()+1).padStart(2,'0');
+      const d = String(kst.getDate()).padStart(2,'0');
+      const h = String(kst.getHours()).padStart(2,'0');
+      const min = String(kst.getMinutes()).padStart(2,'0');
+      const s = String(kst.getSeconds()).padStart(2,'0');
+      adminStatus.textContent = `🟢 관리자 온라인 – ${y}-${m}-${d} ${h}:${min}:${s}`;
+    }
+    updateAdminStatus();
+    setInterval(updateAdminStatus, 1000);
+
+    // 깜빡임
+    setInterval(()=>{
+      adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
+    }, 800);
+
+    adminStatus.style.background = "#28a745";
+  } else {
+    adminStatus.textContent = "🔴 관리자 오프라인";
+    adminStatus.style.background = "#dc3545";
+    adminStatus.style.opacity = "1";
+  }
+});
 </script>
+
 </body>
 </html>
