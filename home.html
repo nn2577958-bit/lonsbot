@@ -6,10 +6,18 @@
 <title>Palworld 홈</title>
 <link rel="stylesheet" href="./style.css">
 <style>
+  body { font-family: Arial, sans-serif; background: #f0f2f5; margin:0; padding:0; }
+  .container { max-width: 500px; margin:50px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+  h1,h2,h3 { text-align:center; }
+  .user-box { background:#f9f9f9; padding:15px; margin:15px 0; border-radius:8px; }
+  button { width:100%; padding:10px; margin:5px 0; border:none; border-radius:5px; background:#4CAF50; color:#fff; cursor:pointer; }
+  button:hover { background:#45a049; }
   .notice { border: 1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:5px; }
   .notice strong { display:block; font-size:1.1em; margin-bottom:3px; }
   .notice small { color:#555; display:block; margin-bottom:5px; }
   #load-more-btn { margin-top:10px; padding:5px 10px; }
+  .logout-btn { background:#f44336; margin-top:15px; }
+  .logout-btn:hover { background:#d32f2f; }
 </style>
 </head>
 <body>
@@ -17,6 +25,12 @@
   <h1>🎮 LONS Palworld</h1>
   <div class="subtitle">론즈서버 팰월드 24시간</div>
 
+  <!-- 로그아웃 버튼 -->
+  <div class="user-box">
+    <button id="logout-btn" class="logout-btn">로그아웃</button>
+  </div>
+
+  <!-- 공지사항 -->
   <div class="user-box">
     <h3>📢 공지사항</h3>
     <div id="notice-list" class="notice-container">불러오는 중...</div>
@@ -24,7 +38,10 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+import { auth, signOut } from "./firebase.js";
+
+const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
 
@@ -69,8 +86,17 @@ function loadNextPage() {
 noticeList.innerHTML = "";
 currentIndex = 0;
 loadNextPage();
-
 loadMoreBtn.addEventListener("click", loadNextPage);
+
+// 🔹 로그아웃
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    window.location.href = "login.html";
+  } catch (err) {
+    console.error("로그아웃 실패:", err);
+  }
+});
 </script>
 </body>
 </html>
