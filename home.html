@@ -5,7 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Palworld 홈</title>
 <style>
-/* 기존 CSS 그대로 유지 */
+.container { max-width: 600px; margin: auto; padding: 20px; font-family: sans-serif; }
+.user-box { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 10px; background-color: #f9f9f9; }
+.link-btn { display: inline-block; margin-top: 10px; padding: 7px 12px; background-color: #5865F2; color: #fff; text-decoration: none; border-radius: 5px; }
+.logout-btn { background-color: #f04747; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.notice-container { max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 8px; background-color: #fff; }
+.notice { border-bottom: 1px solid #eee; padding: 10px; margin-bottom: 5px; border-radius: 5px; background-color: #f1f1f1; }
+.notice:last-child { border-bottom: none; margin-bottom: 0; }
+.notice strong { display: block; font-size: 1.1em; margin-bottom: 5px; color: #333; }
+.notice div { color: #555; }
 </style>
 </head>
 <body>
@@ -22,7 +30,7 @@
 
   <div class="user-box">
     <h3>📢 공지사항</h3>
-    <div id="notice-list">불러오는 중...</div>
+    <div id="notice-list" class="notice-container">불러오는 중...</div>
   </div>
 
   <button id="logout-btn" class="logout-btn">로그아웃</button>
@@ -63,30 +71,34 @@ onAuthStateChanged(auth, async (user) => {
   userVerified.textContent = user.emailVerified ? "인증됨 ✅" : "미인증 ❌";
 
   if (!user.emailVerified) {
-    noticeList.innerHTML = "이메일 인증 후 이용 가능합니다.";
+    noticeList.textContent = "이메일 인증 후 이용 가능합니다.";
     return;
   }
 
   const userDoc = await getDoc(doc(db, "users", user.uid));
-  if (!userDoc.exists() || !userDoc.data().isMember) {
-    noticeList.innerHTML = "디스코드 서버 가입 후 이용 가능합니다.";
+  const isMember = userDoc.exists() && userDoc.data()?.isMember;
+
+  if (!isMember) {
+    noticeList.textContent = "디스코드 서버 가입 후 이용 가능합니다.";
     return;
   }
 
   noticeList.innerHTML = "";
   const querySnapshot = await getDocs(collection(db, "posts"));
+
   if (querySnapshot.empty) {
-    noticeList.innerHTML = "공지사항이 없습니다.";
+    noticeList.textContent = "공지사항이 없습니다.";
   } else {
+    const fragment = document.createDocumentFragment();
     querySnapshot.forEach(doc => {
       const data = doc.data();
-      noticeList.innerHTML += `
-        <div class="notice">
-          <strong>${data.title || "제목 없음"}</strong>
-          <div>${data.content || ""}</div>
-        </div>
-      `;
+      const div = document.createElement("div");
+      div.className = "notice";
+      div.innerHTML = `<strong>${data.title || "제목 없음"}</strong>
+                       <div>${data.content || ""}</div>`;
+      fragment.appendChild(div);
     });
+    noticeList.appendChild(fragment);
   }
 });
 
