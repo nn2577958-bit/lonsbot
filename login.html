@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./style.css">
 <style>
   .error { color:red; margin-bottom:10px; }
-  .login-btn, .signup-btn, .google-btn { display:block; margin:10px 0; padding:8px 12px; }
+  .login-btn, .signup-btn, .google-btn, .phone-btn { display:block; margin:10px 0; padding:8px 12px; }
 </style>
 </head>
 <body>
@@ -15,109 +15,73 @@
   <h2>Palworld 로그인/회원가입</h2>
   <div id="login-msg" class="error"></div>
 
-  <input type="email" id="email" placeholder="이메일">
-  <input type="password" id="password" placeholder="비밀번호">
+  <input type="text" id="phone" placeholder="전화번호 (+82...)">
+  <div id="recaptcha-container"></div>
+  <input type="text" id="otp" placeholder="OTP 입력">
 
-  <button id="login-btn" class="login-btn">로그인</button>
-  <button id="signup-btn" class="signup-btn">회원가입</button>
-  <button id="google-btn" class="google-btn">Google 로그인</button>
+  <button id="phone-btn" class="phone-btn">전화번호 인증</button>
 </div>
 
 <script type="module">
 import { auth, db } from "./firebase.js";
 import { 
-  createUserWithEmailAndPassword, 
-  sendEmailVerification, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider 
+  RecaptchaVerifier, 
+  signInWithPhoneNumber 
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("login-btn");
-const signupBtn = document.getElementById("signup-btn");
-const googleBtn = document.getElementById("google-btn");
+const phoneInput = document.getElementById("phone");
+const otpInput = document.getElementById("otp");
+const phoneBtn = document.getElementById("phone-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// 🔹 이메일/비밀번호 회원가입
-signupBtn.addEventListener("click", async () => {
+let confirmationResult;
+
+// 🔹 전화번호 인증 시작
+phoneBtn.addEventListener("click", async () => {
   loginMsg.textContent = "";
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) { loginMsg.textContent = "이메일과 비밀번호를 입력해주세요."; return; }
+  const phoneNumber = phoneInput.value.trim();
+  if (!phoneNumber) { loginMsg.textContent = "전화번호를 입력해주세요."; return; }
+
+  // reCAPTCHA
+  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
 
   try {
-    // 1️⃣ 회원가입
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+    alert("SMS로 OTP가 발송되었습니다. 받으신 6자리 코드 입력 후 다시 클릭해주세요.");
 
-    // 2️⃣ Firestore에 사용자 정보 추가
-    await setDoc(doc(db, "users", user.uid), {
-      email: email,
-      isMember: false,   // 디스코드 서버 가입 여부
-      createdAt: new Date()
-    });
+    // OTP 입력 후 인증 처리
+    phoneBtn.textContent = "OTP 인증 완료";
+    phoneBtn.onclick = async () => {
+      const code = otpInput.value.trim();
+      if (!code) { loginMsg.textContent = "OTP를 입력해주세요."; return; }
+      try {
+        const userCredential = await confirmationResult.confirm(code);
+        const user = userCredential.user;
 
-    // 3️⃣ 이메일 인증 전송
-    await sendEmailVerification(user);
-    alert("회원가입 성공! 인증 이메일을 보냈습니다. 이메일 확인 후 로그인해주세요.");
+        // Firestore 사용자 정보 확인/생성
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, { 
+            phone: phoneNumber, 
+            isMember: false, 
+            createdAt: new Date() 
+          });
+        }
+
+        // 인증 완료 → 홈 화면 이동
+        window.location.href = "home.html";
+
+      } catch (err) {
+        console.error(err);
+        loginMsg.textContent = "OTP 인증 실패: " + err.message;
+      }
+    };
 
   } catch (err) {
     console.error(err);
-    loginMsg.textContent = "회원가입 실패: " + err.message;
-  }
-});
-
-// 🔹 이메일/비밀번호 로그인
-loginBtn.addEventListener("click", async () => {
-  loginMsg.textContent = "";
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  if (!email || !password) { loginMsg.textContent = "이메일과 비밀번호를 입력해주세요."; return; }
-
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    // 이메일 인증 체크
-    if (!user.emailVerified) {
-      alert("이메일 인증 완료 후 이용 가능합니다.");
-      return;
-    }
-
-    window.location.href = "home.html"; // 인증 완료 시 홈 이동
-  } catch (err) {
-    console.error(err);
-    loginMsg.textContent = "로그인 실패: " + err.message;
-  }
-});
-
-// 🔹 구글 로그인
-googleBtn.addEventListener("click", async () => {
-  const provider = new GoogleAuthProvider();
-  try {
-    const userCredential = await signInWithPopup(auth, provider);
-    const user = userCredential.user;
-
-    // Firestore에 사용자 정보가 없으면 생성
-    const userDocRef = doc(db, "users", user.uid);
-    const userSnapshot = await userDocRef.get();
-    if (!userSnapshot.exists()) {
-      await setDoc(userDocRef, {
-        email: user.email,
-        isMember: false,
-        createdAt: new Date()
-      });
-    }
-
-    // 구글 로그인은 emailVerified 기본 true
-    window.location.href = "home.html";
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.textContent = "Google 로그인 실패: " + err.message;
+    loginMsg.textContent = "SMS 발송 실패: " + err.message;
   }
 });
 </script>
