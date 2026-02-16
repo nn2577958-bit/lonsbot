@@ -9,14 +9,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* ===== 전체 배경 (Palworld 이미지 + 그라데이션 오버레이) ===== */
+/* ===== 전체 배경 ===== */
 body {
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* 배경이미지 절대 URL로 설정 (GitHub Pages 문제 방지) */
   background-image:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
     url('https://www.gamemeca.com/data/news/2025/0917/p1766172_1.jpg');
@@ -27,70 +29,74 @@ body {
 
 /* ===== 로그인 카드 ===== */
 .container {
-  width: 400px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(230,230,230,0.9));
-  padding: 35px 25px;
+  width: 380px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
+  padding: 30px 22px;
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  text-align:center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0px 10px 28px rgba(0,0,0,0.35);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .container:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  transform: translateY(-6px) scale(1.025);
+  box-shadow: 0px 14px 38px rgba(0,0,0,0.4);
 }
 
-/* 제목 */
-h2 { color:#222; margin-bottom:25px; font-size:26px; }
+h2 {
+  color: #222;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
 
 /* ===== 버튼 ===== */
 button {
-  width:100%;
-  padding:14px;
-  margin:12px 0;
-  border:none;
-  border-radius:8px;
-  font-size:18px;
-  font-weight:600;
-  cursor:pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.23s ease;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  box-shadow: 0px 6px 16px rgba(0,0,0,0.3);
 }
 
 button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
 }
 
-button i { margin-right:8px; }
+button i {
+  margin-right: 8px;
+  color: #DB4437;
+}
 
-/* Google 로그인 버튼 */
 #google-btn {
-  background:#fff;
-  color:#444;
+  background: #fff;
+  color: #444;
   border: 1px solid #ccc;
 }
+
 #google-btn:hover {
-  background:#f0f0f0;
+  background: #f0f0f0;
 }
 
-/* 에러 메시지 */
 #login-msg {
-  color:#ff4444;
-  font-weight:500;
-  margin-bottom:12px;
-  text-align:center;
-  display:block;
+  color: #ff4444;
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 </style>
 </head>
 <body>
+
 <div class="container">
   <h2>LONS SV Palworld 로그인</h2>
   <div id="login-msg"></div>
@@ -104,7 +110,6 @@ import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/fir
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// Google 로그인
 googleBtn.addEventListener("click", async () => {
   googleBtn.disabled = true;
   loginMsg.textContent = "";
@@ -113,11 +118,11 @@ googleBtn.addEventListener("click", async () => {
     await signInWithPopup(auth, provider);
     window.location.href = "home.html";
   } catch (err) {
-    console.error(err);
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled = false;
   }
 });
 </script>
+
 </body>
 </html>
