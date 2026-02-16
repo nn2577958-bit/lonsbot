@@ -18,10 +18,10 @@ body {
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-  /* 배경이미지 절대 URL로 설정 (GitHub Pages 문제 방지) */
+  /* CDN 배경 이미지 적용 */
   background-image:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-    url('https://www.gamemeca.com/data/news/2025/0917/p1766172_1.jpg');
+    url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -31,16 +31,16 @@ body {
 .container {
   width: 380px;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
-  padding: 30px 22px;
+  padding: 35px 25px;
   border-radius: 15px;
-  box-shadow: 0px 10px 28px rgba(0,0,0,0.35);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .container:hover {
   transform: translateY(-6px) scale(1.025);
-  box-shadow: 0px 14px 38px rgba(0,0,0,0.4);
+  box-shadow: 0 14px 38px rgba(0,0,0,0.4);
 }
 
 h2 {
@@ -88,6 +88,7 @@ button i {
   background: #f0f0f0;
 }
 
+/* 에러 메시지 */
 #login-msg {
   color: #ff4444;
   margin-bottom: 10px;
@@ -123,6 +124,5 @@ googleBtn.addEventListener("click", async () => {
   }
 });
 </script>
-
 </body>
 </html>
