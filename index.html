@@ -5,14 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworld 로그인</title>
 
-<!-- 사이트 파비콘 -->
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
-
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* ===== 전체 배경 ===== */
 body {
   margin: 0;
   height: 100vh;
@@ -20,7 +16,6 @@ body {
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
   background-image:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
     url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
@@ -29,7 +24,6 @@ body {
   background-repeat: no-repeat;
 }
 
-/* ===== 로그인 카드 ===== */
 .container {
   width: 380px;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
@@ -51,7 +45,6 @@ h2 {
   font-size: 24px;
 }
 
-/* ===== 버튼 ===== */
 button {
   width: 100%;
   padding: 14px;
@@ -91,16 +84,16 @@ button i {
 }
 
 #discord-btn {
-  background: #7289da;
+  background: #7289DA;
   color: white;
-  border: 1px solid #5b6eae;
+  margin-top: 10px;
 }
 
 #discord-btn:hover {
   background: #5b6eae;
 }
 
-/* ===== 관리자 상태 ===== */
+/* 관리자 상태 */
 #admin-status {
   color: white;
   font-weight: bold;
@@ -109,9 +102,10 @@ button i {
   padding: 6px 12px;
   border-radius: 8px;
   display: inline-block;
+  line-height: 1.4;
 }
 
-/* ===== 에러 메시지 ===== */
+/* 메시지 박스 */
 #login-msg {
   color: #ff4444;
   margin-bottom: 10px;
@@ -139,21 +133,21 @@ const googleBtn = document.getElementById("google-btn");
 const discordBtn = document.getElementById("discord-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// ===== 관리자 상태 갱신 함수 =====
+// ===== 관리자 상태 + 시계 갱신 =====
 function updateAdminClock(user) {
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
 
   if(user && user.email === ADMIN_EMAIL){
-    adminStatus.textContent = `🟢 관리자 온라인 – ${kstString}`;
+    adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
     adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
   } else {
-    adminStatus.textContent = "🔴 관리자 오프라인";
+    adminStatus.innerHTML = `🔴 관리자 오프라인<br>${kstString}`;
     adminStatus.style.opacity = "1";
   }
 }
 
-// ===== 1초마다 시계 갱신 (로그인 전후 모두 반영) =====
+// ===== 항상 1초마다 시계 갱신 =====
 setInterval(() => updateAdminClock(auth.currentUser), 1000);
 
 // ===== 로그인 상태 변화 감지 =====
@@ -161,7 +155,7 @@ onAuthStateChanged(auth, (user) => {
   updateAdminClock(user);
 });
 
-// ===== Google 로그인 버튼 =====
+// ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
   googleBtn.disabled = true;
   loginMsg.textContent = "";
@@ -175,15 +169,14 @@ googleBtn.addEventListener("click", async () => {
   }
 });
 
-// ===== 디스코드 참여 버튼 =====
-discordBtn.addEventListener("click", () => {
-  if(auth.currentUser){
-    // 로그인 되어 있으면 홈으로 이동
-    window.location.href = "home.html";
-  } else {
-    // 로그인 안 되어 있으면 안내
-    loginMsg.textContent = "⚠ 구글 로그인 후 참여 가능합니다!";
+// ===== 디스코드 참여하기 버튼 =====
+discordBtn.addEventListener("click", async () => {
+  if(!auth.currentUser){
+    loginMsg.textContent = "구글 로그인 후 가능합니다!";
+    return;
   }
+  // 로그인 되어 있으면 홈 이동
+  window.location.href = "home.html";
 });
 </script>
 </body>
