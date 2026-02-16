@@ -16,13 +16,13 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 .logout-btn:hover { background:#d32f2f; }
 #discord-btn { background:#5865F2; display:none; color:#fff; }
 #discord-btn:hover { background:#4752c4; }
+#kakao-btn { background:#FFCD00; display:none; color:#000; font-weight:bold; }
+#kakao-btn:hover { background:#e6b800; }
 .notice { background:#e8e8e8; padding:12px 15px; margin:10px 0; border-radius:8px; border-left:4px solid #4CAF50; }
 .notice strong { display:block; font-size:1.1em; margin-bottom:5px; color:#333; }
 .notice small { display:block; color:#666; margin-bottom:8px; font-size:12px; }
 #load-more-btn { width:100%; padding:10px; background:#2196F3; color:#fff; border-radius:6px; border:none; cursor:pointer; margin-top:10px; transition: background 0.2s; }
 #load-more-btn:hover { background:#1976d2; }
-#donation-note { font-size:12px; color:#666; margin-top:5px; }
-#kakao-qr { width:200px; border:2px solid #333; border-radius:10px; margin-top:10px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -46,12 +46,10 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
     <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
   </div>
 
-  <!-- 카카오페이 후원 QR -->
-  <div class="user-box" id="kakao-box" style="display:none;">
-    <h3>💛 카카오페이 후원</h3>
-    <p>휴대폰으로 스캔 또는 이미지를 클릭 후 금액 확인 후 송금해주세요.</p>
-    <img id="kakao-qr" src="https://qr.kakaopay.com/FRydbZ6Gr.png" alt="카카오페이 QR">
-    <div id="donation-note">후원은 자발적이며, 최소 1,000원 이상 권장. 보내기 전 금액 확인 필수.</div>
+  <!-- 카카오페이 후원 버튼 -->
+  <div class="user-box">
+    <button id="kakao-btn">💛 페이 OR 지원 하기</button>
+    <div id="donation-note" style="font-size:12px; color:#666; margin-top:5px;">모바일에서 클릭하면 카카오 페이 앱으로 연결됩니다.</div>
   </div>
 
 </div>
@@ -64,8 +62,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
 const discordBtn = document.getElementById("discord-btn");
-const kakaoBox = document.getElementById("kakao-box");
-const kakaoQR = document.getElementById("kakao-qr");
+const kakaoBtn = document.getElementById("kakao-btn");
 
 let currentIndex = 0;
 const PAGE_SIZE = 5;
@@ -74,10 +71,10 @@ const PAGE_SIZE = 5;
 const notices = [
   { title: "서버 오픈 안내", content: "02/20 하드코어 오픈점검", createdAt: "2026-02-20 15:00~15:10" },
   { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
-  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
-  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
-  { title: "공지 사항", content: "항상 모니터링 중이며 모든 파일은 데이터베이스에 저장됩니다", createdAt: "2026-02-15 12:00" },
-  { title: "지원금 안내", content: "지원 해주신 모든 지원금은 운영비에 쓰입니다", createdAt: "2026-02-14 10:00" }
+  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치 적용", createdAt: "2026-02-16 14:30" },
+  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상", createdAt: "2026-02-16 00:00" },
+  { title: "공지 사항", content: "항상 모니터링 중이며 모든 데이터는 안전하게 저장됩니다", createdAt: "2026-02-15 12:00" },
+  { title: "지원금 안내", content: "모든 후원금은 운영비에 사용됩니다", createdAt: "2026-02-14 10:00" }
 ];
 
 // 로그인 상태 체크
@@ -87,7 +84,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     // 로그인 시 버튼 표시
     discordBtn.style.display = "block";
-    kakaoBox.style.display = "block";
+    kakaoBtn.style.display = "block";
 
     noticeList.innerHTML = "";
     currentIndex = 0;
@@ -111,16 +108,12 @@ function loadNextPage() {
   next.forEach(data => {
     const div = document.createElement("div");
     div.className = "notice";
-
     const titleEl = document.createElement("strong");
     titleEl.textContent = data.title;
-
     const dateEl = document.createElement("small");
     dateEl.textContent = data.createdAt;
-
     const contentEl = document.createElement("div");
     contentEl.textContent = data.content;
-
     div.append(titleEl, dateEl, contentEl);
     noticeList.appendChild(div);
   });
@@ -134,9 +127,9 @@ discordBtn.addEventListener("click", () => {
   window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
 });
 
-// 카카오페이 QR 클릭
-kakaoQR.addEventListener("click", () => {
-  window.open("https://qr.kakaopay.com/FRydbZ6Gr", "_blank");
+// 카카오페이 OR 버튼 클릭
+kakaoBtn.addEventListener("click", () => {
+  window.open("https://qr.kakaopay.com/FRydbZ6Gr", "_blank"); // 앱 실행 시 OR 화면
 });
 </script>
 </body>
