@@ -4,103 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LONS Palworld 로그인</title>
-
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-image:
-    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-    url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.container {
-  width: 380px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
-  padding: 35px 25px;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.container:hover {
-  transform: translateY(-6px) scale(1.025);
-  box-shadow: 0 14px 38px rgba(0,0,0,0.4);
-}
-
-h2 { color: #222; margin-bottom: 20px; font-size: 24px; }
-
-button {
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: none;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.23s ease;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-  position: relative;
-}
-
-button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
-button:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-
-button i { margin-right: 8px; color: #DB4437; }
-
-#google-btn { background: #fff; color: #444; border: 1px solid #ccc; }
-#google-btn:hover { background: #f0f0f0; }
-
-#discord-btn { background: #7289DA; color: white; margin-top: 10px; }
-#discord-btn:hover { background: #5b6eae; }
-
-#discord-btn.disabled { cursor: not-allowed; opacity: 0.6; }
-
-/* 툴팁 */
-#discord-btn[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #444;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 10;
-}
-
-#admin-status {
-  color: white;
-  font-weight: bold;
-  margin-bottom: 10px;
-  background: rgba(0,0,0,0.5);
-  padding: 6px 12px;
-  border-radius: 8px;
-  display: inline-block;
-  line-height: 1.4;
-}
-
-#login-msg {
-  color: #ff4444;
-  margin-bottom: 10px;
-  font-weight: 500;
-  text-align: center;
-}
+body { margin:0;height:100vh;display:flex;justify-content:center;align-items:center;font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
+background:linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover no-repeat;}
+.container {width:380px;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(225,225,225,0.9));padding:35px 25px;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,0.35);text-align:center;transition:transform 0.3s ease, box-shadow 0.3s ease;}
+.container:hover {transform:translateY(-6px) scale(1.025);box-shadow:0 14px 38px rgba(0,0,0,0.4);}
+h2 {color:#222;margin-bottom:20px;font-size:24px;}
+button {width:100%;padding:14px;margin:10px 0;border-radius:8px;border:none;font-size:18px;font-weight:600;cursor:pointer;transition:all 0.23s ease;box-shadow:0px 4px 10px rgba(0,0,0,0.2);position:relative;}
+button:hover {transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+button:active {transform:translateY(1px);box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+button i {margin-right:8px;color:#DB4437;}
+#google-btn {background:#fff;color:#444;border:1px solid #ccc;}
+#google-btn:hover {background:#f0f0f0;}
+#discord-btn {background:#7289DA;color:white;margin-top:10px;}
+#discord-btn:hover {background:#5b6eae;}
+#discord-btn.disabled {cursor:not-allowed;opacity:0.6;}
+#discord-btn[data-tooltip]:hover::after {content:attr(data-tooltip);position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:#444;color:#fff;padding:4px 8px;border-radius:6px;font-size:12px;white-space:nowrap;z-index:10;}
+#admin-status {color:white;font-weight:bold;margin-bottom:10px;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:8px;display:inline-block;line-height:1.4;}
+#login-msg {color:#ff4444;margin-bottom:10px;font-weight:500;text-align:center;}
 </style>
 </head>
 <body>
@@ -114,10 +38,21 @@ button i { margin-right: 8px; color: #DB4437; }
 </div>
 
 <script type="module">
-import { auth } from "./firebase.js";
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-const ADMIN_EMAIL = "nn2577958@gmail.com";
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 const adminStatus = document.getElementById("admin-status");
 const googleBtn = document.getElementById("google-btn");
 const discordBtn = document.getElementById("discord-btn");
@@ -126,67 +61,63 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// ===== 관리자 상태 + 시계 갱신 =====
-function updateAdminClock(user) {
+// 관리자 상태 깜빡임
+function updateAdminClock(isOnline){
   const now = new Date();
-  const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
+  const kstString = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
+  adminStatus.innerHTML = `${isOnline?"🟢 관리자 온라인":"🔴 관리자 오프라인"}<br>${kstString}`;
 
-  let isOnline = true;
-  if(user && user.email === ADMIN_EMAIL) isOnline = true;
-  if(user && user.email !== ADMIN_EMAIL) isOnline = false;
-
-  adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
-
-  // 깜빡임
-  if(fadingOut){
-    opacity -= 0.05;
-    if(opacity <= 0){ opacity = 0; fadingOut = false; }
-  } else {
-    opacity += 0.05;
-    if(opacity >= 1){ opacity = 1; fadingOut = true; }
-  }
+  if(fadingOut){ opacity -=0.05;if(opacity<=0){opacity=0;fadingOut=false;} }
+  else{ opacity+=0.05;if(opacity>=1){opacity=1;fadingOut=true;} }
   adminStatus.style.opacity = opacity;
 }
 
-// ===== 1초마다 상태/시계 갱신 =====
-setInterval(() => updateAdminClock(auth.currentUser), 1000);
+// 초기 기본 온라인
+setInterval(()=>updateAdminClock(true),1000);
 
-// ===== 로그인 상태 감지 =====
-onAuthStateChanged(auth, (user) => {
-  updateAdminClock(user);
-
-  // 로그인 되면 디스코드 버튼 활성화
+onAuthStateChanged(auth, async (user)=>{
+  let isAdmin = false;
   if(user){
+    // 서버로 ID 토큰 보내서 관리자 확인
+    const token = await user.getIdToken();
+    const res = await fetch("/api/check-admin",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({idToken:token})
+    });
+    const data = await res.json();
+    isAdmin = data.isAdmin;
+
+    // 디스코드 버튼 활성화
     discordBtn.classList.remove('disabled');
     discordBtn.removeAttribute('data-tooltip');
   } else {
     discordBtn.classList.add('disabled');
-    discordBtn.setAttribute('data-tooltip', '로그인 후 활성화됩니다');
+    discordBtn.setAttribute('data-tooltip','로그인 후 활성화됩니다');
+  }
+  updateAdminClock(isAdmin);
+});
+
+googleBtn.addEventListener("click", async ()=>{
+  googleBtn.disabled=true;
+  loginMsg.textContent="";
+  const provider=new GoogleAuthProvider();
+  try{
+    await signInWithPopup(auth,provider);
+    loginMsg.textContent="로그인 성공! 디스코드 참여하기 버튼이 활성화되었습니다.";
+  }catch(err){
+    loginMsg.textContent="로그인 실패: "+err.message;
+    googleBtn.disabled=false;
   }
 });
 
-// ===== 구글 로그인 버튼 =====
-googleBtn.addEventListener("click", async () => {
-  googleBtn.disabled = true;
-  loginMsg.textContent = "";
-  const provider = new GoogleAuthProvider();
-  try {
-    await signInWithPopup(auth, provider);
-    loginMsg.textContent = "로그인 성공! 디스코드 참여하기 버튼이 활성화되었습니다.";
-  } catch (err) {
-    loginMsg.textContent = "로그인 실패: " + err.message;
-    googleBtn.disabled = false;
-  }
-});
-
-// ===== 디스코드 참여하기 버튼 =====
-discordBtn.addEventListener("click", () => {
+discordBtn.addEventListener("click",()=>{
   if(discordBtn.classList.contains('disabled')){
-    loginMsg.textContent = "구글 로그인 후 참여하기 버튼이 활성화됩니다!";
+    loginMsg.textContent="구글 로그인 후 참여하기 버튼이 활성화됩니다!";
     return;
   }
-  loginMsg.textContent = "잠시 후 홈으로 이동합니다...";
-  setTimeout(() => window.location.href = "home.html", 1500);
+  loginMsg.textContent="잠시 후 홈으로 이동합니다...";
+  setTimeout(()=>window.location.href="home.html",1500);
 });
 </script>
 </body>
