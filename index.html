@@ -39,11 +39,7 @@ body {
   box-shadow: 0 14px 38px rgba(0,0,0,0.4);
 }
 
-h2 {
-  color: #222;
-  margin-bottom: 20px;
-  font-size: 24px;
-}
+h2 { color: #222; margin-bottom: 20px; font-size: 24px; }
 
 button {
   width: 100%;
@@ -58,42 +54,17 @@ button {
   box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-}
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+button:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 
-button:active {
-  transform: translateY(1px);
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
-}
+button i { margin-right: 8px; color: #DB4437; }
 
-button i {
-  margin-right: 8px;
-  color: #DB4437;
-}
+#google-btn { background: #fff; color: #444; border: 1px solid #ccc; }
+#google-btn:hover { background: #f0f0f0; }
 
-#google-btn {
-  background: #fff;
-  color: #444;
-  border: 1px solid #ccc;
-}
+#discord-btn { background: #7289DA; color: white; margin-top: 10px; }
+#discord-btn:hover { background: #5b6eae; }
 
-#google-btn:hover {
-  background: #f0f0f0;
-}
-
-#discord-btn {
-  background: #7289DA;
-  color: white;
-  margin-top: 10px;
-}
-
-#discord-btn:hover {
-  background: #5b6eae;
-}
-
-/* 관리자 상태 */
 #admin-status {
   color: white;
   font-weight: bold;
@@ -105,12 +76,7 @@ button i {
   line-height: 1.4;
 }
 
-/* 메시지 박스 */
-#login-msg {
-  color: #ff4444;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
+#login-msg { color: #ff4444; margin-bottom: 10px; font-weight: 500; text-align: center; }
 </style>
 </head>
 <body>
@@ -133,6 +99,9 @@ const googleBtn = document.getElementById("google-btn");
 const discordBtn = document.getElementById("discord-btn");
 const loginMsg = document.getElementById("login-msg");
 
+let opacity = 1;
+let fadingOut = true;
+
 // ===== 관리자 상태 + 시계 갱신 =====
 function updateAdminClock(user) {
   const now = new Date();
@@ -140,20 +109,26 @@ function updateAdminClock(user) {
 
   if(user && user.email === ADMIN_EMAIL){
     adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
-    adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
   } else {
     adminStatus.innerHTML = `🔴 관리자 오프라인<br>${kstString}`;
-    adminStatus.style.opacity = "1";
   }
+
+  // 깜빡임
+  if(fadingOut){
+    opacity -= 0.05;
+    if(opacity <= 0) { opacity = 0; fadingOut = false; }
+  } else {
+    opacity += 0.05;
+    if(opacity >= 1) { opacity = 1; fadingOut = true; }
+  }
+  adminStatus.style.opacity = opacity;
 }
 
-// ===== 항상 1초마다 시계 갱신 =====
+// ===== 1초마다 시계 + 상태 갱신 =====
 setInterval(() => updateAdminClock(auth.currentUser), 1000);
 
 // ===== 로그인 상태 변화 감지 =====
-onAuthStateChanged(auth, (user) => {
-  updateAdminClock(user);
-});
+onAuthStateChanged(auth, (user) => updateAdminClock(user));
 
 // ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
@@ -170,12 +145,11 @@ googleBtn.addEventListener("click", async () => {
 });
 
 // ===== 디스코드 참여하기 버튼 =====
-discordBtn.addEventListener("click", async () => {
+discordBtn.addEventListener("click", () => {
   if(!auth.currentUser){
     loginMsg.textContent = "구글 로그인 후 가능합니다!";
     return;
   }
-  // 로그인 되어 있으면 홈 이동
   window.location.href = "home.html";
 });
 </script>
