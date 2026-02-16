@@ -1,14 +1,17 @@
+// script.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { 
   getAuth, 
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
-  onAuthStateChanged
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  sendEmailVerification, 
+  signOut, 
+  GoogleAuthProvider, 
+  signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
@@ -18,87 +21,71 @@ const firebaseConfig = {
   appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
 };
 
+// 초기화
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
+// HTML 요소
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const googleBtn = document.getElementById("google-btn");
-const msg = document.getElementById("login-msg");
+const loginMsg = document.getElementById("login-msg");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 
-function getInput() {
-  return {
-    email: document.getElementById("email").value.trim(),
-    password: document.getElementById("password").value
-  };
-}
-
-// 🔥 한국어 에러 변환
-function getKoreanErrorMessage(error) {
-  switch (error.code) {
-    case "auth/email-already-in-use":
-      return "이미 가입된 이메일입니다.";
-    case "auth/invalid-email":
-      return "올바른 이메일 형식이 아닙니다.";
-    case "auth/weak-password":
-      return "비밀번호는 6자 이상이어야 합니다.";
-    case "auth/user-not-found":
-      return "존재하지 않는 계정입니다.";
-    case "auth/wrong-password":
-      return "비밀번호가 올바르지 않습니다.";
-    default:
-      return "오류가 발생했습니다. 다시 시도해주세요.";
-  }
-}
-
-// ✅ 로그인
-loginBtn?.addEventListener("click", () => {
-  const { email, password } = getInput();
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => window.location.href = "home.html")
-    .catch(e => msg.innerText = getKoreanErrorMessage(e));
-});
-
-// ✅ 회원가입 (이미 존재하면 자동 로그인)
-signupBtn?.addEventListener("click", async () => {
-  const { email, password } = getInput();
+// 로그인 이벤트
+loginBtn.addEventListener("click", async () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    window.location.href = "home.html";
-  } catch (error) {
-
-    if (error.code === "auth/email-already-in-use") {
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = "home.html";
-      } catch (loginError) {
-        msg.innerText = "이미 가입된 이메일입니다. 비밀번호를 확인하세요.";
-      }
-    } else {
-      msg.innerText = getKoreanErrorMessage(error);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    if (!userCredential.user.emailVerified) {
+      loginMsg.textContent = "❌ 이메일 인증이 필요합니다. 메일함을 확인하세요.";
+      return;
     }
-
+    loginMsg.textContent = "";
+    window.location.href = "home.html"; // 로그인 성공 후 홈으로
+  } catch (error) {
+    loginMsg.textContent = "❌ 로그인 실패: " + error.message;
   }
 });
 
-// ✅ 구글 로그인 (GitHub Pages 대응)
-googleBtn?.addEventListener("click", () => {
-  signInWithRedirect(auth, provider);
-});
+// 회원가입 이벤트
+signupBtn.addEventListener("click", async () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-// ✅ 리디렉트 결과 처리
-getRedirectResult(auth).then(result => {
-  if (result?.user) {
-    window.location.href = "home.html";
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await sendEmailVerification(userCredential.user);
+    loginMsg.textContent = "✅ 회원가입 성공! 이메일을 확인하세요.";
+    emailInput.value = "";
+    passwordInput.value = "";
+  } catch (error) {
+    loginMsg.textContent = "❌ 회원가입 실패: " + error.message;
   }
 });
 
-// ✅ 로그인 상태 유지
+// Google 로그인 이벤트
+googleBtn.addEventListener("click", async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    if (!user.emailVerified) {
+      loginMsg.textContent = "❌ Google 계정 이메일 확인 필요.";
+      return;
+    }
+    window.location.href = "home.html"; // 로그인 성공 후 홈으로
+  } catch (error) {
+    loginMsg.textContent = "❌ Google 로그인 실패: " + error.message;
+  }
+});
+
+// 로그인 상태 확인 (자동 리다이렉트)
 onAuthStateChanged(auth, user => {
-  if (user && window.location.pathname.includes("index.html")) {
+  if (user && user.emailVerified) {
     window.location.href = "home.html";
   }
 });
