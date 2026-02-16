@@ -3,176 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LONS Palworld</title>
+<title>LONS Palworld Home</title>
 
+<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-2fc87bae-3744-4c0a-891f-19f3a20b09fd.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
-
-/* ===== 기본 ===== */
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#111;
-  color:white;
+body {
+  margin: 0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://written-orange-nkzgqhkmqv.edgeone.app/OIP.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* ===== 네비게이션 바 ===== */
-.navbar{
-  position:fixed;
-  top:0;
+.topbar {
   width:100%;
-  height:70px;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
-  box-sizing:border-box;
-  border-bottom:1px solid #222;
-  z-index:1000;
-}
-
-/* 왼쪽 */
-.nav-left{
-  font-size:20px;
-  font-weight:bold;
-}
-
-/* 가운데 메뉴 */
-.nav-center{
-  display:flex;
-  gap:30px;
-}
-
-.nav-center a{
-  text-decoration:none;
-  color:#ccc;
-  font-weight:500;
-  transition:0.2s;
-}
-
-.nav-center a:hover{
-  color:#fff;
-}
-
-/* 오른쪽 */
-.nav-right{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-#admin-status{
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:12px;
-  background:#444;
-}
-
-.logout-btn{
-  padding:6px 12px;
-  border:none;
-  border-radius:6px;
-  background:#e53935;
+  background:rgba(0,0,0,0.85);
   color:white;
-  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 20px;
+  box-sizing:border-box;
 }
 
-/* ===== 메인 ===== */
-.main{
-  margin-top:100px;
-  width:90%;
-  max-width:1100px;
-  margin-left:auto;
-  margin-right:auto;
+.topbar-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.section{
-  margin-bottom:60px;
+#admin-status {
+  padding:6px 12px;
+  border-radius:20px;
+  background:#555;
+  font-weight:600;
+  font-size:13px;
 }
 
-.notice{
-  background:#1e1e1e;
+#user-count{
+  font-size:14px;
+}
+
+.main-wrapper {
+  min-height:calc(100vh - 60px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px;
+}
+
+.container {
+  width:100%;
+  max-width:450px;
+  background:rgba(255,255,255,0.95);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  padding:20px 25px;
+  text-align:center;
+}
+
+.user-box {
+  background:#f9f9f9;
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #eee;
+}
+
+button {
+  width:100%;
   padding:12px;
-  border-radius:8px;
-  margin-bottom:10px;
-}
-
-.btn{
-  padding:10px 16px;
+  margin:8px 0;
   border:none;
-  border-radius:6px;
+  border-radius:8px;
+  font-size:16px;
   font-weight:600;
   cursor:pointer;
 }
 
-.discord{ background:#5865F2; color:white; }
-.kakao{ background:#FFDC00; color:black; }
+.logout-btn { background:#f44336; color:#fff; }
+#discord-btn { background:#5865F2; color:#fff; }
+#kakao-btn { background:#FFDC00; color:#000; }
 
-/* ===== 팝업 ===== */
-.modal{
+.notice-container {
+  max-height:150px;
+  overflow-y:auto;
+  text-align:left;
+}
+
+.notice {
+  background:#e8e8e8;
+  padding:8px 10px;
+  margin:5px 0;
+  border-radius:8px;
+  border-left:4px solid #4CAF50;
+}
+
+.modal {
   display:none;
   position:fixed;
   top:0; left:0;
   width:100%; height:100%;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.6);
   justify-content:center;
   align-items:center;
 }
 
-.modal-content{
+.modal-content {
   background:white;
-  padding:30px;
-  border-radius:10px;
+  padding:25px;
+  border-radius:12px;
   text-align:center;
   width:300px;
-  color:black;
 }
-
 </style>
 </head>
 <body>
 
-<!-- 네비게이션 -->
-<div class="navbar">
-  <div class="nav-left">🎮 LONS</div>
-
-  <div class="nav-center">
-    <a href="#">HOME</a>
-    <a href="#">NOTICE</a>
-    <a href="#">SUPPORT</a>
-  </div>
-
-  <div class="nav-right">
+<div class="topbar">
+  <div>🎮 LONS Palworld</div>
+  <div class="topbar-right">
+    <div id="user-count">👥 0</div>
     <div id="admin-status">확인중...</div>
-    <button class="logout-btn" id="logout-btn">로그아웃</button>
-  </div>
-</div>
-
-<div class="main">
-
-  <div class="section">
-    <h2>📢 공지사항</h2>
-    <div id="notice-list"></div>
-  </div>
-
-  <div class="section">
-    <h2>🎧 커뮤니티</h2>
-    <button class="btn discord" id="discord-btn">
-      <i class="fab fa-discord"></i> 디스코드 참여하기
+    <button id="logout-btn" class="logout-btn" style="width:auto;padding:6px 12px;margin:0;">
+      로그아웃
     </button>
   </div>
-
-  <div class="section">
-    <h2>💛 후원</h2>
-    <button class="btn kakao" id="kakao-btn">💛Pay 지원금💛</button>
-    <p style="font-size:12px;color:#aaa;">모바일에서 이용 가능합니다.</p>
-  </div>
-
 </div>
 
-<!-- PC 팝업 -->
+<div class="main-wrapper">
+<div class="container">
+
+<h1>🎮 LONS Palworld</h1>
+
+<div class="user-box">
+  <h3>📢 공지사항</h3>
+  <div id="notice-list" class="notice-container"></div>
+</div>
+
+<div id="admin-write" class="user-box" style="display:none;">
+  <input id="notice-title" placeholder="제목" style="width:100%;padding:8px;margin-bottom:5px;">
+  <input id="notice-content" placeholder="내용" style="width:100%;padding:8px;margin-bottom:5px;">
+  <button id="notice-submit">공지 작성</button>
+</div>
+
+<div class="user-box">
+  <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+</div>
+
+<div class="user-box">
+  <button id="kakao-btn">💛Pay 지원금💛</button>
+  <div style="font-size:12px;color:#666;margin-top:5px;">
+    모바일에서 이용 가능합니다.
+  </div>
+</div>
+
+</div>
+</div>
+
 <div class="modal" id="pc-modal">
   <div class="modal-content">
     <h3>📱 모바일 전용</h3>
@@ -182,76 +174,107 @@ body{
 </div>
 
 <script type="module">
-import { auth } from "./firebase.js";
-import { getDatabase, ref, set, onValue, onDisconnect }
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { auth, db } from "./firebase.js";
 import { onAuthStateChanged, signOut }
 from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import {
+  ref, set, onValue, push,
+  onDisconnect
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-const db=getDatabase();
-const ADMIN_EMAIL="관리자이메일@gmail.com";
-const adminRef=ref(db,"status/admin");
+const ADMIN_EMAIL = "관리자이메일@gmail.com"; // 수정
 
-const adminStatus=document.getElementById("admin-status");
-const logoutBtn=document.getElementById("logout-btn");
-const noticeList=document.getElementById("notice-list");
-const discordBtn=document.getElementById("discord-btn");
-const kakaoBtn=document.getElementById("kakao-btn");
-const modal=document.getElementById("pc-modal");
+const logoutBtn = document.getElementById("logout-btn");
+const noticeList = document.getElementById("notice-list");
+const discordBtn = document.getElementById("discord-btn");
+const kakaoBtn = document.getElementById("kakao-btn");
+const adminStatus = document.getElementById("admin-status");
+const modal = document.getElementById("pc-modal");
 
-const notices=[
- {title:"공지 사항",content:"서버 정상 운영 중입니다.",date:"2026-02-12"},
- {title:"업데이트 완료",content:"최신 패치 적용.",date:"2026-02-16"}
-];
-
-onAuthStateChanged(auth,user=>{
- if(!user){ location.href="index.html"; }
- else{
-
-  if(user.email===ADMIN_EMAIL){
-   set(adminRef,true);
-   onDisconnect(adminRef).set(false);
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
   }
 
-  onValue(adminRef,snap=>{
-   if(snap.val()){
-    adminStatus.innerHTML="🟢 온라인";
-    adminStatus.style.background="#2e7d32";
-   }else{
-    adminStatus.innerHTML="🔴 오프라인";
-    adminStatus.style.background="#c62828";
-   }
-  });
+  const userRef = ref(db, "onlineUsers/" + user.uid);
+  set(userRef, true);
+  onDisconnect(userRef).remove();
 
-  noticeList.innerHTML="";
-  notices.forEach(n=>{
-   noticeList.innerHTML+=`
-    <div class="notice">
-      <strong>${n.title}</strong><br>
-      <small>${n.date}</small>
-      <div>${n.content}</div>
-    </div>`;
+  if (user.email === ADMIN_EMAIL) {
+    const adminRef = ref(db, "adminOnline");
+    set(adminRef, true);
+    onDisconnect(adminRef).set(false);
+    document.getElementById("admin-write").style.display = "block";
+  }
+
+  onValue(ref(db, "notices"), (snapshot) => {
+    noticeList.innerHTML = "";
+    snapshot.forEach(child => {
+      const data = child.val();
+      const div = document.createElement("div");
+      div.className = "notice";
+      div.innerHTML = `
+        <strong>${data.title}</strong>
+        <small>${data.createdAt}</small>
+        <div>${data.content}</div>
+      `;
+      noticeList.appendChild(div);
+    });
   });
- }
 });
 
-logoutBtn.onclick=async()=>{
- await signOut(auth);
- location.href="index.html";
+onValue(ref(db, "adminOnline"), (snapshot) => {
+  if (snapshot.val()) {
+    adminStatus.innerHTML = "🟢 관리자 온라인";
+    adminStatus.style.background = "#28a745";
+  } else {
+    adminStatus.innerHTML = "🔴 관리자 오프라인";
+    adminStatus.style.background = "#dc3545";
+  }
+});
+
+onValue(ref(db, "onlineUsers"), (snapshot) => {
+  document.getElementById("user-count").innerText = "👥 " + snapshot.numChildren();
+});
+
+document.getElementById("notice-submit").addEventListener("click", () => {
+  const title = document.getElementById("notice-title").value;
+  const content = document.getElementById("notice-content").value;
+
+  if (!title || !content) return alert("내용 입력");
+
+  push(ref(db, "notices"), {
+    title,
+    content,
+    createdAt: new Date().toLocaleString()
+  });
+
+  document.getElementById("notice-title").value = "";
+  document.getElementById("notice-content").value = "";
+});
+
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "index.html";
+});
+
+discordBtn.addEventListener("click", () => {
+  window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
+});
+
+kakaoBtn.addEventListener("click", () => {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = "https://qr.kakaopay.com/FRydbZ6Gr";
+  } else {
+    modal.style.display = "flex";
+  }
+});
+
+window.closeModal = function() {
+  modal.style.display = "none";
 };
-
-discordBtn.onclick=()=>window.open("https://discord.gg/tnMXbQ65Hk","_blank");
-
-kakaoBtn.onclick=()=>{
- const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
- if(isMobile){
-  location.href="https://qr.kakaopay.com/FRydbZ6Gr";
- }else{
-  modal.style.display="flex";
- }
-};
-
-window.closeModal=()=>modal.style.display="none";
 </script>
 
 </body>
