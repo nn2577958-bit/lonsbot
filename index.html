@@ -90,14 +90,18 @@ button i {
   background: #f0f0f0;
 }
 
-/* 관리자 상태 */
+/* ===== 관리자 상태 ===== */
 #admin-status {
   color: white;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.6); /* 반투명 배경 */
+  display: inline-block;
 }
 
-/* 에러 메시지 */
+/* ===== 에러 메시지 ===== */
 #login-msg {
   color: #ff4444;
   margin-bottom: 10px;
@@ -128,7 +132,7 @@ onAuthStateChanged(auth, (user) => {
   if(user && user.email === ADMIN_EMAIL){
     function updateAdminStatus(){
       const now = new Date();
-      const kst = new Date(now.getTime() + 9*60*60*1000);
+      const kst = new Date(now.getTime() + 9*60*60*1000); // 한국 시간
       const y = kst.getFullYear();
       const m = String(kst.getMonth()+1).padStart(2,'0');
       const d = String(kst.getDate()).padStart(2,'0');
@@ -140,7 +144,7 @@ onAuthStateChanged(auth, (user) => {
     updateAdminStatus();
     setInterval(updateAdminStatus, 1000);
 
-    // 깜빡임
+    // 깜빡임 효과
     setInterval(()=>{
       adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
     }, 800);
@@ -164,5 +168,6 @@ googleBtn.addEventListener("click", async () => {
   }
 });
 </script>
+
 </body>
 </html>
