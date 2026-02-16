@@ -2,10 +2,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { 
   getAuth, 
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -21,47 +23,49 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const loginForm = document.getElementById("login-form");
-const loginMsg = document.getElementById("login-msg");
-const googleBtn = document.getElementById("google-login-btn");
+const loginBtn = document.getElementById("login-btn");
+const signupBtn = document.getElementById("signup-btn");
+const googleBtn = document.getElementById("google-btn");
+const msg = document.getElementById("login-msg");
 
-// 🔹 이메일 로그인
-loginForm?.addEventListener("submit", e => {
-  e.preventDefault();
+function getInput() {
+  return {
+    email: document.getElementById("email").value.trim(),
+    password: document.getElementById("password").value
+  };
+}
 
-  const email = document.getElementById("login-email").value.trim();
-  const pw = document.getElementById("login-password").value;
-
-  signInWithEmailAndPassword(auth, email, pw)
-    .then(() => {
-      window.location.href = "home.html";
-    })
-    .catch(err => {
-      loginMsg.innerText = err.message;
-    });
+// 로그인
+loginBtn?.addEventListener("click", () => {
+  const { email, password } = getInput();
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => window.location.href = "home.html")
+    .catch(e => msg.innerText = e.message);
 });
 
-// 🔹 구글 로그인 (Redirect 방식)
+// 회원가입
+signupBtn?.addEventListener("click", () => {
+  const { email, password } = getInput();
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => window.location.href = "home.html")
+    .catch(e => msg.innerText = e.message);
+});
+
+// 구글 로그인 (GitHub Pages 안전용 redirect)
 googleBtn?.addEventListener("click", () => {
   signInWithRedirect(auth, provider);
 });
 
-// 🔹 리디렉트 로그인 결과 처리
-getRedirectResult(auth)
-  .then(result => {
-    if (result?.user) {
-      window.location.href = "home.html";
-    }
-  })
-  .catch(error => {
-    if (error) {
-      loginMsg.innerText = error.message;
-    }
-  });
+// 리디렉트 결과 처리
+getRedirectResult(auth).then(result => {
+  if (result?.user) {
+    window.location.href = "home.html";
+  }
+});
 
-// 🔹 로그인 상태 확인
+// 로그인 상태 유지
 onAuthStateChanged(auth, user => {
-  if (!user && window.location.pathname.includes("home.html")) {
-    window.location.href = "index.html";
+  if (user && window.location.pathname.includes("index.html")) {
+    window.location.href = "home.html";
   }
 });
