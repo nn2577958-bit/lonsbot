@@ -112,19 +112,20 @@ function updateAdminClock(user) {
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
 
+  // 로그인 여부 상관없이 ADMIN_EMAIL 비교
   if(user && user.email === ADMIN_EMAIL){
     adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
   } else {
     adminStatus.innerHTML = `🔴 관리자 오프라인<br>${kstString}`;
   }
 
-  // 깜빡임
+  // 깜빡임 효과
   if(fadingOut){
     opacity -= 0.05;
-    if(opacity <= 0) { opacity = 0; fadingOut = false; }
+    if(opacity <= 0){ opacity = 0; fadingOut = false; }
   } else {
     opacity += 0.05;
-    if(opacity >= 1) { opacity = 1; fadingOut = true; }
+    if(opacity >= 1){ opacity = 1; fadingOut = true; }
   }
   adminStatus.style.opacity = opacity;
 }
@@ -142,7 +143,7 @@ googleBtn.addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    updateAdminClock(auth.currentUser);
+    window.location.href = "home.html";
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled = false;
@@ -153,13 +154,10 @@ googleBtn.addEventListener("click", async () => {
 discordBtn.addEventListener("click", () => {
   if(!auth.currentUser){
     loginMsg.textContent = "구글 로그인 후 참여하기 버튼이 활성화 됩니다!";
-    setTimeout(() => {
-      window.location.href = "home.html";
-    }, 2000);
     return;
   }
-  // 로그인 되어 있으면 바로 홈 이동
-  window.location.href = "home.html";
+  loginMsg.textContent = "잠시 후 홈으로 이동합니다...";
+  setTimeout(() => window.location.href = "home.html", 1500);
 });
 </script>
 </body>
