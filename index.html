@@ -3,62 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>로그인</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.container {
-  background: rgba(255,255,255,0.95);
-  padding: 35px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 0 25px rgba(0,0,0,0.2);
-}
-
-h2 { margin-bottom: 20px; }
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.login-btn { background: #333; color: white; }
-.signup-btn { background: #4CAF50; color: white; }
-.google-btn { background: #db4437; color: white; }
-
-.error { color: red; margin-bottom: 10px; font-size: 14px; }
-</style>
+<title>Palworld 로그인</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
   <h2>Palworld 로그인</h2>
-
   <div id="login-msg" class="error"></div>
 
   <input type="email" id="email" placeholder="이메일">
@@ -70,6 +20,5 @@ button {
 </div>
 
 <script type="module" src="script.js"></script>
-
 </body>
 </html>
