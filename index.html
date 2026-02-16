@@ -72,15 +72,13 @@ button:hover {
 
 button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
 }
 
 button i {
   margin-right: 8px;
+  color: #DB4437;
 }
-
-#google-btn i { color: #DB4437; }
-#discord-btn i { color: #7289DA; }
 
 #google-btn {
   background: #fff;
@@ -93,12 +91,13 @@ button i {
 }
 
 #discord-btn {
-  background: #5865F2;
-  color: #fff;
+  background: #7289da;
+  color: white;
+  border: 1px solid #5b6eae;
 }
 
 #discord-btn:hover {
-  background: #4752C4;
+  background: #5b6eae;
 }
 
 /* ===== 관리자 상태 ===== */
@@ -127,7 +126,7 @@ button i {
   <div id="admin-status">관리자 상태 확인중...</div>
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="discord-btn"><i class="fab fa-discord"></i> Discord 참여하기</button>
+  <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
@@ -154,14 +153,12 @@ function updateAdminClock(user) {
   }
 }
 
+// ===== 1초마다 시계 갱신 (로그인 전후 모두 반영) =====
+setInterval(() => updateAdminClock(auth.currentUser), 1000);
+
 // ===== 로그인 상태 변화 감지 =====
 onAuthStateChanged(auth, (user) => {
   updateAdminClock(user);
-
-  // 1초마다 시계 갱신
-  const intervalId = setInterval(() => updateAdminClock(auth.currentUser), 1000);
-
-  return () => clearInterval(intervalId);
 });
 
 // ===== Google 로그인 버튼 =====
@@ -171,21 +168,22 @@ googleBtn.addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    alert("로그인 성공! 이제 Discord 참여하기 버튼을 클릭할 수 있습니다.");
+    window.location.href = "home.html";
   } catch (err) {
     loginMsg.textContent = "로그인 실패: " + err.message;
     googleBtn.disabled = false;
   }
 });
 
-// ===== Discord 참여하기 버튼 =====
+// ===== 디스코드 참여 버튼 =====
 discordBtn.addEventListener("click", () => {
-  if(!auth.currentUser){
-    alert("Discord 서버 참여는 먼저 Google 로그인 후 가능합니다!");
-    return;
+  if(auth.currentUser){
+    // 로그인 되어 있으면 홈으로 이동
+    window.location.href = "home.html";
+  } else {
+    // 로그인 안 되어 있으면 안내
+    loginMsg.textContent = "⚠ 구글 로그인 후 참여 가능합니다!";
   }
-  // 인증된 유저만 홈 화면 이동
-  window.location.href = "home.html";
 });
 </script>
 </body>
