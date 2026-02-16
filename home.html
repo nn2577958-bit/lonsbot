@@ -1,64 +1,118 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>홈 화면</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palworld 홈</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: rgba(0,0,0,0.7);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #aaa;
+  margin-bottom: 25px;
+}
+
+.user-box {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #ff4d4d;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  transform: scale(1.05);
+}
+</style>
 </head>
+
 <body>
 
-  <!-- 홈 화면 배경 -->
-  <div class="home-container">
-    <div class="card">
-      <h1>환영합니다!</h1>
-      <p id="user-info">사용자: <span id="user-name"></span></p>
-      <button id="logout-btn">로그아웃</button>
-    </div>
+<div class="container">
+  <h1>🎮 Palworld 대시보드</h1>
+  <div class="subtitle">팰월드 서버 관리 시스템</div>
+
+  <div class="user-box">
+    로그인 사용자: <strong id="user-name"></strong>
   </div>
 
-  <script>
-    // Firebase 초기화
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-      authDomain: "lons-dc24d.firebaseapp.com",
-      projectId: "lons-dc24d",
-      storageBucket: "lons-dc24d.appspot.com",
-      messagingSenderId: "755692328918",
-      appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
-    };
-    
-    // Firebase 앱 초기화
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <button id="logout-btn" class="logout-btn">로그아웃</button>
+</div>
 
-    // DOM 요소
-    const logoutBtn = document.getElementById("logout-btn");
-    const userNameElement = document.getElementById("user-name");
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    // 로그인된 사용자 정보 표시
-    auth.onAuthStateChanged(user => {
-      console.log("Auth State Changed:", user); // 로그인 상태 확인을 위한 로그
-      if (user) {
-        userNameElement.textContent = user.email; // 사용자 이메일 표시
-      } else {
-        // 로그인 안 된 경우 index.html로 리다이렉트
-        window.location.href = "index.html";
-      }
-    });
+const firebaseConfig = {
+  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
+  authDomain: "lons-dc24d.firebaseapp.com",
+  projectId: "lons-dc24d",
+  storageBucket: "lons-dc24d.appspot.com",
+  messagingSenderId: "755692328918",
+  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
+};
 
-    // 로그아웃 기능
-    logoutBtn.addEventListener("click", () => {
-      auth.signOut().then(() => {
-        window.location.href = "index.html"; // 로그아웃 후 로그인 페이지로 이동
-      }).catch((error) => {
-        console.error("로그아웃 실패:", error);
-      });
-    });
-  </script>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const logoutBtn = document.getElementById("logout-btn");
+const userName = document.getElementById("user-name");
+
+// 로그인 상태 확인
+onAuthStateChanged(auth, user => {
+  if (user) {
+    userName.textContent = user.email;
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+// 로그아웃
+logoutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    window.location.href = "index.html";
+  });
+});
+</script>
 
 </body>
 </html>
