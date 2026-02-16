@@ -6,7 +6,6 @@
 <title>로그인</title>
 
 <style>
-/* ===== 테마 변수 ===== */
 :root {
   --bg-gradient: linear-gradient(to bottom right, #6a11cb, #2575fc);
   --container-bg: rgba(255,255,255,0.95);
@@ -27,7 +26,6 @@ body.dark-mode {
   --button-bg: #000;
 }
 
-/* ===== 기본 레이아웃 ===== */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -36,7 +34,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
 }
 
 .login-container {
@@ -47,21 +44,8 @@ body {
   border-radius: 16px;
   text-align: center;
   box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  backdrop-filter: blur(10px);
-  transition: 0.3s;
 }
 
-h1 {
-  margin-bottom: 10px;
-  color: var(--text-main);
-}
-
-p {
-  margin-bottom: 20px;
-  color: var(--text-sub);
-}
-
-/* ===== 입력창 ===== */
 input {
   width: 100%;
   padding: 12px;
@@ -70,16 +54,8 @@ input {
   border: 1px solid var(--input-border);
   background: var(--input-bg);
   color: var(--text-main);
-  transition: 0.2s;
 }
 
-input:focus {
-  border-color: #6a11cb;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(106,17,203,0.3);
-}
-
-/* ===== 기본 로그인 버튼 ===== */
 .login-btn {
   width: 100%;
   padding: 12px;
@@ -89,64 +65,18 @@ input:focus {
   color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
-  margin-bottom: 10px;
-}
-
-.login-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* ===== 구글 로그인 ===== */
-.google-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
-  color: #444;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: 0.2s;
-}
-
-.google-btn:hover {
-  background: #f5f5f5;
-}
-
-/* ===== 디스코드 버튼 ===== */
-.discord-btn {
-  display: block;
-  padding: 12px;
-  margin-top: 10px;
-  color: #fff;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #5865F2, #7289DA);
-  transition: 0.2s;
-}
-
-.discord-btn:hover {
-  transform: scale(1.05);
-}
-
-/* ===== 다크모드 토글 ===== */
-.theme-toggle {
-  margin-top: 15px;
-  font-size: 13px;
-  cursor: pointer;
-  color: var(--text-sub);
-}
-
-.theme-toggle:hover {
-  text-decoration: underline;
 }
 
 .error {
   color: red;
   margin-bottom: 10px;
+}
+
+.theme-toggle {
+  margin-top: 15px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-sub);
 }
 </style>
 </head>
@@ -154,47 +84,55 @@ input:focus {
 <body>
 
 <div class="login-container">
-  <h1>로그인</h1>
-  <p>계정으로 로그인하세요</p>
-
+  <h2>로그인</h2>
   <div class="error" id="error-msg"></div>
 
-  <input type="text" placeholder="아이디">
-  <input type="password" placeholder="비밀번호">
+  <form id="login-form">
+    <input type="text" id="username" placeholder="아이디">
+    <input type="password" id="password" placeholder="비밀번호">
+    <button type="submit" class="login-btn">로그인</button>
+  </form>
 
-  <button class="login-btn">로그인</button>
-
-  <div style="margin:15px 0; font-size:13px; color:#999;">또는</div>
-
-  <!-- 구글 로그인 -->
-  <button class="google-btn">
-    🔵 Google로 로그인
-  </button>
-
-  <!-- 디스코드 바로가기 -->
-  <a href="https://discord.gg/tnMXbQ65Hk" class="discord-btn" target="_blank">
-    💬 디스코드 바로가기
-  </a>
-
-  <!-- 다크모드 토글 -->
-  <div class="theme-toggle" onclick="toggleTheme()">
-    🌙 다크모드 전환
-  </div>
+  <div class="theme-toggle" onclick="toggleTheme()">🌙 다크모드 전환</div>
 </div>
 
 <script>
-function toggleTheme() {
+// 이미 로그인 되어있으면 홈으로
+if(localStorage.getItem("loggedIn") === "true"){
+  window.location.href = "home.html";
+}
+
+document.getElementById("login-form").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const id = document.getElementById("username").value.trim();
+  const pw = document.getElementById("password").value.trim();
+  const errorBox = document.getElementById("error-msg");
+
+  if(!id || !pw){
+    errorBox.textContent = "아이디와 비밀번호를 입력하세요.";
+    return;
+  }
+
+  if(id === "admin" && pw === "1234"){
+    localStorage.setItem("loggedIn","true");
+    window.location.href = "home.html";
+  } else {
+    errorBox.textContent = "아이디 또는 비밀번호가 틀렸습니다.";
+  }
+});
+
+// 다크모드
+function toggleTheme(){
   document.body.classList.toggle("dark-mode");
   localStorage.setItem("theme",
     document.body.classList.contains("dark-mode") ? "dark" : "light"
   );
 }
 
-window.onload = function() {
-  if(localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
-  }
-};
+if(localStorage.getItem("theme") === "dark"){
+  document.body.classList.add("dark-mode");
+}
 </script>
 
 </body>
