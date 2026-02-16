@@ -17,12 +17,10 @@ document.getElementById("login-btn").addEventListener("click", async () => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
     const user = userCredential.user;
-
     if (!user.emailVerified) {
-      loginMsg.textContent = "이메일 인증 후 로그인 가능합니다. 이메일을 확인해주세요.";
+      loginMsg.textContent = "이메일 인증 후 로그인 가능합니다.";
       return;
     }
-
     window.location.href = "home.html";
   } catch (error) {
     if (error.code === "auth/user-not-found") loginMsg.textContent = "가입된 계정이 없습니다.";
