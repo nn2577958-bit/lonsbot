@@ -102,16 +102,19 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// ===== 관리자 상태 + 시계 갱신 =====
-function updateAdminClock(user) {
+// ===== 현재 시각 문자열 반환 =====
+function getKSTString() {
   const now = new Date();
-  const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
+  return now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
+}
 
-  if(user && user.email === ADMIN_EMAIL){
-    adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
-  } else {
-    adminStatus.innerHTML = `🔴 관리자 오프라인<br>${kstString}`;
-  }
+// ===== 관리자 상태 + 깜빡임 =====
+function updateAdminStatus(user) {
+  const kst = getKSTString();
+
+  // 로그인 전이라도 온라인으로 보이게, 로그인 후 이메일 비교
+  const isAdmin = !user || (user && user.email === ADMIN_EMAIL);
+  adminStatus.innerHTML = `${isAdmin ? '🟢 관리자 온라인' : '🔴 관리자 오프라인'}<br>${kst}`;
 
   // 깜빡임
   if(fadingOut){
@@ -125,10 +128,10 @@ function updateAdminClock(user) {
 }
 
 // ===== 1초마다 시계 + 상태 갱신 =====
-setInterval(() => updateAdminClock(auth.currentUser), 1000);
+setInterval(() => updateAdminStatus(auth.currentUser), 1000);
 
 // ===== 로그인 상태 변화 감지 =====
-onAuthStateChanged(auth, (user) => updateAdminClock(user));
+onAuthStateChanged(auth, user => updateAdminStatus(user));
 
 // ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", async () => {
