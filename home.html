@@ -6,39 +6,100 @@
 <title>LONS Palworld Home</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
-body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-.container { max-width:500px; margin:50px auto; background:#fff; padding:25px 20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); }
-h1,h3 { text-align:center; color:#333; margin-bottom:15px; }
-.user-box { background:#f9f9f9; padding:15px 20px; margin:15px 0; border-radius:10px; border:1px solid #eee; text-align:center; }
-button { width:100%; padding:12px; margin:5px 0; border:none; border-radius:6px; font-size:15px; cursor:pointer; transition: all 0.3s; }
-button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+/* ===== 전체 화면 배경 ===== */
+body {
+  margin: 0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:#f0f2f5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+/* ===== 단일 카드 ===== */
+.container {
+  width: 100%;
+  max-width: 450px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  padding: 20px 25px;
+  box-sizing:border-box;
+  text-align:center;
+}
+
+/* ===== 제목 ===== */
+h1 {
+  margin: 0 0 20px 0;
+  font-size:24px;
+}
+
+/* ===== 카드형 섹션 ===== */
+.user-box {
+  background:#f9f9f9;
+  padding:15px 15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #eee;
+  text-align:center;
+}
+
+/* ===== 버튼 ===== */
+button {
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition: all 0.2s;
+}
+button:hover {
+  transform: translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 로그아웃 */
 .logout-btn { background:#f44336; color:#fff; }
 .logout-btn:hover { background:#d32f2f; }
-#discord-btn { background:#5865F2; display:none; color:#fff; }
+
+/* Discord */
+#discord-btn { background:#5865F2; color:#fff; }
 #discord-btn:hover { background:#4752c4; }
-#kakao-btn { background:#FFCD00; display:none; color:#000; font-weight:bold; }
-#kakao-btn:hover { background:#e6b800; }
-.notice { background:#e8e8e8; padding:12px 15px; margin:10px 0; border-radius:8px; border-left:4px solid #4CAF50; }
-.notice strong { display:block; font-size:1.1em; margin-bottom:5px; color:#333; }
-.notice small { display:block; color:#666; margin-bottom:8px; font-size:12px; }
-#load-more-btn { width:100%; padding:10px; background:#2196F3; color:#fff; border-radius:6px; border:none; cursor:pointer; margin-top:10px; transition: background 0.2s; }
-#load-more-btn:hover { background:#1976d2; }
+
+/* 카카오페이 후원 */
+#kakao-btn { background:#FFDC00; color:#000; }
+#kakao-btn:hover { background:#e6c200; }
+
+/* 공지사항 스크롤 */
+.notice-container {
+  max-height:120px;
+  overflow-y:auto;
+  text-align:left;
+}
+.notice {
+  background:#e8e8e8;
+  padding:8px 10px;
+  margin:5px 0;
+  border-radius:8px;
+  border-left:4px solid #4CAF50;
+}
+.notice strong { display:block; font-size:1em; margin-bottom:3px; color:#333; }
+.notice small { display:block; font-size:11px; color:#666; margin-bottom:3px; }
 </style>
 </head>
 <body>
+
 <div class="container">
   <h1>🎮 LONS Palworld</h1>
-
-  <!-- 로그아웃 -->
-  <div class="user-box">
-    <button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-  </div>
 
   <!-- 공지사항 -->
   <div class="user-box">
     <h3>📢 공지사항</h3>
     <div id="notice-list" class="notice-container">불러오는 중...</div>
-    <button id="load-more-btn" style="display:none;">더보기</button>
   </div>
 
   <!-- Discord 참여 -->
@@ -46,12 +107,18 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
     <button id="discord-btn"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
   </div>
 
-  <!-- 카카오페이 후원 버튼 -->
+  <!-- 카카오페이 후원 -->
   <div class="user-box">
-    <button id="kakao-btn">💛 페이 OR 지원 하기</button>
-    <div id="donation-note" style="font-size:12px; color:#666; margin-top:5px;">모바일에서 클릭하면 카카오 페이 앱으로 연결됩니다.</div>
+    <button id="kakao-btn">💛페이 후원💛</button>
+    <div id="donation-note" style="font-size:12px;color:#666;margin-top:5px;">
+      휴대폰 으로 스캔 후 금액 확인 후 송금해주세요.
+    </div>
   </div>
 
+  <!-- 로그아웃 -->
+  <div class="user-box">
+    <button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+  </div>
 </div>
 
 <script type="module">
@@ -60,21 +127,16 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
-const loadMoreBtn = document.getElementById("load-more-btn");
 const discordBtn = document.getElementById("discord-btn");
 const kakaoBtn = document.getElementById("kakao-btn");
 
-let currentIndex = 0;
-const PAGE_SIZE = 5;
-
 // 공지사항 예시
 const notices = [
-  { title: "서버 오픈 안내", content: "02/20 하드코어 오픈점검", createdAt: "2026-02-20 15:00~15:10" },
+  { title: "공지 사항", content: "항상 모니터링 중이며 모든 파일은 데이터 베이스에 기록 됩니다.", createdAt: "2026-02-12 13:00~13:10" },
   { title: "신규 뽑기 이벤트 시작!", content: "당첨되신 분들은 요청 주시면 지급 처리됩니다.", createdAt: "2026-02-16 14:00" },
-  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치 적용", createdAt: "2026-02-16 14:30" },
-  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상", createdAt: "2026-02-16 00:00" },
-  { title: "공지 사항", content: "항상 모니터링 중이며 모든 데이터는 안전하게 저장됩니다", createdAt: "2026-02-15 12:00" },
-  { title: "지원금 안내", content: "모든 후원금은 운영비에 사용됩니다", createdAt: "2026-02-14 10:00" }
+  { title: "업데이트 완료", content: "PAL 0.7.2 최신 패치가 적용되었습니다.", createdAt: "2026-02-16 14:30" },
+  { title: "서버 접속 상황", content: "1SV / 2SV 모두 정상 작동 중입니다.", createdAt: "2026-02-16 00:00" },
+  { title: "서버 오픈 안내", content: "하드코어 02 / 20 大 오픈 많이 사랑 해주세요!", createdAt: "2026-02-20 12:00" }
 ];
 
 // 로그인 상태 체크
@@ -83,12 +145,19 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "index.html";
   } else {
     // 로그인 시 버튼 표시
-    discordBtn.style.display = "block";
-    kakaoBtn.style.display = "block";
-
     noticeList.innerHTML = "";
-    currentIndex = 0;
-    loadNextPage();
+    notices.forEach(data => {
+      const div = document.createElement("div");
+      div.className = "notice";
+      const titleEl = document.createElement("strong");
+      titleEl.textContent = data.title;
+      const dateEl = document.createElement("small");
+      dateEl.textContent = data.createdAt;
+      const contentEl = document.createElement("div");
+      contentEl.textContent = data.content;
+      div.append(titleEl, dateEl, contentEl);
+      noticeList.appendChild(div);
+    });
   }
 });
 
@@ -97,39 +166,17 @@ logoutBtn.addEventListener("click", async () => {
   try {
     await signOut(auth);
     window.location.href = "index.html";
-  } catch(err) {
-    console.error(err);
-  }
+  } catch(err) { console.error(err); }
 });
 
-// 공지사항 페이지네이션
-function loadNextPage() {
-  const next = notices.slice(currentIndex, currentIndex + PAGE_SIZE);
-  next.forEach(data => {
-    const div = document.createElement("div");
-    div.className = "notice";
-    const titleEl = document.createElement("strong");
-    titleEl.textContent = data.title;
-    const dateEl = document.createElement("small");
-    dateEl.textContent = data.createdAt;
-    const contentEl = document.createElement("div");
-    contentEl.textContent = data.content;
-    div.append(titleEl, dateEl, contentEl);
-    noticeList.appendChild(div);
-  });
-  currentIndex += PAGE_SIZE;
-  loadMoreBtn.style.display = currentIndex < notices.length ? "block" : "none";
-}
-loadMoreBtn.addEventListener("click", loadNextPage);
-
-// Discord 버튼 클릭
+// Discord 버튼
 discordBtn.addEventListener("click", () => {
   window.open("https://discord.gg/tnMXbQ65Hk", "_blank");
 });
 
-// 카카오페이 OR 버튼 클릭
+// 카카오페이 후원 버튼
 kakaoBtn.addEventListener("click", () => {
-  window.open("https://qr.kakaopay.com/FRydbZ6Gr", "_blank"); // 앱 실행 시 OR 화면
+  window.open("https://qr.kakaopay.com/FRydbZ6Gr", "_blank");
 });
 </script>
 </body>
