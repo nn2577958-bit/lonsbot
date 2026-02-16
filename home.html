@@ -18,9 +18,8 @@
 <div class="container">
   <h1>🎮 LONS Palworld</h1>
 
-  <!-- 사용자 정보 -->
+  <!-- 로그아웃 버튼 -->
   <div class="user-box">
-    <p>디스코드 닉네임: <strong id="discord-nick-display"></strong></p>
     <button id="logout-btn" class="logout-btn">로그아웃</button>
   </div>
 
@@ -33,11 +32,10 @@
 </div>
 
 <script type="module">
-import { auth, db, signOut } from "./firebase.js";
+import { auth, signOut } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-const discordDisplay = document.getElementById("discord-nick-display");
+// 요소 선택
 const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
@@ -55,16 +53,12 @@ const notices = [
   { title: "이벤트 안내", content: "이번 주말 특별 이벤트를 놓치지 마세요!", createdAt: "2026-02-11 14:00" }
 ];
 
-// 🔹 로그인 체크 + Discord 닉네임 표시
-onAuthStateChanged(auth, async (user) => {
+// 🔹 로그인 체크
+onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "login.html";
     return;
   }
-
-  const userDoc = await getDoc(doc(db, "users", user.uid));
-  const discordNick = userDoc.data()?.discordNick || "닉네임 없음";
-  discordDisplay.textContent = discordNick;
 
   noticeList.innerHTML = "";
   currentIndex = 0;
@@ -72,12 +66,40 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // 🔹 로그아웃
-logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => {
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
     window.location.href = "login.html";
-  });
+  } catch (err) {
+    console.error("로그아웃 실패:", err);
+  }
 });
 
 // 🔹 공지 페이지네이션
 function loadNextPage() {
-  const next = notices.slice(currentIndex
+  const next = notices.slice(currentIndex, currentIndex + PAGE_SIZE);
+  next.forEach(data => {
+    const div = document.createElement("div");
+    div.className = "notice";
+
+    const titleEl = document.createElement("strong");
+    titleEl.textContent = data.title;
+
+    const dateEl = document.createElement("small");
+    dateEl.textContent = data.createdAt;
+
+    const contentEl = document.createElement("div");
+    contentEl.textContent = data.content;
+
+    div.append(titleEl, dateEl, contentEl);
+    noticeList.appendChild(div);
+  });
+
+  currentIndex += PAGE_SIZE;
+  loadMoreBtn.style.display = currentIndex < notices.length ? "block" : "none";
+}
+
+loadMoreBtn.addEventListener("click", loadNextPage);
+</script>
+</body>
+</html>
