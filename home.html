@@ -17,9 +17,11 @@
 <body>
 <div class="container">
   <h1>🎮 LONS Palworld</h1>
+  <div class="subtitle">론즈서버 팰월드 24시간</div>
 
-  <!-- 로그아웃 버튼 -->
+  <!-- 사용자 정보 -->
   <div class="user-box">
+    <p>디스코드 닉네임: <strong id="discord-nick-display"></strong></p>
     <button id="logout-btn" class="logout-btn">로그아웃</button>
   </div>
 
@@ -32,10 +34,11 @@
 </div>
 
 <script type="module">
+// 🔹 로그인 체크 (Firebase Auth)
 import { auth, signOut } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 요소 선택
+const discordDisplay = document.getElementById("discord-nick-display");
 const logoutBtn = document.getElementById("logout-btn");
 const noticeList = document.getElementById("notice-list");
 const loadMoreBtn = document.getElementById("load-more-btn");
@@ -43,36 +46,40 @@ const loadMoreBtn = document.getElementById("load-more-btn");
 let currentIndex = 0;
 const PAGE_SIZE = 5;
 
-// 🔹 수동 공지 배열
+// 🔹 수동 공지 배열 (관리자가 직접 입력)
 const notices = [
   { title: "서버 점검 안내", content: "오늘 오후 8시부터 9시까지 서버 점검이 있습니다.", createdAt: "2026-02-16 15:00" },
   { title: "신규 이벤트 시작!", content: "주말 동안 특별 이벤트가 진행됩니다.", createdAt: "2026-02-15 12:30" },
-  { title: "업데이트 완료", content: "최신 패치가 적용되었습니다.", createdAt: "2026-02-14 10:00" },
+  { title: "업데이트 완료", content: "최신 패치가 적용되었습니다. 자세한 내용은 패치노트를 확인하세요.", createdAt: "2026-02-14 10:00" },
   { title: "서버 점검 완료", content: "점검이 완료되어 정상 서비스 중입니다.", createdAt: "2026-02-13 09:00" },
   { title: "공지사항 테스트", content: "이것은 테스트용 공지입니다.", createdAt: "2026-02-12 18:00" },
   { title: "이벤트 안내", content: "이번 주말 특별 이벤트를 놓치지 마세요!", createdAt: "2026-02-11 14:00" }
 ];
 
-// 🔹 로그인 체크
+// 🔹 로그인 상태 체크
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "login.html";
+    window.location.href = "login.html"; // 로그인 안 됐으면 로그인 화면
     return;
   }
 
+  // Google 로그인은 emailVerified 항상 true
+  // Discord 닉네임 표시
+  const discordNick = localStorage.getItem("discordNick") || "닉네임 없음";
+  discordDisplay.textContent = discordNick;
+
+  // 공지 초기 로드
   noticeList.innerHTML = "";
   currentIndex = 0;
   loadNextPage();
 });
 
 // 🔹 로그아웃
-logoutBtn.addEventListener("click", async () => {
-  try {
-    await signOut(auth);
+logoutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    localStorage.removeItem("discordNick");
     window.location.href = "login.html";
-  } catch (err) {
-    console.error("로그아웃 실패:", err);
-  }
+  });
 });
 
 // 🔹 공지 페이지네이션
