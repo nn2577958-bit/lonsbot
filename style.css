@@ -1,23 +1,21 @@
-/* 로그인 화면 스타일 */
-.login-container, .home-container {
-  max-width: 400px;
-  margin: 50px auto;
-  background: rgba(255,255,255,0.95);
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
+<div class="login-container">
+  <h1>로그인</h1>
+  <p>계정으로 로그인하세요</p>
 
-.login-container h1, .home-container h1 { margin-bottom: 10px; }
-.login-container p, .home-container p { margin-bottom: 20px; }
+  <input type="text" placeholder="아이디">
+  <input type="password" placeholder="비밀번호">
 
-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
-button { width: 100%; padding: 10px; border-radius: 5px; border: none; background: #333; color: #fff; cursor: pointer; }
-button:hover { background: #555; }
-.error { color: red; margin-bottom: 10px; }
+  <button>로그인</button>
 
-body.home-bg { background: linear-gradient(to bottom right, #6a11cb, #2575fc); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-#discord-btn { display: inline-block; padding: 12px 20px; margin: 20px 0; color: #fff; font-weight: bold; text-decoration: none; border-radius: 8px; background: linear-gradient(90deg, #7289DA, #99AAB5); transition: transform 0.2s; }
-#discord-btn:hover { transform: scale(1.05); }
-footer { margin-top: 30px; font-size: 12px; color: #fff; }
+  <div style="margin:15px 0; font-size:13px; color:#999;">또는</div>
+
+  <!-- 구글 로그인 -->
+  <button class="google-btn">
+    🔵 Google로 로그인
+  </button>
+
+  <!-- 디스코드 바로가기 -->
+  <a href="https://discord.gg/tnMXbQ65Hk" id="discord-btn" target="_blank">
+    💬 디스코드 바로가기
+  </a>
+</div>
