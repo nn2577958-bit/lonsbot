@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* ===== 배경 ===== */
+/* ===== 전체 배경 ===== */
 body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display:flex;
@@ -32,7 +32,8 @@ body {
 /* ===== 로그인 카드 ===== */
 .container {
   width: 400px;
-  background-color: rgba(255, 255, 255, 0.95);
+  /* 카드 배경 그라데이션 */
+  background: linear-gradient(180deg, #ffffff, #e0e0e0);
   padding: 35px 25px;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
@@ -61,22 +62,41 @@ button {
   transition: all 0.2s;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
+
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.25);
 }
+
 button:active {
   transform: translateY(1px);
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-button i { margin-right:8px; }
+
+button i {
+  margin-right:8px;
+  color: #DB4437; /* Google G 색상 레드 */
+}
 
 /* Google 버튼 */
-#google-btn { background:#4285F4; color:#fff; }
-#google-btn:hover { background:#3367d6; }
+#google-btn { 
+  background:#fff; /* 흰색 배경 */
+  color:#444;      /* 글씨 진하게 */
+  border:1px solid #ccc;
+}
+
+#google-btn:hover { 
+  background:#f0f0f0;
+}
 
 /* 에러 메시지 */
-#login-msg { color:#e74c3c; font-weight:500; margin-bottom:12px; text-align:center; display:block; }
+#login-msg { 
+  color:#e74c3c; 
+  font-weight:500; 
+  margin-bottom:12px; 
+  text-align:center; 
+  display:block; 
+}
 </style>
 </head>
 <body>
@@ -93,14 +113,13 @@ import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/fir
 const googleBtn = document.getElementById("google-btn");
 const loginMsg = document.getElementById("login-msg");
 
-// 🔹 Google 로그인
 googleBtn.addEventListener("click", async () => {
-  googleBtn.disabled = true; // 광클 방지
+  googleBtn.disabled = true;
   loginMsg.textContent = "";
   const provider = new GoogleAuthProvider();
   try {
     await signInWithPopup(auth, provider);
-    window.location.href = "home.html"; // 로그인 성공 시 home 이동
+    window.location.href = "home.html";
   } catch (err) {
     console.error(err);
     loginMsg.textContent = "Google 로그인 실패: " + err.message;
