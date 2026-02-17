@@ -33,7 +33,6 @@ button i { margin-right:8px; color:#DB4437; }
   <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
-<!-- 구글 OAuth 라이브러리 -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 const googleBtn = document.getElementById("google-btn");
@@ -49,15 +48,13 @@ function updateAdminClock(isAdmin){
   const kstString = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
   adminStatus.innerHTML = `${isAdmin ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
 
-  // 깜빡임
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false;} }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true;} }
   adminStatus.style.opacity = opacity;
 }
 
-setInterval(()=>updateAdminClock(discordBtn.classList.contains('disabled')===false),1000);
+setInterval(()=>updateAdminClock(!discordBtn.classList.contains('disabled')),1000);
 
-// ===== 구글 로그인 버튼 =====
 googleBtn.addEventListener("click", () => {
   google.accounts.id.prompt((response) => {
     if(!response.credential){
@@ -65,7 +62,6 @@ googleBtn.addEventListener("click", () => {
       return;
     }
 
-    // 서버로 ID 토큰 전송
     fetch("/auth/google", {
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -88,7 +84,6 @@ googleBtn.addEventListener("click", () => {
   });
 });
 
-// ===== 디스코드 참여하기 버튼 =====
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains('disabled')){
     loginMsg.textContent="로그인 후 참여하기 버튼이 활성화됩니다!";
