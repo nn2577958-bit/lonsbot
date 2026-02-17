@@ -5,40 +5,36 @@ import cors from "cors";
 
 dotenv.config();
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
-  })
-});
-
-const db = admin.firestore();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 관리자 이메일
+// Firebase Admin 초기화
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  }),
+});
+
+const db = admin.firestore();
 const ADMIN_EMAIL = "nn2577958@gmail.com";
 
-// ============================
-// 구글 로그인 토큰 검증 API
-// ============================
+// ===== 구글 ID 토큰 검증 =====
 app.post("/auth/google", async (req, res) => {
   const { idToken } = req.body;
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const isAdmin = decodedToken.email === ADMIN_EMAIL;
-    res.json({ uid: decodedToken.uid, email: decodedToken.email, isAdmin });
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    const isAdmin = decoded.email === ADMIN_EMAIL;
+    res.json({ uid: decoded.uid, email: decoded.email, isAdmin });
   } catch (err) {
     console.error(err);
     res.status(401).json({ error: "유효하지 않은 토큰" });
   }
 });
 
-// ============================
-// Firestore 예시 API (유저 데이터)
-// ============================
+// ===== 예시: Firestore 유저 데이터 =====
 app.get("/user/:uid", async (req, res) => {
   try {
     const doc = await db.collection("users").doc(req.params.uid).get();
@@ -49,4 +45,5 @@ app.get("/user/:uid", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => console.log("Server running"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
