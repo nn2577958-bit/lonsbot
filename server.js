@@ -1,39 +1,34 @@
-// server.js
-import express from "express";
-import admin from "firebase-admin";
-import dotenv from "dotenv";
-import cors from "cors";
-
-dotenv.config();
+import express from 'express';
+import { OAuth2Client } from 'google-auth-library';
+import path from 'path';
 
 const app = express();
-app.use(cors({ origin: "https://yourdomain.com", credentials: true }));
 app.use(express.json());
+const CLIENT_ID = "755692328918-rncbloi5oh3tj9kh4nauhurihui1ohfp.apps.googleusercontent.com";
+const client = new OAuth2Client(CLIENT_ID);
 
-// ===== Firebase Admin 초기화 =====
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-  }),
-});
+// 정적 파일 제공 (index.html, script.js 등)
+app.use(express.static(path.join(process.cwd())));
 
-const ADMIN_EMAIL = "nn2577958@gmail.com";
-
-// ===== 구글 ID 토큰 검증 =====
-app.post("/auth/google", async (req, res) => {
+// 구글 로그인 인증
+app.post('/auth/google', async (req, res) => {
   const { idToken } = req.body;
-
   try {
-    const decoded = await admin.auth().verifyIdToken(idToken);
-    const isAdmin = decoded.email === ADMIN_EMAIL;
-    res.json({ uid: decoded.uid, email: decoded.email, isAdmin });
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+
+    // 관리자 이메일 지정
+    const adminEmails = ["nn2577958@gmai.com"];
+    const isAdmin = adminEmails.includes(payload.email);
+
+    res.json({ isAdmin });
   } catch (err) {
-    console.error("토큰 검증 실패:", err.message);
-    res.status(401).json({ error: "유효하지 않은 토큰" });
+    console.error(err);
+    res.status(401).json({ error: "Invalid token" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));
