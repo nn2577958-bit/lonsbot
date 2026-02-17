@@ -18,14 +18,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// =====================
-// 구글 로그인 토큰 검증
-// =====================
+// 관리자 이메일
+const ADMIN_EMAIL = "nn2577958@gmail.com";
+
+// ============================
+// 구글 로그인 토큰 검증 API
+// ============================
 app.post("/auth/google", async (req, res) => {
   const { idToken } = req.body;
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const isAdmin = decodedToken.email === "nn2577958@gmail.com";
+    const isAdmin = decodedToken.email === ADMIN_EMAIL;
     res.json({ uid: decodedToken.uid, email: decodedToken.email, isAdmin });
   } catch (err) {
     console.error(err);
@@ -33,15 +36,15 @@ app.post("/auth/google", async (req, res) => {
   }
 });
 
-// =====================
-// Firestore 예시 API
-// =====================
+// ============================
+// Firestore 예시 API (유저 데이터)
+// ============================
 app.get("/user/:uid", async (req, res) => {
   try {
     const doc = await db.collection("users").doc(req.params.uid).get();
-    if(!doc.exists) return res.status(404).json({ error: "유저 없음" });
+    if (!doc.exists) return res.status(404).json({ error: "유저 없음" });
     res.json(doc.data());
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ error: "서버 에러" });
   }
 });
