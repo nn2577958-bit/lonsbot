@@ -30,7 +30,7 @@ function handleCredentialResponse(response){
     return;
   }
 
-  // **여기 URL을 무료 서버 도메인으로 변경**
+  // ✅ 반드시 Node.js 서버 도메인으로 변경
   fetch("https://lons-server.fly.dev/auth/google", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
