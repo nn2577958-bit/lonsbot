@@ -34,7 +34,7 @@ button i { margin-right:8px; color:#DB4437; }
 <body>
 <div class="container">
   <h2>LONS SV Palworld 로그인</h2>
-  <div id="admin-status">관리자 상태 확인중...</div>
+  <div id="admin-status">🟢 관리자 온라인</div> <!-- 로그인 전에도 온라인 표시 -->
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
   <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
@@ -69,13 +69,20 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// 관리자 상태 + 시계
+// 관리자 상태 + 시계 (로그인 후에도 깜박임 유지)
 function updateAdminClock(user){
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
-  let isOnline = user?.email === ADMIN_EMAIL;
+
+  // 로그인 전에도 온라인 표시
+  let isOnline = true; // 항상 온라인
+  if(user?.email === ADMIN_EMAIL){
+    isOnline = true;
+  }
+
   adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
 
+  // 깜박임 효과 유지
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false;} }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true;} }
   adminStatus.style.opacity = opacity;
