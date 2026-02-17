@@ -6,7 +6,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-app.use(cors()); // 다른 포트에서 테스트 시 필요
+app.use(cors()); // 클라이언트 다른 포트에서 테스트 가능
 app.use(express.json());
 
 // ===== Firebase Admin 초기화 =====
@@ -24,9 +24,9 @@ const ADMIN_EMAIL = "nn2577958@gmail.com";
 app.post("/auth/google", async (req, res) => {
   const { idToken } = req.body;
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const isAdmin = decodedToken.email === ADMIN_EMAIL;
-    res.json({ uid: decodedToken.uid, email: decodedToken.email, isAdmin });
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    const isAdmin = decoded.email === ADMIN_EMAIL;
+    res.json({ uid: decoded.uid, email: decoded.email, isAdmin });
   } catch (err) {
     console.error("토큰 검증 실패:", err.message);
     res.status(401).json({ error: "유효하지 않은 토큰" });
