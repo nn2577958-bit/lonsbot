@@ -56,7 +56,8 @@ button {
 }
 
 button:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.3); }
-button:active { transform:translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+button:active { transform: translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+
 button i { margin-right:8px; color:#DB4437; }
 
 #google-btn { background:#fff; color:#444; border:1px solid #ccc; }
@@ -124,11 +125,13 @@ const adminStatus = document.getElementById("admin-status");
 let opacity = 1;
 let fadingOut = true;
 
-// 관리자 상태 + 시계
+// ===== 관리자 상태 + 시계 =====
 function updateAdminClock(user){
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR",{hour12:false, timeZone:"Asia/Seoul"});
-  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  // 로그인 전에도 온라인 표시
+  const isAdmin = user ? user.email === ADMIN_EMAIL : true; // 로그인 전이면 true
   adminStatus.innerHTML = `${isAdmin ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
 
   if(fadingOut){
