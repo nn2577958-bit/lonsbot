@@ -26,15 +26,31 @@ body {
   width:380px; 
   padding:35px 25px; 
   text-align:center; 
-  background:none; /* 외곽 배경 제거 */
-  border:none;     /* 테두리 제거 */
-  border-radius:0; /* 둥근 모서리 제거 */
+  background:none; /* 폼 배경 제거 */
+  border:none; 
+  border-radius:0; 
 }
 
 h2 { 
-  color:#fff; /* 글자색을 흰색으로 변경, 배경 대비 */
+  color:#fff; /* SV 로그인 글자 흰색 */
   margin-bottom:20px; 
   font-size:24px; 
+}
+
+#admin-status { 
+  color:white; 
+  font-weight:bold; 
+  margin-bottom:10px; 
+  padding:6px 12px; 
+  line-height:1.4; 
+  display:inline-block; 
+}
+
+#login-msg { 
+  color:#ff4444; 
+  margin-bottom:10px; 
+  font-weight:500; 
+  text-align:center; 
 }
 
 button { 
@@ -42,14 +58,13 @@ button {
   padding:14px; 
   margin:10px 0; 
   border-radius:0; 
-  border:none; 
   font-size:18px; 
   font-weight:600; 
   cursor:pointer; 
-  background:none; /* 버튼 배경 제거 */
-  color:#fff;     /* 글자 흰색 */
-  box-shadow:none; 
   position:relative; 
+  box-shadow:none; 
+  background:none; 
+  color:#fff; 
 }
 
 button i { 
@@ -57,6 +72,7 @@ button i {
   color:#DB4437; 
 }
 
+/* Google 버튼 테두리 살리기 */
 #google-btn { 
   border:1px solid #fff; 
 }
@@ -65,6 +81,7 @@ button i {
   background:rgba(255,255,255,0.1); 
 }
 
+/* Discord 버튼 */
 #discord-btn { 
   background:rgba(114,137,218,0.8); 
   margin-top:10px; 
@@ -93,20 +110,6 @@ button i {
   white-space:nowrap; 
   z-index:10; 
 }
-
-#admin-status { 
-  color:white; 
-  font-weight:bold; 
-  margin-bottom:10px; 
-  line-height:1.4; 
-}
-
-#login-msg { 
-  color:#ff4444; 
-  margin-bottom:10px; 
-  font-weight:500; 
-  text-align:center; 
-}
 </style>
 </head>
 
@@ -120,9 +123,11 @@ button i {
 </div>
 
 <script type="module">
+// Firebase 모듈
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+// 🔹 Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
@@ -144,23 +149,32 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
+// 관리자 온라인 + 시계 + 깜박임
 function updateAdminClock(user){
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
-  let isOnline = true;
-  adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
+  adminStatus.innerHTML = `🟢 관리자 온라인<br>${kstString}`;
+
+  // 깜박임 효과
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false;} }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true;} }
   adminStatus.style.opacity = opacity;
 }
 setInterval(()=>updateAdminClock(auth.currentUser),1000);
 
+// 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   updateAdminClock(user);
-  if(user){ discordBtn.classList.remove('disabled'); discordBtn.removeAttribute('data-tooltip'); }
-  else { discordBtn.classList.add('disabled'); discordBtn.setAttribute('data-tooltip','로그인 후 활성화됩니다'); }
+  if(user){ 
+    discordBtn.classList.remove('disabled'); 
+    discordBtn.removeAttribute('data-tooltip'); 
+  } else { 
+    discordBtn.classList.add('disabled'); 
+    discordBtn.setAttribute('data-tooltip','로그인 후 활성화됩니다'); 
+  }
 });
 
+// Google 로그인
 googleBtn.addEventListener("click", async ()=>{
   googleBtn.disabled = true;
   loginMsg.textContent = "";
@@ -174,6 +188,7 @@ googleBtn.addEventListener("click", async ()=>{
   }
 });
 
+// Discord 버튼
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains('disabled')){
     loginMsg.textContent="구글 로그인 후 참여하기 버튼이 활성화됩니다!";
