@@ -63,33 +63,33 @@ h2 {
 button {
   padding:10px;
   font-size:14px;
-  font-weight:600;
-  border-radius:6px;
+  font-weight:500;
+  border-radius:4px;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  border:none;
   transition: all 0.2s ease;
-  text-shadow:1px 1px 2px rgba(0,0,0,0.5);
+  text-shadow:1px 1px 2px rgba(0,0,0,0.2);
+  border:none;
 }
 
 /* 버튼 위치 */
 #google-btn { grid-column:1 / 2; }
 #discord-btn { grid-column:2 / 3; }
 
-/* === Google 버튼 공식 스타일 (테두리 제거) === */
+/* === 구글 공식 버튼 === */
 #google-btn {
   background:#fff;
-  color:#000;
-  border:none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  font-weight: 500;
+  color:#3c4043;
+  box-shadow:0 1px 2px rgba(0,0,0,0.2);
+  font-weight:500;
   font-size:14px;
 }
 #google-btn i {
   margin-right:8px;
   font-size:18px;
+  color:#4285F4; /* 구글 G 컬러 */
 }
 #google-btn:hover {
   box-shadow:0 2px 4px rgba(0,0,0,0.25);
@@ -97,7 +97,7 @@ button {
   transform:translateY(-1px);
 }
 
-/* Discord 버튼 */
+/* 디스코드 버튼 */
 #discord-btn {
   background:#7289DA;
   color:#fff;
@@ -135,8 +135,8 @@ button {
   <div id="admin-status">🟢 관리자 온라인</div>
   <div id="server-status">🟢 LONS SV ONLINE</div>
   <div id="login-msg">구글 로그인 후 참여하기 버튼이 활성화됩니다!</div>
-  <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
-  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
+  <button id="google-btn"><i class="fab fa-google"></i>Google 로그인</button>
+  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i>디스코드 참여하기</button>
 </div>
 
 <script type="module">
