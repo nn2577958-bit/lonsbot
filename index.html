@@ -9,43 +9,125 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* 기존 스타일 그대로 */
-body { margin:0; height:100vh; display:flex; justify-content:center; align-items:center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
-background-size:cover; background-position:center; background-repeat:no-repeat; }
-.container { width:380px; background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9)); padding:35px 25px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.35); text-align:center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.container:hover { transform: translateY(-6px) scale(1.025); box-shadow: 0 14px 38px rgba(0,0,0,0.4); }
-h2 { color:#222; margin-bottom:20px; font-size:24px; }
-button { width:100%; padding:14px; margin:10px 0; border-radius:8px; border:none; font-size:18px; font-weight:600; cursor:pointer; transition:all 0.23s ease; box-shadow:0px 4px 10px rgba(0,0,0,0.2); position:relative; }
-button:hover { transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.3); }
-button:active { transform: translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,0.2); }
-button i { margin-right:8px; color:#DB4437; }
-#google-btn { background:#fff; color:#444; border:1px solid #ccc; }
-#google-btn:hover { background:#f0f0f0; }
-#discord-btn { background:#7289DA; color:white; margin-top:10px; }
-#discord-btn:hover { background:#5b6eae; }
-#discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
-#discord-btn[data-tooltip]:hover::after { content:attr(data-tooltip); position:absolute; top:-30px; left:50%; transform:translateX(-50%); background:#444; color:#fff; padding:4px 8px; border-radius:6px; font-size:12px; white-space:nowrap; z-index:10; }
-#admin-status { color:white; font-weight:bold; margin-bottom:10px; background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:8px; display:inline-block; line-height:1.4; }
-#login-msg { color:#ff4444; margin-bottom:10px; font-weight:500; text-align:center; }
+body { 
+  margin:0; 
+  height:100vh; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg');
+  background-size:cover; 
+  background-position:center; 
+  background-repeat:no-repeat; 
+}
+
+.container { 
+  width:380px; 
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9)); 
+  padding:35px 25px; 
+  border-radius:0; /* 테두리 둥글기 제거 */
+  text-align:center; 
+  transition: transform 0.3s ease; /* box-shadow 제거 */
+}
+
+h2 { 
+  color:#222; 
+  margin-bottom:20px; 
+  font-size:24px; 
+}
+
+button { 
+  width:100%; 
+  padding:14px; 
+  margin:10px 0; 
+  border-radius:0; /* 버튼 둥근 테두리 제거 */
+  border:none; 
+  font-size:18px; 
+  font-weight:600; 
+  cursor:pointer; 
+  transition:all 0.23s ease; 
+  position:relative; 
+  box-shadow:none; /* 그림자 제거 */
+}
+
+button i { 
+  margin-right:8px; 
+  color:#DB4437; 
+}
+
+#google-btn { 
+  background:#fff; 
+  color:#444; 
+  border:1px solid #ccc; 
+}
+
+#google-btn:hover { 
+  background:#f0f0f0; 
+}
+
+#discord-btn { 
+  background:#7289DA; 
+  color:white; 
+  margin-top:10px; 
+}
+
+#discord-btn:hover { 
+  background:#5b6eae; 
+}
+
+#discord-btn.disabled { 
+  cursor:not-allowed; 
+  opacity:0.6; 
+}
+
+#discord-btn[data-tooltip]:hover::after { 
+  content:attr(data-tooltip); 
+  position:absolute; 
+  top:-30px; 
+  left:50%; 
+  transform:translateX(-50%); 
+  background:#444; 
+  color:#fff; 
+  padding:4px 8px; 
+  border-radius:6px; 
+  font-size:12px; 
+  white-space:nowrap; 
+  z-index:10; 
+}
+
+#admin-status { 
+  color:white; 
+  font-weight:bold; 
+  margin-bottom:10px; 
+  background:rgba(0,0,0,0.5); 
+  padding:6px 12px; 
+  display:inline-block; 
+  line-height:1.4; 
+}
+
+#login-msg { 
+  color:#ff4444; 
+  margin-bottom:10px; 
+  font-weight:500; 
+  text-align:center; 
+}
 </style>
 </head>
 
 <body>
 <div class="container">
   <h2>LONS SV Palworld 로그인</h2>
-  <div id="admin-status">🟢 관리자 온라인</div> <!-- 로그인 전에도 온라인 표시 -->
+  <div id="admin-status">🟢 관리자 온라인</div>
   <div id="login-msg"></div>
   <button id="google-btn"><i class="fab fa-google"></i> Google 로그인</button>
   <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i> 디스코드 참여하기</button>
 </div>
 
 <script type="module">
-// Firebase 모듈
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 🔹 실제 Firebase 프로젝트 키 적용
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
@@ -55,11 +137,9 @@ const firebaseConfig = {
   appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
 };
 
-// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 요소
 const ADMIN_EMAIL = "nn2577958@gmail.com";
 const adminStatus = document.getElementById("admin-status");
 const googleBtn = document.getElementById("google-btn");
@@ -69,34 +149,23 @@ const loginMsg = document.getElementById("login-msg");
 let opacity = 1;
 let fadingOut = true;
 
-// 관리자 상태 + 시계 (로그인 후에도 깜박임 유지)
 function updateAdminClock(user){
   const now = new Date();
   const kstString = now.toLocaleString("ko-KR", { hour12:false, timeZone:"Asia/Seoul" });
-
-  // 로그인 전에도 온라인 표시
-  let isOnline = true; // 항상 온라인
-  if(user?.email === ADMIN_EMAIL){
-    isOnline = true;
-  }
-
+  let isOnline = true;
   adminStatus.innerHTML = `${isOnline ? "🟢 관리자 온라인" : "🔴 관리자 오프라인"}<br>${kstString}`;
-
-  // 깜박임 효과 유지
   if(fadingOut){ opacity -= 0.05; if(opacity<=0){ opacity=0; fadingOut=false;} }
   else { opacity += 0.05; if(opacity>=1){ opacity=1; fadingOut=true;} }
   adminStatus.style.opacity = opacity;
 }
 setInterval(()=>updateAdminClock(auth.currentUser),1000);
 
-// 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   updateAdminClock(user);
   if(user){ discordBtn.classList.remove('disabled'); discordBtn.removeAttribute('data-tooltip'); }
   else { discordBtn.classList.add('disabled'); discordBtn.setAttribute('data-tooltip','로그인 후 활성화됩니다'); }
 });
 
-// 구글 로그인
 googleBtn.addEventListener("click", async ()=>{
   googleBtn.disabled = true;
   loginMsg.textContent = "";
@@ -110,7 +179,6 @@ googleBtn.addEventListener("click", async ()=>{
   }
 });
 
-// 디스코드 버튼
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.classList.contains('disabled')){
     loginMsg.textContent="구글 로그인 후 참여하기 버튼이 활성화됩니다!";
@@ -122,3 +190,4 @@ discordBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
