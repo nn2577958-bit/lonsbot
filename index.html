@@ -44,7 +44,7 @@ h2 {
 /* 상태창 / 메시지 */
 #admin-status, #server-status, #login-msg {
   padding:3px 5px;
-  font-size:12px; /* 숫자 작게 */
+  font-size:12px;
   font-weight:bold;
   color:#fff;
   border:1.5px solid rgba(255,255,255,0.7);
@@ -78,18 +78,24 @@ button {
 #google-btn { grid-column:1 / 2; }
 #discord-btn { grid-column:2 / 3; }
 
-/* Google 버튼 (구글 테두리) */
+/* === Google 버튼 (공식 스타일) === */
 #google-btn {
   background:#fff;
-  color:#444;
-  border:2px solid #4285F4; /* 구글 파란색 테두리 */
-  box-shadow:0 2px 5px rgba(0,0,0,0.25);
+  color:#000;
+  border:1px solid #dadce0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  font-weight: 500;
+  font-size:14px;
 }
-#google-btn i { margin-right:5px; color:#DB4437; }
+#google-btn i {
+  margin-right:8px;
+  color:#4285F4; /* G 로고 컬러 */
+  font-size:18px;
+}
 #google-btn:hover {
+  box-shadow:0 2px 4px rgba(0,0,0,0.3);
+  background:#f8f9fa;
   transform:translateY(-1px);
-  box-shadow:0 3px 8px rgba(0,0,0,0.35);
-  background:#f0f0f0;
 }
 
 /* Discord 버튼 */
