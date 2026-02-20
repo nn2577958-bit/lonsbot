@@ -26,15 +26,18 @@ body {
   width:380px; 
   padding:35px 25px; 
   text-align:center; 
-  background:none; /* 폼 배경 제거 */
+  background:none; 
   border:none; 
   border-radius:0; 
+  /* 폼 그림자 */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 h2 { 
-  color:#fff; /* SV 로그인 글자 흰색 */
+  color:#fff; 
   margin-bottom:20px; 
   font-size:24px; 
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
 }
 
 #admin-status { 
@@ -44,6 +47,7 @@ h2 {
   padding:6px 12px; 
   line-height:1.4; 
   display:inline-block; 
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
 }
 
 #login-msg { 
@@ -51,6 +55,7 @@ h2 {
   margin-bottom:10px; 
   font-weight:500; 
   text-align:center; 
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
 }
 
 button { 
@@ -62,9 +67,17 @@ button {
   font-weight:600; 
   cursor:pointer; 
   position:relative; 
-  box-shadow:none; 
   background:none; 
   color:#fff; 
+  border:1px solid #fff; 
+  /* 버튼 그림자 찐하게 */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.8);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,1);
 }
 
 button i { 
@@ -72,23 +85,13 @@ button i {
   color:#DB4437; 
 }
 
-/* Google 버튼 테두리 살리기 */
 #google-btn { 
-  border:1px solid #fff; 
+  background:rgba(255,255,255,0.05);
 }
 
-#google-btn:hover { 
-  background:rgba(255,255,255,0.1); 
-}
-
-/* Discord 버튼 */
 #discord-btn { 
-  background:rgba(114,137,218,0.8); 
+  background:rgba(114,137,218,0.85); 
   margin-top:10px; 
-}
-
-#discord-btn:hover { 
-  background:rgba(114,137,218,1); 
 }
 
 #discord-btn.disabled { 
@@ -127,7 +130,6 @@ button i {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// 🔹 Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
   authDomain: "lons-dc24d.firebaseapp.com",
