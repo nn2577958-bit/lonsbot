@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>팰월드 론즈서버</title>
-
-<link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png" type="image/png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-
-<style>
 body { 
   margin:0; 
   height:100vh; 
@@ -16,200 +5,91 @@ body {
   justify-content:center; 
   align-items:center; 
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
+              url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover no-repeat;
 }
 
-/* 컨테이너 그리드 */
+/* 컨테이너 (크기 확대 + 유리효과) */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 6px;
-  width: 320px;
-  padding:12px;
-  text-align:center;
+  grid-gap: 10px;
+  width: 420px;                /* ⬅ 기존 320 → 확대 */
+  padding: 25px;
+  text-align: center;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 /* 타이틀 */
 h2 {
   grid-column: 1 / 3;
   color:#fff;
-  font-size:18px;
-  margin-bottom:6px;
-  padding:4px 6px;
-  border:1.5px solid rgba(255,255,255,0.5);
-  border-radius:6px;
-  text-shadow:1px 1px 4px rgba(0,0,0,0.8);
+  font-size:24px;             /* ⬅ 확대 */
+  margin-bottom:10px;
+  padding:8px;
+  border:1.5px solid rgba(255,255,255,0.6);
+  border-radius:10px;
+  text-shadow:2px 2px 6px rgba(0,0,0,0.9);
 }
 
-/* 상태창 / 메시지 */
+/* 상태창 */
 #admin-status, #server-status, #login-msg {
-  padding:3px 5px;
-  font-size:12px;
+  padding:6px 8px;
+  font-size:14px;            /* ⬅ 확대 */
   font-weight:bold;
   color:#fff;
   border:1.5px solid rgba(255,255,255,0.7);
-  border-radius:6px;
-  background: rgba(0,0,0,0.2);
+  border-radius:10px;
+  background: rgba(0,0,0,0.35);
   text-shadow:1px 1px 4px rgba(0,0,0,1);
-  line-height:1.2;
+  line-height:1.4;
 }
-
-/* 그리드 위치 */
-#admin-status { grid-column:1 / 2; }
-#server-status { grid-column:2 / 3; }
-#login-msg { grid-column:1 / 3; }
 
 /* 버튼 */
 button {
-  padding:10px;
-  font-size:14px;
-  font-weight:500;
-  border-radius:4px;
+  padding:14px;               /* ⬅ 확대 */
+  font-size:16px;             /* ⬅ 확대 */
+  font-weight:600;
+  border-radius:10px;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
   transition: all 0.2s ease;
-  text-shadow:1px 1px 2px rgba(0,0,0,0.2);
   border:none;
 }
 
-/* 버튼 위치 */
-#google-btn { grid-column:1 / 2; }
-#discord-btn { grid-column:2 / 3; }
-
-/* === 구글 공식 버튼 === */
+/* 구글 버튼 */
 #google-btn {
   background:#fff;
   color:#3c4043;
-  box-shadow:0 1px 2px rgba(0,0,0,0.2);
-  font-weight:500;
-  font-size:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
 }
 #google-btn i {
-  margin-right:8px;
-  font-size:18px;
-  color:#4285F4; /* 구글 G 컬러 */
+  margin-right:10px;
+  font-size:20px;
+  color:#4285F4;
 }
 #google-btn:hover {
-  box-shadow:0 2px 4px rgba(0,0,0,0.25);
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(0,0,0,0.4);
   background:#f8f9fa;
-  transform:translateY(-1px);
 }
 
 /* 디스코드 버튼 */
 #discord-btn {
   background:#7289DA;
   color:#fff;
-  box-shadow:0 2px 5px rgba(0,0,0,0.25);
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
 }
-#discord-btn i { margin-right:5px; }
+#discord-btn i { margin-right:8px; }
 #discord-btn:hover {
-  transform:translateY(-1px);
-  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(0,0,0,0.4);
   background:#5b6eae;
 }
 #discord-btn.disabled { cursor:not-allowed; opacity:0.6; }
-
-/* 툴팁 */
-#discord-btn[data-tooltip]:hover::after {
-  content:attr(data-tooltip);
-  position:absolute;
-  top:-25px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#444;
-  color:#fff;
-  padding:3px 6px;
-  border-radius:5px;
-  font-size:11px;
-  white-space:nowrap;
-  z-index:10;
-}
-</style>
-</head>
-
-<body>
-<div class="container">
-  <h2>LONS SV Palworld 로그인</h2>
-  <div id="admin-status">🟢 관리자 온라인</div>
-  <div id="server-status">🟢 LONS SV ONLINE</div>
-  <div id="login-msg">구글 로그인 후 참여하기 버튼이 활성화됩니다!</div>
-  <button id="google-btn"><i class="fab fa-google"></i>Google 로그인</button>
-  <button id="discord-btn" class="disabled" data-tooltip="로그인 후 활성화됩니다"><i class="fab fa-discord"></i>디스코드 참여하기</button>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
-  authDomain: "lons-dc24d.firebaseapp.com",
-  projectId: "lons-dc24d",
-  storageBucket: "lons-dc24d.appspot.com",
-  messagingSenderId: "755692328918",
-  appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const adminStatus = document.getElementById("admin-status");
-const serverStatus = document.getElementById("server-status");
-const googleBtn = document.getElementById("google-btn");
-const discordBtn = document.getElementById("discord-btn");
-const loginMsg = document.getElementById("login-msg");
-
-let opacity = 1;
-let fadingOut = true;
-
-function updateStatus(){
-  const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  adminStatus.innerHTML = `🟢 관리자 온라인<br><span style="font-size:11px;">${kst}</span>`;
-  serverStatus.innerHTML = `🟢 LONS SV ONLINE<br><span style="font-size:11px;">${kst}</span>`;
-
-  if(fadingOut){ opacity -=0.05; if(opacity<=0.5){opacity=0.5; fadingOut=false;} }
-  else { opacity +=0.05; if(opacity>=1){opacity=1; fadingOut=true;} }
-
-  adminStatus.style.borderColor = `rgba(255,255,255,${opacity})`;
-  serverStatus.style.borderColor = `rgba(255,255,255,${opacity})`;
-}
-
-setInterval(updateStatus,1000);
-
-onAuthStateChanged(auth,user=>{
-  if(user){ 
-    discordBtn.classList.remove('disabled');
-    discordBtn.removeAttribute('data-tooltip');
-  } else {
-    discordBtn.classList.add('disabled');
-    discordBtn.setAttribute('data-tooltip','로그인 후 활성화됩니다');
-  }
-});
-
-googleBtn.addEventListener("click", async ()=>{
-  googleBtn.disabled=true;
-  loginMsg.textContent="";
-  const provider = new GoogleAuthProvider();
-  try{
-    await signInWithPopup(auth,provider);
-    loginMsg.textContent="로그인 성공! 디스코드 참여하기 버튼이 활성화되었습니다.";
-  }catch(e){
-    loginMsg.textContent="로그인 실패: "+e.message;
-    googleBtn.disabled=false;
-  }
-});
-
-discordBtn.addEventListener("click",()=>{
-  if(discordBtn.classList.contains('disabled')){
-    loginMsg.textContent="구글 로그인 후 참여하기 버튼이 활성화됩니다!";
-    return;
-  }
-  loginMsg.textContent="잠시 후 홈으로 이동합니다...";
-  setTimeout(()=>window.location.href="home.html",1500);
-});
-</script>
-</body>
-</html>
