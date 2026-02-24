@@ -44,7 +44,6 @@ body {
 #admin-status{
     padding:5px 12px;
     border-radius:16px;
-    background:#444;
     font-size:12px;
     text-align:center;
     transition: all 0.3s;
@@ -213,19 +212,24 @@ function renderNotices(){
 onAuthStateChanged(auth, user=>{
     if(!user){ window.location.href="index.html"; return; }
 
-    // 관리자 체크
+    const nowKST = new Date().toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
+
     if(user.email === ADMIN_EMAIL){
-        adminStatus.innerHTML = `🟢 관리자 온라인 – ${new Date().toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"})}`;
+        adminStatus.innerHTML = `🟢 관리자 온라인 – ${nowKST}`;
         adminStatus.style.background = "#28a745";
-        // 깜빡임 효과
-        setInterval(()=>{
-            adminStatus.style.opacity = adminStatus.style.opacity === "0" ? "1" : "0";
-        },800);
     } else {
-        adminStatus.innerHTML = "🔴 관리자 오프라인";
-        adminStatus.style.background = "#dc3545";
-        adminStatus.style.opacity = "1";
+        adminStatus.innerHTML = `🟢 사용자 온라인 – ${nowKST}`;
+        adminStatus.style.background = "#17a2b8";
     }
+
+    // 모든 계정 깜빡이 적용
+    let opacity = 1;
+    let fadingOut = true;
+    setInterval(()=>{
+        if(fadingOut){ opacity -=0.05; if(opacity<=0.5){opacity=0.5; fadingOut=false;} }
+        else { opacity +=0.05; if(opacity>=1){opacity=1; fadingOut=true;} }
+        adminStatus.style.opacity = opacity;
+    },80);
 
     renderNotices();
 });
