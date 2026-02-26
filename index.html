@@ -4,51 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>팰월드 론즈서버 LONS 로그인</title>
-
 <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
+* {box-sizing:border-box;margin:0;padding:0}
 body { 
-  margin:0; height:100vh; display:flex; justify-content:center; align-items:center; 
+  height:100vh; 
+  display:flex; justify-content:center; align-items:center; 
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover no-repeat;
+  background: 
+    linear-gradient(135deg, rgba(0,0,0,0.65), rgba(0,0,0,0.4)),
+    url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover;
+  position:relative;overflow:hidden;
+}
+body::before {
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(45deg, #00d4ff, #0099ff, #6600ff, #ff00ff);
+  background-size:400% 400%;opacity:0.1;
+  animation:gradientShift 8s ease infinite;
+}
+@keyframes gradientShift {
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
 }
 .container {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  width: 90%; max-width: 420px; padding: 22px; text-align:center;
-  border-radius: 14px; background: rgba(0,0,0,0.35); box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+  display:flex;flex-direction:column;gap:20px;
+  width:90%;max-width:450px;padding:35px;background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(25px);border-radius:24px;border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  position:relative;animation:float 6s ease-in-out infinite;
+  transform-style:preserve-3d;
 }
-h1 { grid-column: 1 / 3; color:#fff; font-size:24px; margin-bottom:10px; padding:8px; border:1.5px solid rgba(255,255,255,0.5); border-radius:8px; text-shadow:1px 1px 6px rgba(0,0,0,0.9); }
-#admin-status, #server-status, #login-msg { padding:6px 8px; font-size:14px; font-weight:bold; color:#fff; border:1.5px solid rgba(255,255,255,0.6); border-radius:8px; background: rgba(0,0,0,0.3); text-shadow:1px 1px 4px rgba(0,0,0,1); line-height:1.3; }
-#admin-status { grid-column:1 / 2; } 
-#server-status { grid-column:2 / 3; } 
-#login-msg { grid-column:1 / 3; }
-
-button { padding:14px; font-size:15px; font-weight:600; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.2s ease; border:none; }
-
-#google-btn { background:#fff; color:#3c4043; }
-#google-btn i { margin-right:8px; font-size:18px; color:#4285F4; }
-
-#discord-btn { background:#7289DA; color:#fff; }
-#discord-btn:disabled { cursor:not-allowed; opacity:0.6; }
-
+@keyframes float {
+  0%,100%{transform:translateY(0px) rotateX(0deg)}
+  50%{transform:translateY(-8px) rotateX(1deg)}
+}
+.container::before {
+  content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;
+  background:linear-gradient(45deg, #00d4ff, #0099ff, #6600ff, #ff00ff);
+  border-radius:26px;z-index:-1;opacity:0.7;animation:neonBorder 3s ease-in-out infinite alternate;
+}
+@keyframes neonBorder {
+  0%{opacity:0.5;filter:blur(1px)}
+  100%{opacity:0.9;filter:blur(2px)}
+}
+.logo {
+  text-align:center;color:#fff;font-size:28px;font-weight:800;
+  background:linear-gradient(135deg, #fff, #e0e7ff);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;text-shadow:0 0 20px rgba(255,255,255,0.5);
+  letter-spacing:-0.5px;padding:12px 20px;border:2px solid rgba(255,255,255,0.3);
+  border-radius:16px;position:relative;
+}
+.logo::after {
+  content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+  width:60px;height:3px;background:linear-gradient(90deg,transparent,#00d4ff,transparent);
+  border-radius:2px;
+}
+.status-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.status-card {
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(15px);
+  padding:15px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);
+  text-align:center;transition:all 0.3s;box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  position:relative;overflow:hidden;
+}
+.status-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, #00ff88, #00d4ff);
+}
+.status-card:hover {transform:translateY(-3px);box-shadow:0 15px 30px rgba(0,0,0,0.3)}
+.status-main {color:#fff;font-size:15px;font-weight:700;line-height:1.3}
+.status-time {color:rgba(255,255,255,0.7);font-size:11px;margin-top:4px}
+.msg-card {
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(15px);
+  padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.9);font-size:14px;font-weight:500;line-height:1.4;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);transition:all 0.3s;
+}
+.msg-card:hover {transform:translateY(-2px);box-shadow:0 12px 25px rgba(0,0,0,0.3)}
+.action-btn {
+  padding:16px 24px;font-size:16px;font-weight:700;border-radius:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s ease;border:none;box-shadow:0 8px 25px rgba(0,0,0,0.3);
+  position:relative;overflow:hidden;font-family:inherit;
+}
+.action-btn::before {
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  transition:left 0.5s;
+}
+.action-btn:hover::before {left:100%}
+.action-btn i {margin-right:12px;font-size:20px}
+#google-btn {
+  background:linear-gradient(135deg, #4285F4, #34A853);
+  color:#fff;transform:translateY(0);
+}
+#google-btn:hover {
+  transform:translateY(-4px);box-shadow:0 15px 35px rgba(66,133,244,0.5);
+  background:linear-gradient(135deg, #34A853, #4285F4);
+}
+#discord-btn {
+  background:linear-gradient(135deg, #7289DA, #5B6FAE);
+  color:#fff;transform:translateY(0);opacity:1;
+}
+#discord-btn:hover:not(:disabled) {
+  transform:translateY(-4px);box-shadow:0 15px 35px rgba(114,137,218,0.5);
+  background:linear-gradient(135deg, #5B6FAE, #7289DA);
+}
+#discord-btn:disabled {
+  opacity:0.4; cursor:not-allowed; transform:none;
+  background:linear-gradient(135deg, #4a5568, #2d3748);
+}
 @media(max-width:480px){
-  .container { grid-template-columns: 1fr; }
-  #admin-status, #server-status { grid-column:1 / 2; }
+  .container{padding:25px 20px;max-width:360px;gap:16px}
+  .logo{font-size:24px}
+  .status-grid{grid-template-columns:1fr}
+  .status-card{padding:12px}
+  .action-btn{padding:14px 20px;font-size:15px}
 }
 </style>
 </head>
 
 <body>
 <div class="container">
-  <h1>팰월드 론즈서버 | LONS 로그인</h1>
-  <div id="admin-status">🟢 관리자 온라인</div>
-  <div id="server-status">🟢 LONS SV ONLINE</div>
-  <div id="login-msg">Google 로그인 후 디스코드 참여 버튼이 활성화됩니다!</div>
-  <button id="google-btn"><i class="fab fa-google"></i>Google 로그인</button>
-  <button id="discord-btn" disabled><i class="fab fa-discord"></i>디스코드 참여</button>
+  <div class="logo">팰월드 론즈서버<br><span style="font-size:0.7em;font-weight:500">LONS</span></div>
+  
+  <div class="status-grid">
+    <div id="admin-status" class="status-card">
+      <div class="status-main">🟢 관리자 온라인</div>
+      <div class="status-time"></div>
+    </div>
+    <div id="server-status" class="status-card">
+      <div class="status-main">🟢 LONS SV ONLINE</div>
+      <div class="status-time"></div>
+    </div>
+  </div>
+  
+  <div id="login-msg" class="msg-card">
+    Google 로그인 후 디스코드 참여 버튼이 활성화됩니다!
+  </div>
+  
+  <button id="google-btn" class="action-btn">
+    <i class="fab fa-google"></i>Google 로그인
+  </button>
+  <button id="discord-btn" class="action-btn" disabled>
+    <i class="fab fa-discord"></i>디스코드 참여
+  </button>
 </div>
 
 <script type="module">
@@ -70,25 +172,31 @@ const auth = getAuth(app);
 const googleBtn = document.getElementById("google-btn");
 const discordBtn = document.getElementById("discord-btn");
 const loginMsg = document.getElementById("login-msg");
-const adminStatus = document.getElementById("admin-status");
-const serverStatus = document.getElementById("server-status");
+const adminStatusMain = document.querySelector("#admin-status .status-main");
+const serverStatusMain = document.querySelector("#server-status .status-main");
+const adminTime = document.querySelector("#admin-status .status-time");
+const serverTime = document.querySelector("#server-status .status-time");
 
 // 상태 시간 표시
 function updateStatus(){
   const now = new Date();
   const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  adminStatus.innerHTML = `🟢 관리자 온라인<br><span style="font-size:11px;">${kst}</span>`;
-  serverStatus.innerHTML = `🟢 LONS SV ONLINE<br><span style="font-size:11px;">${kst}</span>`;
+  adminTime.textContent = kst;
+  serverTime.textContent = kst;
 }
 setInterval(updateStatus,1000);
+updateStatus();
 
 // 로그인 상태 감지
 onAuthStateChanged(auth,user=>{
   if(user){
     discordBtn.disabled = false;
-    loginMsg.textContent = "로그인 성공! 디스코드 참여 버튼이 활성화되었습니다.";
+    loginMsg.innerHTML = '✅ <strong>로그인 성공!</strong><br>디스코드 참여 버튼이 활성화되었습니다.';
+    loginMsg.style.background = 'rgba(0,255,136,0.2)';
+    loginMsg.style.borderColor = 'rgba(0,255,136,0.5)';
   }else{
     discordBtn.disabled = true;
+    loginMsg.innerHTML = 'Google 로그인 후 디스코드 참여 버튼이 활성화됩니다!';
   }
 });
 
@@ -98,24 +206,23 @@ googleBtn.addEventListener("click", async ()=>{
   try{
     await signInWithPopup(auth,provider);
   }catch(e){
-    loginMsg.textContent="로그인 실패: "+e.message;
+    loginMsg.innerHTML = `❌ <strong>로그인 실패:</strong><br>${e.message}`;
+    loginMsg.style.background = 'rgba(255,80,80,0.2)';
+    loginMsg.style.borderColor = 'rgba(255,80,80,0.5)';
   }
 });
 
-// 홈으로 이동 (같은 폴더 기준)
+// 홈으로 이동
 discordBtn.addEventListener("click", ()=>{
   if(discordBtn.disabled){
-    loginMsg.textContent="Google 로그인 후 버튼이 활성화됩니다!";
+    loginMsg.innerHTML = 'Google 로그인 후 버튼이 활성화됩니다!';
     return;
   }
-
-  loginMsg.textContent="잠시 후 홈페이지로 이동합니다...";
-
+  loginMsg.innerHTML = '🚀 잠시 후 홈페이지로 이동합니다...';
   setTimeout(()=>{
     window.location.href="home.html";
   },1000);
 });
 </script>
-
 </body>
 </html>
