@@ -155,7 +155,12 @@ body::before {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
@@ -166,62 +171,68 @@ const firebaseConfig = {
   appId: "1:755692328918:web:a4eb4563cb862d3eb5b677"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const googleBtn = document.getElementById("google-btn");
-const discordBtn = document.getElementById("discord-btn");
-const loginMsg = document.getElementById("login-msg");
-const adminStatusMain = document.querySelector("#admin-status .status-main");
-const serverStatusMain = document.querySelector("#server-status .status-main");
-const adminTime = document.querySelector("#admin-status .status-time");
-const serverTime = document.querySelector("#server-status .status-time");
+const googleBtn   = document.getElementById("google-btn");
+const discordBtn  = document.getElementById("discord-btn");
+const loginMsg    = document.getElementById("login-msg");
+const adminTime   = document.querySelector("#admin-status .status-time");
+const serverTime  = document.querySelector("#server-status .status-time");
 
 // 상태 시간 표시
-function updateStatus(){
+function updateStatus() {
   const now = new Date();
-  const kst = now.toLocaleString("ko-KR",{hour12:false,timeZone:"Asia/Seoul"});
-  adminTime.textContent = kst;
+  const kst = now.toLocaleString("ko-KR", { hour12: false, timeZone: "Asia/Seoul" });
+  adminTime.textContent  = kst;
   serverTime.textContent = kst;
 }
-setInterval(updateStatus,1000);
+setInterval(updateStatus, 1000);
 updateStatus();
 
 // 로그인 상태 감지
-onAuthStateChanged(auth,user=>{
-  if(user){
+onAuthStateChanged(auth, user => {
+  if (user) {
     discordBtn.disabled = false;
-    loginMsg.innerHTML = '✅ <strong>로그인 성공!</strong><br>디스코드 참여 버튼이 활성화되었습니다.';
-    loginMsg.style.background = 'rgba(0,255,136,0.2)';
+    loginMsg.innerHTML =
+      '✅ <strong>로그인 성공!</strong><br>디스코드 참여 버튼이 활성화되었습니다.';
+    loginMsg.style.background  = 'rgba(0,255,136,0.2)';
     loginMsg.style.borderColor = 'rgba(0,255,136,0.5)';
-  }else{
+  } else {
     discordBtn.disabled = true;
     loginMsg.innerHTML = 'Google 로그인 후 디스코드 참여 버튼이 활성화됩니다!';
+    loginMsg.style.background  = 'rgba(255,255,255,0.1)';
+    loginMsg.style.borderColor = 'rgba(255,255,255,0.15)';
   }
 });
 
 // 구글 로그인
-googleBtn.addEventListener("click", async ()=>{
+googleBtn.addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
-  try{
-    await signInWithPopup(auth,provider);
-  }catch(e){
-    loginMsg.innerHTML = `❌ <strong>로그인 실패:</strong><br>${e.message}`;
-    loginMsg.style.background = 'rgba(255,80,80,0.2)';
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    // 사용자가 팝업 닫은 경우는 에러 표시 안 함
+    if (e.code === "auth/popup-closed-by-user") {
+      return;
+    }
+    loginMsg.innerHTML =
+      `❌ <strong>로그인 실패:</strong><br>${e.message}`;
+    loginMsg.style.background  = 'rgba(255,80,80,0.2)';
     loginMsg.style.borderColor = 'rgba(255,80,80,0.5)';
   }
 });
 
 // 홈으로 이동
-discordBtn.addEventListener("click", ()=>{
-  if(discordBtn.disabled){
+discordBtn.addEventListener("click", () => {
+  if (discordBtn.disabled) {
     loginMsg.innerHTML = 'Google 로그인 후 버튼이 활성화됩니다!';
     return;
   }
   loginMsg.innerHTML = '🚀 잠시 후 홈페이지로 이동합니다...';
-  setTimeout(()=>{
-    window.location.href="home.html";
-  },1000);
+  setTimeout(() => {
+    window.location.href = "home.html";
+  }, 1000);
 });
 </script>
 </body>
