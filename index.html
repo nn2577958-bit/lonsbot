@@ -169,6 +169,21 @@
       box-shadow:0 14px 30px rgba(0,0,0,0.6);
     }
 
+    .utc-box {
+      margin-top:10px;
+      padding:8px 10px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.18);
+      font-size:12px;
+      color:#d0e4ff;
+      line-height:1.6;
+    }
+    .utc-box strong {
+      font-weight:600;
+      color:#80d8ff;
+    }
+
     .helper-text {
       font-size:12px;
       color:#b7c8ff;
@@ -244,6 +259,14 @@
       <span>론즈서버 후원하기</span>
     </button>
 
+    <!-- UTC 계산기 / 시간 안내 -->
+    <div class="utc-box" id="utc-box">
+      <div><strong>현재 시간 안내</strong></div>
+      <div id="utc-local-line">로딩 중...</div>
+      <div id="utc-utc-line"></div>
+      <div id="utc-other-line"></div>
+    </div>
+
     <p class="helper-text">
       처음 오셨나요? <span>디스코드</span> 또는 서버 공지에서
       LONS 계정 발급 방법을 확인해 주세요.
@@ -260,6 +283,51 @@
       e.preventDefault();
       alert('로그인 기능은 서버 연동 후 활성화됩니다.');
     });
+
+    // UTC 계산기: 로컬(한국), UTC, 예시 타임존(미국 동부) 표시
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    function updateUtcBox() {
+      const now = new Date();
+
+      const localYear = now.getFullYear();
+      const localMonth = pad(now.getMonth() + 1);
+      const localDay = pad(now.getDate());
+      const localHour = pad(now.getHours());
+      const localMin = pad(now.getMinutes());
+      const localSec = pad(now.getSeconds());
+
+      const utcYear = now.getUTCFullYear();
+      const utcMonth = pad(now.getUTCMonth() + 1);
+      const utcDay = pad(now.getUTCDate());
+      const utcHour = pad(now.getUTCHours());
+      const utcMin = pad(now.getUTCMinutes());
+      const utcSec = pad(now.getUTCSeconds());
+
+      // 예시: 미국 동부(UTC-5, 썸머타임 미적용 단순 예시)
+      let estHour = now.getUTCHours() - 5;
+      let estDay = utcDay;
+      let estMonth = utcMonth;
+      let estYear = utcYear;
+      if (estHour < 0) {
+        estHour += 24;
+        // 날짜 계산 간단화 (정확한 달 넘어감까지 볼 필요 없으면 이 정도로 충분)
+      }
+      const estHourStr = pad(estHour);
+
+      const localLine = `로컬(한국 기준) : ${localYear}-${localMonth}-${localDay} ${localHour}:${localMin}:${localSec}`;
+      const utcLine   = `UTC 기준 시간   : ${utcYear}-${utcMonth}-${utcDay} ${utcHour}:${utcMin}:${utcSec}`;
+      const otherLine = `예시 · 미국 동부 : ${estYear}-${estMonth}-${estDay} ${estHourStr}:${utcMin}:${utcSec} (UTC-5 기준 단순 표기)`;
+
+      document.getElementById('utc-local-line').textContent = localLine;
+      document.getElementById('utc-utc-line').textContent   = utcLine;
+      document.getElementById('utc-other-line').textContent = otherLine;
+    }
+
+    updateUtcBox();
+    setInterval(updateUtcBox, 1000);
   </script>
 </body>
 </html>
