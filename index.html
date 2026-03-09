@@ -1,186 +1,299 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>팰월드 론즈서버 LONS 로그인</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description" content="팰월드 론즈서버 LONS 웹 로그인 페이지입니다. 24시간 상시 운영되는 팰월드 전용 론즈서버에 접속하고, 계정 로그인 후 서버 정보와 공지를 편하게 확인해 보세요.">
+
+  <link rel="icon" href="https://cdn.phototourl.com/uploads/2026-02-16-b555cb64-84f5-4ab4-b235-73d0d2be6482.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #050816;
-      color: #f9fafb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { 
+      height:100vh;
+      display:flex; justify-content:center; align-items:center;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        linear-gradient(135deg, rgba(0,0,0,0.65), rgba(0,0,0,0.4)),
+        url('https://cdn.phototourl.com/uploads/2026-02-16-be12475d-955e-4258-b559-d05dd22da876.jpg') center/cover;
+      position:relative;
+      overflow:hidden;
+      color:#f5f5f5;
     }
-    .card {
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.3);
-      border-radius: 16px;
-      padding: 24px 20px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    body::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; bottom:0;
+      background:linear-gradient(45deg, #00d4ff, #0099ff, #6600ff, #ff00ff);
+      background-size:400% 400%;
+      opacity:0.1;
+      animation:gradientShift 8s ease infinite;
     }
-    .title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 4px;
+    @keyframes gradientShift {
+      0%,100% { background-position:0% 50%; }
+      50% { background-position:100% 50%; }
+    }
+    @keyframes float {
+      0%,100% { transform:translateY(0); }
+      50% { transform:translateY(-8px); }
+    }
+
+    .container {
+      position:relative;
+      display:flex; flex-direction:column; gap:20px;
+      width:90%; max-width:450px;
+      padding:35px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,0.2);
+      box-shadow:0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+      animation:float 6s ease-in-out infinite;
+      transform-style:preserve-3d;
+      z-index:1;
+    }
+
+    .server-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:13px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.22);
+      color:#d0e9ff;
+    }
+    .server-badge i { color:#4dd0ff; }
+
+    h1 {
+      font-size:22px;
+      font-weight:700;
+      color:#ffffff;
+      letter-spacing:0.03em;
     }
     .subtitle {
-      font-size: 13px;
-      color: #9ca3af;
-      margin-bottom: 16px;
+      font-size:13px;
+      color:#d0e4ff;
+      line-height:1.5;
     }
-    .field-label {
-      font-size: 13px;
-      margin-bottom: 4px;
+
+    .status-bar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:8px 12px;
+      border-radius:12px;
+      background:rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.18);
+      font-size:12px;
+      color:#cfe8ff;
     }
-    .input {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 9px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      outline: none;
-      font-size: 13px;
-      box-sizing: border-box;
+    .status-left { display:flex; align-items:center; gap:6px; }
+    .status-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:#4caf50;
+      box-shadow:0 0 8px rgba(76,175,80,0.8);
     }
-    .input:focus {
-      border-color: #38bdf8;
+
+    .form-group {
+      display:flex; flex-direction:column; gap:6px;
     }
-    .row {
-      margin-bottom: 12px;
+    label {
+      font-size:13px;
+      color:#d9e6ff;
     }
-    .btn {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 9px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 6px;
+    .input-wrapper {
+      position:relative;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
+    .input-wrapper i {
+      position:absolute; left:12px; top:50%;
+      transform:translateY(-50%);
+      color:#9fb7ff;
+      font-size:14px;
     }
-    .btn-primary:hover {
-      filter: brightness(1.05);
+    input {
+      width:100%;
+      padding:10px 12px 10px 32px;
+      border-radius:10px;
+      border:1px solid rgba(169,189,255,0.6);
+      background:rgba(8,16,40,0.75);
+      color:#ffffff;
+      font-size:14px;
+      outline:none;
     }
-    .btn-google {
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    input::placeholder { color:#9fb0d9; }
+
+    .login-btn {
+      width:100%;
+      padding:11px 0;
+      margin-top:4px;
+      border:none;
+      border-radius:999px;
+      background:linear-gradient(135deg, #4dd0ff, #3f51b5);
+      color:#ffffff;
+      font-weight:600;
+      font-size:15px;
+      cursor:pointer;
+      display:flex; justify-content:center; align-items:center; gap:8px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
     }
-    .btn-google img {
-      width: 16px;
-      height: 16px;
+    .login-btn:hover {
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 14px 30px rgba(0,0,0,0.6);
     }
-    .divider {
-      display: flex;
-      align-items: center;
-      margin: 12px 0;
-      font-size: 12px;
-      color: #6b7280;
+
+    .action-btn {
+      width:100%;
+      margin-top:10px;
+      padding:10px 0;
+      border:none;
+      border-radius:999px;
+      background:linear-gradient(135deg, #ffb300, #ff6f00);
+      color:#ffffff;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
     }
-    .divider::before,
-    .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: #1f2937;
+    .action-btn.google {
+      background:linear-gradient(135deg, #4285F4, #0b63ce);
     }
-    .divider span {
-      padding: 0 8px;
+    .action-btn:hover {
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 14px 30px rgba(0,0,0,0.6);
     }
-    .support-btn {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 9px;
-      border: 1px solid #f97316;
-      background: rgba(234, 88, 12, 0.15);
-      color: #fed7aa;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 10px;
+
+    .utc-box {
+      margin-top:10px;
+      padding:8px 10px;
+      border-radius:10px;
+      background:rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.18);
+      font-size:12px;
+      color:#d0e4ff;
+      line-height:1.6;
     }
-    .time-box {
-      margin-top: 12px;
-      padding: 10px 11px;
-      border-radius: 9px;
-      background: #020617;
-      border: 1px solid #1f2937;
-      font-size: 12px;
-      color: #9ca3af;
-      line-height: 1.45;
+    .utc-box strong {
+      font-weight:600;
+      color:#80d8ff;
     }
-    .time-box strong {
-      color: #e5e7eb;
-      font-weight: 600;
+
+    .helper-text {
+      font-size:12px;
+      color:#b7c8ff;
+      text-align:center;
+      line-height:1.5;
     }
+    .helper-text span {
+      color:#80d8ff;
+      font-weight:500;
+    }
+
+    .footer {
+      font-size:11px;
+      color:#8fa0d0;
+      text-align:center;
+      margin-top:4px;
+    }
+
     .user-info {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #a5b4fc;
-      word-break: break-all;
+      font-size:12px;
+      color:#d1eaff;
+      text-align:center;
+      margin-top:6px;
+      word-break:break-all;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="title">LONS 로그인</div>
-    <div class="subtitle">팰월드 론즈서버 전용 로그인 페이지</div>
+  <div class="container">
+    <div class="server-badge">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>팰월드 론즈서버 · LONS</span>
+    </div>
 
-    <!-- 이메일/비밀번호 로그인 폼 (기존에 쓰면 여기 연결하면 됨) -->
-    <div class="row">
-      <div class="field-label">이메일</div>
-      <input id="email" class="input" type="email" placeholder="example@naver.com" />
+    <div>
+      <h1>팰월드 론즈서버 LONS 로그인</h1>
+      <p class="subtitle">
+        팰월드 전용 론즈서버에 접속하려면 LONS 계정으로 로그인해 주세요.
+        웹에서 서버 상태, 접속 정보, 공지사항을 한 번에 확인할 수 있습니다.
+      </p>
     </div>
-    <div class="row">
-      <div class="field-label">비밀번호</div>
-      <input id="password" class="input" type="password" placeholder="••••••••" />
-    </div>
-    <button class="btn btn-primary" id="emailLoginBtn">이메일로 로그인</button>
 
-    <div class="divider">
-      <span>또는</span>
+    <div class="status-bar">
+      <div class="status-left">
+        <span class="status-dot"></span>
+        <span>서버 상태 · 온라인</span>
+      </div>
+      <span>24시간 상시 운영</span>
     </div>
+
+    <!-- 이메일/비밀번호 로그인 -->
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <div class="input-wrapper">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="email" placeholder="LONS 계정 이메일을 입력하세요">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" placeholder="비밀번호를 입력하세요">
+        </div>
+      </div>
+
+      <button type="button" class="login-btn" id="emailLoginBtn">
+        <span>이메일로 로그인</span>
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+      </button>
+    </form>
 
     <!-- 구글 로그인 버튼 -->
-    <button class="btn btn-google" id="googleLoginBtn">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+    <button type="button" class="action-btn google" id="googleLoginBtn">
+      <i class="fa-brands fa-google"></i>
       <span>Google 계정으로 로그인</span>
     </button>
 
-    <!-- 론즈서버 후원 버튼 -->
-    <button class="support-btn" id="supportBtn">
-      론즈서버 후원하기
+    <!-- 후원하기 버튼 -->
+    <button type="button" class="action-btn" id="supportBtn">
+      <i class="fa-solid fa-coins"></i>
+      <span>론즈서버 후원하기</span>
     </button>
 
-    <!-- 로그인된 유저 정보 표시용 -->
-    <div class="user-info" id="userInfo" style="display:none;"></div>
+    <!-- 로그인된 유저 정보 표시 -->
+    <p class="helper-text" id="userInfo" style="display:none;"></p>
 
-    <!-- 시간 박스 -->
-    <div class="time-box" id="timeBox">
-      <div><strong>한국 시간</strong>: -</div>
-      <div><strong>UTC</strong>: -</div>
-      <div><strong>미국 동부</strong>: -</div>
+    <!-- UTC 계산기 / 시간 안내 -->
+    <div class="utc-box" id="utc-box">
+      <div><strong>현재 시간 안내</strong></div>
+      <div id="utc-local-line">로딩 중...</div>
+      <div id="utc-utc-line"></div>
+      <div id="utc-other-line"></div>
     </div>
+
+    <p class="helper-text">
+      처음 오셨나요? <span>디스코드</span> 또는 서버 공지에서
+      LONS 계정 발급 방법을 확인해 주세요.
+    </p>
+
+    <p class="footer">
+      팰월드 론즈서버 LONS · 비공식 팬 서버 · 웹 로그인 포털
+    </p>
   </div>
 
-  <!-- Firebase SDKs (v9 compat or modular 중 하나 골라야 하는데, 여기선 모듈 번들 방식) -->
   <script type="module">
-    // Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import {
       getAuth,
@@ -190,7 +303,6 @@
       signInWithEmailAndPassword
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // 너가 준 config 그대로 사용
     const firebaseConfig = {
       apiKey: "AIzaSyCyiAepd539cBTPwtcVnAR-HJbb8roLJmE",
       authDomain: "lons-dc24d.firebaseapp.com",
@@ -211,6 +323,7 @@
     const userInfo = document.getElementById("userInfo");
     const supportBtn = document.getElementById("supportBtn");
 
+    // 구글 로그인
     googleBtn.addEventListener("click", async () => {
       try {
         const result = await signInWithPopup(auth, provider);
@@ -222,6 +335,7 @@
       }
     });
 
+    // 이메일 로그인
     emailBtn.addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -239,12 +353,12 @@
       }
     });
 
-    // 후원 버튼 클릭 시 이동할 주소 (원하는 링크로 바꿔)
+    // 후원 버튼 (링크는 원하는 URL로 수정 가능)
     supportBtn.addEventListener("click", () => {
       window.open("https://rani-mall.xyz/support", "_blank");
     });
 
-    // 로그인 상태 변화 감지
+    // 로그인 상태 유지 표시
     onAuthStateChanged(auth, (user) => {
       if (user) {
         userInfo.style.display = "block";
@@ -254,23 +368,48 @@
       }
     });
 
-    // 시간 표시
-    function updateTimes() {
-      const now = new Date();
-
-      const kr = now.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-      const utc = now.toLocaleString("en-GB", { timeZone: "UTC" });
-      const est = now.toLocaleString("en-US", { timeZone: "America/New_York" });
-
-      const box = document.getElementById("timeBox");
-      const lines = box.querySelectorAll("div");
-      lines[0].innerHTML = `<strong>한국 시간</strong>: ${kr}`;
-      lines[1].innerHTML = `<strong>UTC</strong>: ${utc}`;
-      lines[2].innerHTML = `<strong>미국 동부</strong>: ${est}`;
+    // UTC/시간 박스
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
     }
 
-    updateTimes();
-    setInterval(updateTimes, 1000);
+    function updateUtcBox() {
+      const now = new Date();
+
+      const localYear = now.getFullYear();
+      const localMonth = pad(now.getMonth() + 1);
+      const localDay = pad(now.getDate());
+      const localHour = pad(now.getHours());
+      const localMin = pad(now.getMinutes());
+      const localSec = pad(now.getSeconds());
+
+      const utcYear = now.getUTCFullYear();
+      const utcMonth = pad(now.getUTCMonth() + 1);
+      const utcDay = pad(now.getUTCDate());
+      const utcHour = pad(now.getUTCHours());
+      const utcMin = pad(now.getUTCMinutes());
+      const utcSec = pad(now.getUTCSeconds());
+
+      let estHour = now.getUTCHours() - 5;
+      let estDay = utcDay;
+      let estMonth = utcMonth;
+      let estYear = utcYear;
+      if (estHour < 0) {
+        estHour += 24;
+      }
+      const estHourStr = pad(estHour);
+
+      const localLine = `로컬(한국 기준) : ${localYear}-${localMonth}-${localDay} ${localHour}:${localMin}:${localSec}`;
+      const utcLine   = `UTC 기준 시간   : ${utcYear}-${utcMonth}-${utcDay} ${utcHour}:${utcMin}:${utcSec}`;
+      const otherLine = `예시 · 미국 동부 : ${estYear}-${estMonth}-${estDay} ${estHourStr}:${utcMin}:${utcSec} (UTC-5 기준 단순 표기)`;
+
+      document.getElementById('utc-local-line').textContent = localLine;
+      document.getElementById('utc-utc-line').textContent   = utcLine;
+      document.getElementById('utc-other-line').textContent = otherLine;
+    }
+
+    updateUtcBox();
+    setInterval(updateUtcBox, 1000);
   </script>
 </body>
 </html>
