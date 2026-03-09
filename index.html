@@ -145,6 +145,30 @@
       box-shadow:0 14px 30px rgba(0,0,0,0.6);
     }
 
+    .donate-btn {
+      width:100%;
+      margin-top:10px;
+      padding:10px 0;
+      border:none;
+      border-radius:999px;
+      background:linear-gradient(135deg, #ffb300, #ff6f00);
+      color:#ffffff;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.45);
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .donate-btn:hover {
+      transform:translateY(-1px);
+      filter:brightness(1.05);
+      box-shadow:0 14px 30px rgba(0,0,0,0.6);
+    }
+
     .helper-text {
       font-size:12px;
       color:#b7c8ff;
@@ -210,6 +234,15 @@
         <i class="fa-solid fa-arrow-right-to-bracket"></i>
       </button>
     </form>
+
+    <!-- 후원하기 버튼 -->
+    <button
+      type="button"
+      class="donate-btn"
+      onclick="window.open('https://your-donate-link.example', '_blank')">
+      <i class="fa-solid fa-coins"></i>
+      <span>론즈서버 후원하기</span>
+    </button>
 
     <p class="helper-text">
       처음 오셨나요? <span>디스코드</span> 또는 서버 공지에서
